@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class Movie
+class Actor
+class Genre
+class Director
+
+
+Movie "*" -- "*" Actor
+
+Movie "*" -- "*" Genre
+
+Movie "*" -- "*" Director
+
+class Movie {
+Long id;
+String title;
+String originalLanguage;
+String releaseDate;
+double voteAverage;
+List<Genre> genres;
+List<Actor> actors;
+List<Director> directors;
+}
+
+class Actor{
+Long id;
+String name;
+List<Movie> movies;
+}
+
+class Genre{
+Long id;
+String name;
+List<Movie> movies;
+}
+
+class Director{
+Long id;
+String name;
+List<Movie> movies;
+}
+
+
+@enduml
