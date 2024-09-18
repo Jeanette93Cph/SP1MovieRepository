@@ -2,6 +2,7 @@ package dat.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dat.dtos.ActorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +22,12 @@ public class Actor {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@JsonIgnoreProperties
+	@ToString.Exclude // Prevent infinite loop when fetching data
 	@ManyToMany(mappedBy = "actors")
 	private Set<Movie> movies;
+
+	public Actor(ActorDTO actorDTO) {
+		this.id = actorDTO.getId();
+		this.name = actorDTO.getName();
+	}
 }

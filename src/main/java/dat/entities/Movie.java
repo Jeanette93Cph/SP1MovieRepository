@@ -55,17 +55,28 @@ public class Movie {
 			inverseJoinColumns = @JoinColumn(name = "actor_id"))
 	private List<Actor> actors = new ArrayList<>();
 
-	public Movie convertDTOToEntity(MovieDTO movieDTO) {
-		Movie movie = new Movie();
-		movie.setTitle(movieDTO.getTitle());
-		movie.setReleaseDate(LocalDate.parse(movieDTO.getReleaseDate()));
-		movie.setDirector(directorService.convertDTOToEntity(movieDTO.getDirector()));
-		movie.setActors(movieDTO.getActors().stream()
-				.map(actorService::convertDTOToEntity)
-				.collect(Collectors.toList()));
-		movie.setGenres(movieDTO.getGenres().stream()
-				.map(genreService::convertDTOToEntity)
-				.collect(Collectors.toList()));
-		return movie;
+	public Movie(MovieDTO movieDTO) {
+		this.id = movieDTO.getId();
+		this.title = movieDTO.getTitle();
+		this.originalLanguage = movieDTO.getOriginalLanguage();
+		this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());
+		this.rating = movieDTO.getRating();
+		this.popularity = movieDTO.getPopularity();
+		this.voteAverage = movieDTO.getVoteAverage();
+
+		// Assume that each movie has only one director
+		this.director = new Director(movieDTO.getDirectors().get(0));
+
+		// Assume that each movie has at least one genre
+		this.genres = new ArrayList<>();
+		for (var genreDTO : movieDTO.getGenres()) {
+			this.genres.add(new Genre(genreDTO));
+		}
+
+		// Assume that each movie has at least one actor
+		this.actors = new ArrayList<>();
+		for (var actorDTO : movieDTO.getActors()) {
+			this.actors.add(new Actor(actorDTO));
+		}
 	}
 }
