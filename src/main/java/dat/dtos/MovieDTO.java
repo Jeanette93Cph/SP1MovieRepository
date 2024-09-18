@@ -1,5 +1,6 @@
 package dat.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,7 @@ public class MovieDTO {
     private String originalLanguage;
 
     @JsonProperty("release_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private String releaseDate;
 
     @JsonProperty("vote_average")
