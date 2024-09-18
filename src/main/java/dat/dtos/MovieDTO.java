@@ -27,6 +27,12 @@ public class MovieDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String releaseDate;
 
+    @JsonProperty("rating")
+    private Double rating;
+
+    @JsonProperty("popularity")
+    private Double popularity;
+
     @JsonProperty("vote_average")
     private double voteAverage;
 
