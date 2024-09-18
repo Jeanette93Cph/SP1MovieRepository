@@ -1,9 +1,5 @@
 package dat.config;
 
-import dat.entities.Actor;
-import dat.entities.Director;
-import dat.entities.Genre;
-import dat.entities.Movie;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -97,7 +93,8 @@ public class HibernateConfig
     {
         props.put("hibernate.connection.url", "jdbc:postgresql://localhost:5432/" + DBName);
         props.put("hibernate.connection.username", "postgres");
-        props.put("hibernate.connection.password", "postgres");
+        //props.put("hibernate.connection.password", "postgres");
+        props.put("hibernate.connection.password", "cc23");
         return props;
     }
 

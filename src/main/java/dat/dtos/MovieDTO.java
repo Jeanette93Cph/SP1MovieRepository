@@ -5,17 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dat.entities.Actor;
-import dat.entities.Director;
-import dat.entities.Genre;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MovieDTO
-{
+public class MovieDTO {
 
     @JsonProperty("id")
     private Long id;
@@ -32,33 +28,27 @@ public class MovieDTO
     @JsonProperty("vote_average")
     private double voteAverage;
 
-    private List<Genre> genres;
+    @JsonProperty("genres")
+    private List<GenreDTO> genres;
 
-    private List<Actor> actors;
+    @JsonProperty("actors")
+    private List<ActorDTO> actors;
 
-    private List<Director> directors;
-
+    @JsonProperty("directors")
+    private List<DirectorDTO> directors;
 
 
     // convert from JSON to List of MovieDTO
-    public static List<MovieDTO> convertToDTOFromJSONList(String json)
-    {
+    public static List<MovieDTO> convertToDTOFromJSONList(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
-        //enabling it to properly serialize / deserialize date and time like LocalDate
         objectMapper.registerModule(new JavaTimeModule());
 
-        try
-        {
+        try {
             MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
             return movieResponseDTO.getMovieList();
-        } catch (JsonProcessingException e)
-        {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
-
-
 }
