@@ -3,6 +3,7 @@ package dat.daos;
 import dat.dtos.MovieDTO;
 import dat.entities.Movie;
 import dat.exceptions.JpaException;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
@@ -12,94 +13,123 @@ import java.util.stream.Collectors;
 
 public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 
-	//singleton instance
+	// Singleton instance
 	private static MovieDAO instance;
-	private static EntityManagerFactory emf;
 
-	//private constructor
+	private final EntityManagerFactory emf;
+
+	// Private constructor
 	private MovieDAO(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
-	//singleton pattern
-	public static MovieDAO getInstance(EntityManagerFactory emf) {
+	// Singleton pattern
+	public static synchronized MovieDAO getInstance(EntityManagerFactory emf) {
 		if (instance == null) {
 			instance = new MovieDAO(emf);
 		}
 		return instance;
 	}
 
-	//method to find all movies in the database
+	// Method to find all movies in the database
 	@Override
-	public Collection<MovieDTO> findAll () {
-		try (var em = emf.createEntityManager()) {
+	public Collection<MovieDTO> findAll() {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
 			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
 			List<Movie> movies = query.getResultList();
-			var collect = movies.stream().map(MovieDTO::new).collect(Collectors.toList());
-			return collect;
+			return movies.stream().map(MovieDTO::new).collect(Collectors.toList());
 		} catch (Exception e) {
-			throw new JpaException("Could not find movies.");
+			throw new JpaException("Could not find movies.", e);
+		} finally {
+			if (em != null) em.close();
 		}
 	}
 
-	//method to persist a movie to the database
+	// Method to persist a movie to the database
 	@Override
-	public void persistEntity (MovieDTO movieDTO) {
-		Movie movie = new Movie(movieDTO);
-		try (var em = emf.createEntityManager()) {
+	public void persistEntity(MovieDTO movieDTO) {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
 			em.getTransaction().begin();
+			Movie movie = new Movie(movieDTO);
 			em.persist(movie);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			throw new JpaException("Failed to persist movie.");
+			if (em != null && em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
+			throw new JpaException("Failed to persist movie.", e);
+		} finally {
+			if (em != null) em.close();
 		}
 	}
 
-	//method to delete a movie from the database
+	// Method to delete a movie from the database
 	@Override
-	public void removeEntity (Long id) {
-		try (var em = emf.createEntityManager()) {
+	public void removeEntity(Long id) {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
-				throw new JpaException("No movie found.");
+				throw new JpaException("No movie found with id: " + id);
 			}
 			em.getTransaction().begin();
 			em.remove(movie);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			throw new JpaException("Failed to remove movie.");
+			if (em != null && em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
+			throw new JpaException("Failed to remove movie.", e);
+		} finally {
+			if (em != null) em.close();
 		}
 	}
 
-	//method to find a movie by id
+	// Method to find a movie by id
 	@Override
-	public MovieDTO findEntity (Long id) {
-		try (var em = emf.createEntityManager()) {
+	public MovieDTO findEntity(Long id) {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
-				throw new JpaException("No movie found.");
+				throw new JpaException("No movie found with id: " + id);
 			}
 			return new MovieDTO(movie);
 		} catch (Exception e) {
-			throw new JpaException("Failed to find movie.");
+			throw new JpaException("Failed to find movie.", e);
+		} finally {
+			if (em != null) em.close();
 		}
 	}
 
-	//method to update a movie in the database by id
-	//FIXME: This method is not used in the application
+	// Method to update a movie in the database by id
 	@Override
-	public void updateEntity (MovieDTO movieDTO, Long id) {
-		/* try (var em = emf.createEntityManager()) {
+	public void updateEntity(MovieDTO movieDTO, Long id) {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
-				throw new JpaException("No movie found.");
+				throw new JpaException("No movie found with id: " + id);
 			}
-			movie.update(movieDTO);
 			em.getTransaction().begin();
+			// Update the movie with the new movieDTO
+			movie = new Movie(movieDTO);
 			em.merge(movie);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			throw new JpaException("Failed to update movie.");
-		} */
+			if (em != null && em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
+			throw new JpaException("Failed to update movie.", e);
+		} finally {
+			if (em != null) em.close();
+		}
 	}
 }
