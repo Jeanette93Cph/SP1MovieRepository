@@ -21,6 +21,10 @@
         <testcontainers.version>1.18.0</testcontainers.version>
         <hikari.version>5.1.0</hikari.version>
 
+        <logback.version>1.5.7</logback.version>
+        <slf4j.version>2.0.16</slf4j.version>
+
+
         <!-- DATABASE PROJECT NAME ON SERVER  -->
         <db.name>jpademo</db.name>
     </properties>
@@ -110,6 +114,20 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!-- Logback Classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>app</finalName> <!-- This is the name of the jar file -->

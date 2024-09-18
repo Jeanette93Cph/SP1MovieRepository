@@ -1,7 +1,9 @@
 package dat;
 
+import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import dat.services.ActorService;
+import dat.services.DirectorService;
 import dat.services.MovieService;
 import java.util.List;
 
@@ -18,6 +20,16 @@ public class Main
         //moviesDTOs.forEach(System.out::println);
 
         //Printing all cast from the danish movies for the recent 5 years
-        ActorService.getAllActorsJSON(2).forEach(System.out::println);
+        //ActorService.getAllActorsJSON(3).forEach(System.out::println);
+
+        //Printing all directors from the danish movies for the recent 5 years
+        String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
+         //System.out.println(jsonAllDirectors);
+
+
+       List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
+       directorDTOS.forEach(System.out::println);
+
+
     }
 }

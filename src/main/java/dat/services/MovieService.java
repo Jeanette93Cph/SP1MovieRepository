@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.MovieDTO;
 import dat.dtos.MovieResponseDTO;
+import dat.exceptions.JpaException;
 
 import javax.imageio.IIOException;
 import java.io.IOException;
@@ -41,8 +42,7 @@ public class MovieService
 
         }catch (InterruptedException | IOException e)
         {
-            e.printStackTrace();
-            return null;
+            throw new JpaException("respond not found");
         }
 
     }
@@ -59,9 +59,9 @@ public class MovieService
 
         } catch (JsonProcessingException e)
         {
-            e.printStackTrace();
+            throw new JpaException("respond not found");
         }
-        return null;
+
     }
 
 
