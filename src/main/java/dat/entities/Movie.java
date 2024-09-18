@@ -1,10 +1,5 @@
 package dat.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
