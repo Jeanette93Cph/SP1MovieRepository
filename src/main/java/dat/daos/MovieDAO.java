@@ -34,16 +34,12 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	// Method to find all movies in the database
 	@Override
 	public Collection<MovieDTO> findAll() {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
+		try (EntityManager em = emf.createEntityManager()) {
 			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
 			List<Movie> movies = query.getResultList();
 			return movies.stream().map(MovieDTO::new).collect(Collectors.toList());
 		} catch (Exception e) {
-			throw new JpaException("Could not find movies.", e);
-		} finally {
-			if (em != null) em.close();
+			throw new JpaException("Failed to find all movies.");
 		}
 	}
 
@@ -61,7 +57,7 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 			if (em != null && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
-			throw new JpaException("Failed to persist movie.", e);
+			throw new JpaException("Failed to persist movie.");
 		} finally {
 			if (em != null) em.close();
 		}
@@ -84,7 +80,7 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 			if (em != null && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
-			throw new JpaException("Failed to remove movie.", e);
+			throw new JpaException("Failed to remove movie.");
 		} finally {
 			if (em != null) em.close();
 		}
@@ -93,18 +89,14 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	// Method to find a movie by id
 	@Override
 	public MovieDTO findEntity(Long id) {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
+		try (EntityManager em = emf.createEntityManager()) {
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
 				throw new JpaException("No movie found with id: " + id);
 			}
 			return new MovieDTO(movie);
 		} catch (Exception e) {
-			throw new JpaException("Failed to find movie.", e);
-		} finally {
-			if (em != null) em.close();
+			throw new JpaException("Failed to find movie.");
 		}
 	}
 
@@ -127,7 +119,7 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 			if (em != null && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
-			throw new JpaException("Failed to update movie.", e);
+			throw new JpaException("Failed to update movie.");
 		} finally {
 			if (em != null) em.close();
 		}
