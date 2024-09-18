@@ -8,50 +8,41 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.Properties;
 
-public class HibernateConfig
-{
+public class HibernateConfig {
     private static EntityManagerFactory emf;
     private static EntityManagerFactory emfTest;
 
-    public static EntityManagerFactory getEntityManagerFactory(String DBName)
-    {
+    public static EntityManagerFactory getEntityManagerFactory(String DBName) {
         if (emf == null)
             emf = createEMF(false, DBName);
         return emf;
     }
 
-    public static EntityManagerFactory getEntityManagerFactoryForTest()
-    {
+    public static EntityManagerFactory getEntityManagerFactoryForTest() {
         if (emfTest == null)
             emfTest = createEMF(true, ""); //No DB needed fo test
         return emfTest;
     }
 
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
-    private static void getAnnotationConfiguration(Configuration configuration)
-    {
-        configuration.addAnnotatedClass(Movie.class);
-        configuration.addAnnotatedClass(Actor.class);
-        configuration.addAnnotatedClass(Genre.class);
-        configuration.addAnnotatedClass(Director.class);
+    private static void getAnnotationConfiguration(Configuration configuration) {
+        configuration.addAnnotatedClass(dat.entities.Movie.class);
+        configuration.addAnnotatedClass(dat.entities.Genre.class);
+        configuration.addAnnotatedClass(dat.entities.Actor.class);
+        configuration.addAnnotatedClass(dat.entities.Director.class);
     }
 
-    private static EntityManagerFactory createEMF(boolean forTest, String DBName)
-    {
-        try
-        {
+    private static EntityManagerFactory createEMF(boolean forTest, String DBName) {
+        try {
             Configuration configuration = new Configuration();
             Properties props = new Properties();
             // Set the properties
             setBaseProperties(props);
-            if (forTest)
-            {
+            if (forTest) {
                 props = setTestProperties(props);
-            } else if (System.getenv("DEPLOYED") != null)
-            {
+            } else if (System.getenv("DEPLOYED") != null) {
                 setDeployedProperties(props, DBName);
-            } else
-            {
+            } else {
                 props = setDevProperties(props, DBName);
             }
             configuration.setProperties(props);
@@ -61,16 +52,14 @@ public class HibernateConfig
             SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
             EntityManagerFactory emf = sf.unwrap(EntityManagerFactory.class);
             return emf;
-        } catch (Throwable ex)
-        {
+        } catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
 
-    private static Properties setBaseProperties(Properties props)
-    {
+    private static Properties setBaseProperties(Properties props) {
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         props.put("hibernate.connection.driver_class", "org.postgresql.Driver");
         props.put("hibernate.hbm2ddl.auto", "update");
@@ -81,16 +70,14 @@ public class HibernateConfig
         return props;
     }
 
-    private static Properties setDeployedProperties(Properties props, String DBName)
-    {
+    private static Properties setDeployedProperties(Properties props, String DBName) {
         props.setProperty("hibernate.connection.url", System.getenv("CONNECTION_STR") + DBName);
         props.setProperty("hibernate.connection.username", System.getenv("DB_USERNAME"));
         props.setProperty("hibernate.connection.password", System.getenv("DB_PASSWORD"));
         return props;
     }
 
-    private static Properties setDevProperties(Properties props, String DBName)
-    {
+    private static Properties setDevProperties(Properties props, String DBName) {
         props.put("hibernate.connection.url", "jdbc:postgresql://localhost:5432/" + DBName);
         props.put("hibernate.connection.username", "postgres");
         //props.put("hibernate.connection.password", "postgres");
@@ -98,8 +85,7 @@ public class HibernateConfig
         return props;
     }
 
-    private static Properties setTestProperties(Properties props)
-    {
+    private static Properties setTestProperties(Properties props) {
 //        props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         props.put("hibernate.connection.driver_class", "org.testcontainers.jdbc.ContainerDatabaseDriver");
         props.put("hibernate.connection.url", "jdbc:tc:postgresql:15.3-alpine3.18:///test_db");
@@ -110,5 +96,4 @@ public class HibernateConfig
         props.put("hibernate.hbm2ddl.auto", "create-drop"); //update for production (og ikke drop)
         return props;
     }
-
 }
