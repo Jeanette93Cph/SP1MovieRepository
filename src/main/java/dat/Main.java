@@ -1,6 +1,5 @@
 package dat;
 
-import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
 import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
@@ -10,18 +9,15 @@ import dat.services.GenreService;
 import dat.services.MovieService;
 import java.util.List;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        /* MOVIES */
+public class Main {
+    public static void main(String[] args) {
         //Printing all danish movies for the recent 5 years in JSON
         String jsonAllMovies = MovieService.getAllMoviesJSON(2);
        // System.out.println(jsonAllMovies);
 
         //Printing all danish movies for the recent 5 years as MovieDTO's
         List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
-        //moviesDTOs.forEach(System.out::println);
+        moviesDTOs.forEach(System.out::println);
 
 
         /* ACTORS */
