@@ -3,6 +3,8 @@ package dat.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
+import java.util.Set;
+
 import lombok.*;
 
 @Entity
@@ -20,5 +22,5 @@ public class Director {
 	private String name;
 
 	@OneToMany(mappedBy = "director")
-	private List<Movie> movies;
+	private Set<Movie> movies;
 }

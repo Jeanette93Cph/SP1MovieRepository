@@ -1,5 +1,6 @@
 package dat.entities;
 
+import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,12 @@ public class Movie {
 	@Column(name = "release_date")
 	private LocalDate releaseDate;
 
+	@Column(name = "rating")
+	private Double rating;
+
+	@Column(name = "popularity")
+	private Double popularity;
+
 	@Column(name = "vote_average")
 	private double voteAverage;
 
@@ -47,4 +54,18 @@ public class Movie {
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "actor_id"))
 	private List<Actor> actors = new ArrayList<>();
+
+	public Movie convertDTOToEntity(MovieDTO movieDTO) {
+		Movie movie = new Movie();
+		movie.setTitle(movieDTO.getTitle());
+		movie.setReleaseDate(LocalDate.parse(movieDTO.getReleaseDate()));
+		movie.setDirector(directorService.convertDTOToEntity(movieDTO.getDirector()));
+		movie.setActors(movieDTO.getActors().stream()
+				.map(actorService::convertDTOToEntity)
+				.collect(Collectors.toList()));
+		movie.setGenres(movieDTO.getGenres().stream()
+				.map(genreService::convertDTOToEntity)
+				.collect(Collectors.toList()));
+		return movie;
+	}
 }

@@ -1,9 +1,11 @@
 package dat.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -19,6 +21,7 @@ public class Actor {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
+	@JsonIgnoreProperties
 	@ManyToMany(mappedBy = "actors")
-	private List<Movie> movies;
+	private Set<Movie> movies;
 }
