@@ -1,4 +1,4 @@
-package dat.Resources;
+package dat.resources;
 
 import java.io.FileWriter;
 import java.io.IOException;
