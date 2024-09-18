@@ -28,32 +28,34 @@ public class Main {
         //
         // /* ACTORS */
         // //Printing all cast from the danish movies for the recent 5 years
-        // String jsonAllActors = ActorService.getAllActorsJSON(3);
-        // List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
-        // actorDTOS.forEach(System.out::println);
+        String jsonAllActors = ActorService.getAllActorsJSON(3);
+         List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
+        actorDTOS.forEach(System.out::println);
 
         /* DIRECTORS */
         //Printing all directors from the danish movies for the recent 5 years
-        // String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
-        // //System.out.println(jsonAllDirectors);
+        //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
+        //System.out.println(jsonAllDirectors);
         //
         // //Printing all directors from the danish movies for the recent 5 years as DirectorDTO's
-        // List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
-        // directorDTOS.forEach(System.out::println);
+        //List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
+       //directorDTOS.forEach(System.out::println);
 
 
         /* GENRE */
         //Printing all genres
-       //  String allGenres = GenreService.getAllGenresJSON();
-       //  List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
-       // genreDTOS.forEach(System.out::println);
+         //String allGenres = GenreService.getAllGenresJSON();
+        //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+       //genreDTOS.forEach(System.out::println);
 
-        //Testing the connection to the database
-        MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
 
-        for (MovieDTO moviesDTO : moviesDTOs) {
-            movieDAO.persistEntity(moviesDTO);
-        }
+
+        /*Testing the connection to the database*/
+//        MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+//
+//        for (MovieDTO moviesDTO : moviesDTOs) {
+//            movieDAO.persistEntity(moviesDTO);
+//        }
 
 
     }

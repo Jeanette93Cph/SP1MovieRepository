@@ -14,7 +14,6 @@ import lombok.*;
 @Table(name = "directors")
 public class Director {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
 

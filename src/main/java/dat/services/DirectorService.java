@@ -42,7 +42,7 @@ public class DirectorService {
 
                 // Add the names of directors to the set to ensure uniqueness
                 directorSet.addAll(movieDirectors.stream()
-                        .map(DirectorDTO::getName)
+                        .map(director -> "ID: " + director.getId() + ", Name: " + director.getName())
                         .collect(Collectors.toSet()));
             }
 

@@ -1,6 +1,9 @@
 package dat.daos;
 
 import dat.dtos.MovieDTO;
+import dat.entities.Actor;
+import dat.entities.Director;
+import dat.entities.Genre;
 import dat.entities.Movie;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
@@ -48,15 +51,34 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 		EntityManager em = null;
 		try {
 			em = emf.createEntityManager();
+			final EntityManager finalEm = em;
+
 			em.getTransaction().begin();
 			Movie movie = new Movie(movieDTO);
+
+			if (movieDTO.getDirectors() != null && !movieDTO.getDirectors().isEmpty())
+			{
+				Director director = finalEm.find(Director.class, movieDTO.getDirectors().get(0).getId());
+			}
+
+			if(movieDTO.getGenres() !=null)
+			{
+				List<Genre> genres = movieDTO.getGenres().stream().map(genreDTO -> finalEm.find(Genre.class, genreDTO.getId())).collect(Collectors.toList());
+				movie.setGenres(genres);
+			}
+
+			if(movieDTO.getActors() != null){
+				List<Actor> actors = movieDTO.getActors().stream().map(actorDTO -> finalEm.find(Actor.class, actorDTO.getId())).collect(Collectors.toList());
+				movie.setActors(actors);
+			}
+
 			em.persist(movie);
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			if (em != null && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}
-			throw new JpaException("Failed to persist movie.");
+			throw new JpaException("Failed to persist movie:" + e.getMessage());
 		} finally {
 			if (em != null) em.close();
 		}
