@@ -12,8 +12,7 @@ public class GenreService {
     private static final String GENRE = "https://api.themoviedb.org/3/genre/movie/list";
 
 
-    public static String getAllGenresJSON()
-    {
+    public static String getAllGenresJSON () {
         String url = GENRE + "?api_key=" + API_KEY;
 
         HttpClient client = HttpClient.newHttpClient();
@@ -30,13 +29,5 @@ public class GenreService {
             e.printStackTrace();
         }
         return null;
-    }
-
-
-
-
-
-            return null;
-        }
     }
 }

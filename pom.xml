@@ -26,7 +26,7 @@
 
 
         <!-- DATABASE PROJECT NAME ON SERVER  -->
-        <db.name>tmdb</db.name>
+        <db.name>the_movie_db</db.name>
     </properties>
 
     <dependencies>

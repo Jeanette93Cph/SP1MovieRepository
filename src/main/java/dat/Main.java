@@ -1,5 +1,7 @@
 package dat;
 
+import dat.config.HibernateConfig;
+import dat.daos.MovieDAO;
 import dat.dtos.DirectorDTO;
 import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
@@ -11,6 +13,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+
+        //the_movie_db
+
+
         //Printing all danish movies for the recent 5 years in JSON
         String jsonAllMovies = MovieService.getAllMoviesJSON(2);
        // System.out.println(jsonAllMovies);
@@ -42,6 +48,10 @@ public class Main {
         //String allGenres = GenreService.getAllGenresJSON();
         //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
        //genreDTOS.forEach(System.out::println);
+
+
+
+
 
 
     }
