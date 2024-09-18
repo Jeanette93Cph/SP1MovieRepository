@@ -3,6 +3,7 @@ package dat.services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dat.dtos.CreditDTO;
 import dat.dtos.CrewMemberDTO;
 import dat.dtos.DirectorDTO;
 import lombok.Data;
@@ -70,7 +71,7 @@ public class DirectorService {
             ObjectMapper objectMapper = new ObjectMapper();
 
             // Deserialize the JSON credits into a Credits object
-            Credits credits = objectMapper.readValue(jsonCredits, Credits.class);
+            CreditDTO credits = objectMapper.readValue(jsonCredits, CreditDTO.class);
 
             // Create a list to store directors
             List<DirectorDTO> directors = new ArrayList<>();
@@ -79,8 +80,8 @@ public class DirectorService {
             for (CrewMemberDTO crewMemberDTO : credits.crew) {
                 if ("Director".equalsIgnoreCase(crewMemberDTO.job)) {
                     DirectorDTO directorDTO = new DirectorDTO();
-                    directorDTO.setName(crewMember.name); // Assign the director's name
-                    directorDTO.setId(crewMember.id); // Assign the director's name
+                    directorDTO.setName(crewMemberDTO.name); // Assign the director's name
+                    directorDTO.setId(crewMemberDTO.id); // Assign the director's name
                     directors.add(directorDTO);
                 }
             }
