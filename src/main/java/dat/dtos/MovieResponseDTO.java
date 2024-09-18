@@ -12,8 +12,7 @@ because the JSON response contains more data (pages, totalresults) beside the li
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MovieResponseDTO
-{
+public class MovieResponseDTO {
 
     @JsonProperty("page")
     private int page;
@@ -26,6 +25,4 @@ public class MovieResponseDTO
 
     @JsonProperty("results")
     private List<MovieDTO> movieList;
-
-
 }

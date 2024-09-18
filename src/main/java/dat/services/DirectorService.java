@@ -3,10 +3,9 @@ package dat.services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dat.dtos.ActorDTO;
+import dat.dtos.CrewMemberDTO;
 import dat.dtos.DirectorDTO;
 import lombok.Data;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,19 +17,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+public class DirectorService {
 
-public class DirectorService
-{
-
-    //should be resplaced with your API key
     private static final String API_KEY = System.getenv("api_key");
     private static final String BASE_URL_MOVIE_DANISH_RECENT_5_YEARS = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&primary_release_date.lte=2024-10-01&sort_by=popularity.desc&with_original_language=da";
     private static final String URL = "https://api.themoviedb.org/3/movie/";
+    private static final HttpClient client = HttpClient.newHttpClient();
 
-    private static HttpClient client = HttpClient.newHttpClient();
-
-
-    //with help from chatgpt
     public static String getAllDirectorsJSON(int page) {
         Set<String> directorSet = new HashSet<>();
 
@@ -62,8 +55,7 @@ public class DirectorService
 
 
     // help method to getAllActorsJSON(). with help from chatgpt
-    private static String getJSONResponse(String url) throws IOException, InterruptedException
-    {
+    static String getJSONResponse (String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
@@ -73,29 +65,8 @@ public class DirectorService
         return response.body();
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class CrewMember
-    {
-        public String name;
-        public String job;
-        public Long id;
-    }
-
-
-    // help method to extractActorsFromCredits. with help from chatgpt
-    @Data
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Credits
-    {
-        public List<CrewMember> crew;
-    }
-
-
-    // help method to getAllDirectorsJSON(). with help from chatgpt
-    public static List<DirectorDTO> extractDirectorsFromCredits(String jsonCredits)
-    {
-        try
-        {
+    public static List<DirectorDTO> extractDirectorsFromCredits(String jsonCredits) {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
 
             // Deserialize the JSON credits into a Credits object
@@ -105,10 +76,8 @@ public class DirectorService
             List<DirectorDTO> directors = new ArrayList<>();
 
             // Iterate through the crew and find the director(s)
-            for (CrewMember crewMember : credits.crew)
-            {
-                if ("Director".equalsIgnoreCase(crewMember.job))
-                {
+            for (CrewMemberDTO crewMemberDTO : credits.crew) {
+                if ("Director".equalsIgnoreCase(crewMemberDTO.job)) {
                     DirectorDTO directorDTO = new DirectorDTO();
                     directorDTO.setName(crewMember.name); // Assign the director's name
                     directorDTO.setId(crewMember.id); // Assign the director's name
@@ -118,8 +87,7 @@ public class DirectorService
 
             return directors; // Return the list of directors
 
-        } catch (JsonProcessingException e)
-        {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;

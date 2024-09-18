@@ -2,22 +2,23 @@ package dat.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
+import lombok.*;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "directors")
-public class Director
-{
+public class Director {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Column(name = "name", nullable = false, length = 100)
+	private String name;
 
-    private String name;
-
-    @ManyToMany(mappedBy = "directors")
-    private List<Movie> movies;
-
+	@OneToMany(mappedBy = "director")
+	private List<Movie> movies;
 }

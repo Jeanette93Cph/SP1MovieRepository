@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DirectorDTO
-{
+public class DirectorDTO {
 
     @Id
     @JsonProperty("id")
@@ -52,14 +51,9 @@ public class DirectorDTO
         return null;
     }
 
-    //help method to convertToDTOFromJSONList()
-    private static String convertPlainStringToJSONArray(String plainString)
-    {
+    private static String convertPlainStringToJSONArray(String plainString) {
         return Arrays.stream(plainString.split(",\\s*"))
                 .map(name -> String.format("{\"name\": \"%s\"}", name.trim()))
                 .collect(Collectors.joining(",", "[", "]"));
     }
-
-
-
 }
