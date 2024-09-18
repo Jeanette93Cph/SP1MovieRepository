@@ -47,6 +47,6 @@ public class Main
         //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
        //genreDTOS.forEach(System.out::println);
 
-        
+
     }
 }
