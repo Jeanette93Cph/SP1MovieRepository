@@ -1,6 +1,5 @@
 @startuml
-'https://plantuml.com/class-diagram
-
+!pragma layout smetana
 
 class Movie
 class Actor

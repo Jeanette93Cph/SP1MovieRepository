@@ -1,0 +1,80 @@
+@startuml
+!pragma layout smetana
+
+component TMDB_API [
+The Movie Database API
+]
+
+database Database [
+Postgres Database
+]
+
+'' Styling
+skinparam ArrowThickness 3
+skinparam ArrowColor Orange
+skinparam backgroundColor #f0f0f0
+skinparam borderColor Black
+skinparam borderThickness 1
+
+skinparam class {
+  BackgroundColor white
+}
+
+skinparam Component {
+  BackgroundColor Lightblue
+}
+
+''
+
+Class Main {
+  +main(String[] args)
+}
+
+
+package "config" {
+Class HibernateConfig
+}
+
+package "daos" {
+Interface IDAO
+Class MovieDao
+}
+
+package "dtos" {
+Class ActorDTO
+Class MovieDTO
+Class GenreDTO
+Class MovieDTO
+Class DirectorDTO
+}
+
+package "entities" {
+Class Actor
+Class Movie
+Class Genre
+Class Director
+}
+
+package "exceptions" {
+  class JpaException {
+    +JpaException(String message)
+  }
+}
+
+package "resources" {
+Class Logger
+}
+
+package "services" {
+Class MovieService
+Class ActorService
+Class GenreService
+Class DirectorService
+}
+
+' Define relationships
+
+
+
+
+@enduml@enduml
