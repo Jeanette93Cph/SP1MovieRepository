@@ -1,10 +1,13 @@
 package dat.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.MovieDTO;
 import dat.dtos.MovieResponseDTO;
 import dat.exceptions.JpaException;
+
+import javax.imageio.IIOException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -34,7 +37,7 @@ public class MovieService {
             return response.body();
 
         } catch (InterruptedException | IOException e) {
-            throw new JpaException("json processing error");
+            throw new JpaException("respond not found");
         }
     }
 
@@ -44,8 +47,9 @@ public class MovieService {
             MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
             List<MovieDTO> movieDTOS = movieResponseDTO.getMovieList();
             return movieDTOS.stream().map(MovieDTO::getId).collect(Collectors.toList());
+
         } catch (JsonProcessingException e) {
-            throw new JpaException("json processing error");
+            throw new JpaException("respond not found");
         }
     }
 }
