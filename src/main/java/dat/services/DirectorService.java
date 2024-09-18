@@ -61,40 +61,6 @@ public class DirectorService
     }
 
 
-
-//    public static List<String> getAllDirectorsJSON(int page)
-//    {
-//        List<String> directors = new ArrayList<>();
-//        Set<String> directorSet = new HashSet<>();
-//
-//        try
-//        {
-//            //get all movies based on filter: danish movies from the recent 5 years
-//            String jsonAllMovies = MovieService.getAllMoviesJSON(page);
-//            //get all movieIDs based on filter
-//            List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
-//
-//            //retrieving directors for each movie
-//            for (Long movieID : movieIDs)
-//            {
-//                String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
-//                String jsonCredits = getJSONResponse(url);
-//                List<DirectorDTO> movieDirectors = DirectorService.extractDirectorsFromCredits(jsonCredits);
-//                //adds the names of actors to the set to ensure uniqueness
-//                directorSet.addAll(movieDirectors.stream().map(DirectorDTO::getName).collect(Collectors.toSet()));
-//            }
-//
-//            //adds all unique actor names from the set to the list
-//            directors.addAll(directorSet);
-//        } catch(IOException | InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        return directors;
-//
-//    }
-
-
     // help method to getAllActorsJSON(). with help from chatgpt
     private static String getJSONResponse(String url) throws IOException, InterruptedException
     {

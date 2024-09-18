@@ -32,9 +32,8 @@ public class ActorService
 
 
     //with help from chatgpt
-    public static List<String> getAllActorsJSON(int page)
+    public static String getAllActorsJSON(int page)
     {
-        List<String> actors = new ArrayList<>();
         Set<String> actorSet = new HashSet<>();
 
         try
@@ -54,13 +53,12 @@ public class ActorService
                 actorSet.addAll(movieActors.stream().map(ActorDTO::getName).collect(Collectors.toSet()));
             }
 
-            //adds all unique actor names from the set to the list
-            actors.addAll(actorSet);
         } catch(IOException | InterruptedException e)
         {
             e.printStackTrace();
         }
-        return actors;
+        // Join all unique actors names from the set into a single string with a delimiter
+        return String.join(", ", actorSet);  // Joining with a comma and space delimiter
 
     }
 

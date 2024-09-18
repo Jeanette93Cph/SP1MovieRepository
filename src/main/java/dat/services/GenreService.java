@@ -17,7 +17,7 @@ public class GenreService
 
     public static String getAllGenresJSON()
     {
-        String url = GENRE + "&api_key=" + API_KEY;
+        String url = GENRE + "?api_key=" + API_KEY;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
@@ -34,9 +34,8 @@ public class GenreService
         }catch (InterruptedException | IOException e)
         {
             e.printStackTrace();
-            return null;
         }
-
+        return null;
     }
 
 
