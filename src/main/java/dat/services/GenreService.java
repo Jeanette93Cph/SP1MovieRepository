@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 
 public class GenreService {
 
+    //should be resplaced with your API key
     private static final String API_KEY = System.getenv("api_key");
     private static final String GENRE = "https://api.themoviedb.org/3/genre/movie/list";
 

@@ -56,6 +56,9 @@ public class DirectorService {
 
 
     static String getJSONResponse (String url) throws IOException, InterruptedException {
+    // help method to getAllActorsJSON(). with help from chatgpt
+    private static String getJSONResponse(String url) throws IOException, InterruptedException
+    {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()

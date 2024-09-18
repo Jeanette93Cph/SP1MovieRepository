@@ -1,11 +1,18 @@
 package dat.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.dtos.ActorDTO;
 import dat.dtos.CreditDTO;
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +30,10 @@ public class ActorService {
 
     public static List<String> getAllActorsJSON(int page) {
         List<String> actors = new ArrayList<>();
+
+    //with help from chatgpt
+    public static String getAllActorsJSON(int page)
+    {
         Set<String> actorSet = new HashSet<>();
 
         try {
@@ -46,6 +57,9 @@ public class ActorService {
             e.printStackTrace();
         }
         return actors;
+        // Join all unique actors names from the set into a single string with a delimiter
+        return String.join(", ", actorSet);  // Joining with a comma and space delimiter
+
     }
 
     public static List<ActorDTO> extractActorsFromCredits(String jsonCredits) {
@@ -55,10 +69,13 @@ public class ActorService {
             //deserialize the JSON credits into a Credits object
             CreditDTO credits = objectMapper.readValue(jsonCredits, CreditDTO.class);
 
+            return credits.cast;
 
         } catch(JsonProcessingException e) {
            throw new dat.exceptions.JpaException("json processing error");
         }
         return null;
     }
+
+
 }

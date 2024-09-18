@@ -1,11 +1,11 @@
 package dat;
 
-import dat.config.HibernateConfig;
-import dat.daos.MovieDAO;
 import dat.dtos.DirectorDTO;
+import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
 import dat.services.ActorService;
 import dat.services.DirectorService;
+import dat.services.GenreService;
 import dat.services.MovieService;
 import java.util.List;
 
@@ -19,20 +19,29 @@ public class Main {
         List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
         moviesDTOs.forEach(System.out::println);
 
-        //Printing all cast from the danish movies for the recent 5 years
-        //ActorService.getAllActorsJSON(3).forEach(System.out::println);
 
+        /* ACTORS */
+        //Printing all cast from the danish movies for the recent 5 years
+       // String jsonAllActors = ActorService.getAllActorsJSON(3);
+        //List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
+        //actorDTOS.forEach(System.out::println);
+
+
+        /* DIRECTORS */
         //Printing all directors from the danish movies for the recent 5 years
         //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
         //System.out.println(jsonAllDirectors);
 
+        //Printing all directors from the danish movies for the recent 5 years as DirectorDTO's
+       //List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
+       //directorDTOS.forEach(System.out::println);
 
-        // List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
-        // directorDTOS.forEach(System.out::println);
 
-        // //persist movies to the database
-        // MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("tmdb"));
-		// moviesDTOs.forEach(movieDAO::persistEntity);
+        /* GENRE */
+        //Printing all genres
+        //String allGenres = GenreService.getAllGenresJSON();
+        //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+       //genreDTOS.forEach(System.out::println);
 
 
     }
