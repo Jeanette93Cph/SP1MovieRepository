@@ -12,6 +12,14 @@ public class FetchData {
 	private ActorDAO actorDAO;
 	private DirectorDAO directorDAO;
 
+	// Constructor to initialize the DAOs
+	public FetchData(EntityManagerFactory emf) {
+		this.movieDAO = MovieDAO.getInstance(emf);
+		this.genreDAO = GenreDAO.getInstance(emf);
+		this.actorDAO = ActorDAO.getInstance(emf);
+		this.directorDAO = DirectorDAO.getInstance(emf);
+	}
+
 	// List of all movies
 	public void fetchAllMovies () {
 		movieDAO.findAll();

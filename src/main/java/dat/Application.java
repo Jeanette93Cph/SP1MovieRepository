@@ -1,6 +1,8 @@
 package dat;
 
+import dat.config.HibernateConfig;
 import dat.services.FetchData;
+import jakarta.persistence.EntityManagerFactory;
 
 public class Application {
 
@@ -9,7 +11,10 @@ public class Application {
         //RUN THE APPLICATION
         System.out.println("TMBD API Application");
 
-        FetchData f = new FetchData();
+        // Create an EntityManagerFactory for the persistence unit
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
+
+        FetchData f = new FetchData(emf);
 
         f.fetchAllMovies();
         f.fetchAllActors();
@@ -28,6 +33,9 @@ public class Application {
         f.getTop10HighestRatedMovies();
         f.getTop10LowestRatedMovies();
         f.getTop10MostPopularMovies();
+
+        // Close the EntityManagerFactory when done
+        emf.close();
 
         //PERSISTING DATA TO DATABASE
 

@@ -38,7 +38,7 @@ public class MovieDAO {
 		try (EntityManager em = emf.createEntityManager()) {
 			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
 			List<Movie> movies = query.getResultList();
-			movies.stream().map(MovieDTO::new).collect(Collectors.toList());
+			movies.stream().map(MovieDTO::new).toList();
 		} catch (Exception e) {
 			throw new JpaException("Failed to find movies.");
 		}
