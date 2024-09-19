@@ -6,7 +6,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-        //run the application
+        //RUN THE APPLICATION
         System.out.println("TMBD API Application");
 
         FetchData.fetchAllMovies();
@@ -28,21 +28,7 @@ public class Application {
         FetchData.getTop10MostPopularMovies();
 
 
-
-        //ACTORS
-        //Printing all actors from the danish movies for the recent 5 years
-        // List<ActorDTO> actors = ActorDTO.convertToDTOFromJSONList(ActorService.getAllActorsJSON(1));
-        // System.out.println(actors);
-
-        // DIRECTORS
-        //Printing all directors from the danish movies for the recent 5 years
-        //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
-        //System.out.println(jsonAllDirectors);
-        //
-
-        // //Printing all directors from the danish movies for the recent 5 years as DirectorDTO's
-        //List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
-       //directorDTOS.forEach(System.out::println);
+        //PERSISTING DATA TO DATABASE
 
         //------------------------------------------------------------/
 
@@ -63,6 +49,9 @@ public class Application {
         for (GenreDTO genreDTO : genreDTOS) {
             genreDAO.persistEntity(genreDTO);
         } */
+
+        //------------------------------------------------------------/
+
 
     }
 }
