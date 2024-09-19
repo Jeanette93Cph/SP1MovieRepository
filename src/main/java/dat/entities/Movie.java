@@ -26,17 +26,20 @@ public class Movie {
 	@Column(name = "original_language")
 	private String originalLanguage;
 
+	@Column(name = "original_title")
+	private String originalTitle;
+
 	@Column(name = "release_date")
 	private LocalDate releaseDate;
-
-	@Column(name = "rating")
-	private Double rating;
 
 	@Column(name = "popularity")
 	private Double popularity;
 
 	@Column(name = "vote_average")
-	private double voteAverage;
+	private Double voteAverage;
+
+	@Column(name = "vote_count")
+	private Integer voteCount;
 
 	@ManyToOne
 	@JoinColumn(name = "director_id")

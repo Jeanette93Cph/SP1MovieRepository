@@ -32,14 +32,17 @@ public class MovieDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String releaseDate;
 
-    @JsonProperty("rating")
-    private Double rating;
-
     @JsonProperty("popularity")
     private Double popularity;
 
+    @JsonProperty("original_title")
+    private String originalTitle;
+
     @JsonProperty("vote_average")
     private double voteAverage;
+
+    @JsonProperty("vote_count")
+    private Integer voteCount;
 
     @JsonProperty("genres")
     private List<GenreDTO> genres;
@@ -55,9 +58,10 @@ public class MovieDTO {
         this.title = movie.getTitle();
         this.originalLanguage = movie.getOriginalLanguage();
         this.releaseDate = movie.getReleaseDate().toString();
-        this.rating = movie.getRating();
         this.popularity = movie.getPopularity();
+        this.originalTitle = movie.getOriginalTitle();
         this.voteAverage = movie.getVoteAverage();
+        this.voteCount = movie.getVoteCount();
         this.genres = new MovieDTO(movie).getGenres();
         this.actors = new MovieDTO(movie).getActors();
         this.directors = new MovieDTO(movie).getDirectors();
