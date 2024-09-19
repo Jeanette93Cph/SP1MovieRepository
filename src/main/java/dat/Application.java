@@ -1,5 +1,7 @@
 package dat;
 
+import dat.config.HibernateConfig;
+import dat.daos.MovieDAO;
 import dat.services.FetchData;
 
 public class Application {
@@ -9,23 +11,23 @@ public class Application {
         //RUN THE APPLICATION
         System.out.println("TMBD API Application");
 
-        FetchData.fetchAllMovies();
-        FetchData.fetchAllActors();
-        FetchData.fetchAllDirectors();
-        FetchData.fetchAllGenres();
-        FetchData.fetchMoviesByGenre("genre");
-        FetchData.fetchMoviesByActor("actor name");
-        FetchData.fetchMoviesByDirector("director name");
+        //FetchData.fetchAllMovies();
+        //FetchData.fetchAllActors();
+        //FetchData.fetchAllDirectors();
+        //FetchData.fetchAllGenres();
+        //FetchData.fetchMoviesByGenre("genre");
+        //FetchData.fetchMoviesByActor("actor name");
+        //FetchData.fetchMoviesByDirector("director name");
         //FetchData.updateMovieByTitle("title");
         //FetchData.updateMovieByReleaseDate("1999-03-31");
         //FetchData.deleteMovieByTitle("title");
         //FetchData.deleteMovieByReleaseDate("1999-03-31");
-        FetchData.searchMovieByTitle("title");
-        FetchData.getAverageRating("title");
-        FetchData.getAverageRatingOfAllMovies();
-        FetchData.getTop10HighestRatedMovies();
-        FetchData.getTop10LowestRatedMovies();
-        FetchData.getTop10MostPopularMovies();
+        //FetchData.searchMovieByTitle("title");
+        //FetchData.getAverageRating("title");
+        //FetchData.getAverageRatingOfAllMovies();
+        //FetchData.getTop10HighestRatedMovies();
+        //FetchData.getTop10LowestRatedMovies();
+        //FetchData.getTop10MostPopularMovies();
 
 
         //PERSISTING DATA TO DATABASE

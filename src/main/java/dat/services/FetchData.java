@@ -7,8 +7,6 @@ import dat.daos.MovieDAO;
 
 public class FetchData {
 
-	//All methods are static, so we don't need to create an instance of FetchData
-
 	public static MovieDAO movieDAO;
 	public static GenreDAO genreDAO;
 	public static ActorDAO actorDAO;
