@@ -15,17 +15,13 @@ import java.util.stream.Collectors;
 
 public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 
-	// Singleton instance
 	private static MovieDAO instance;
-
 	private final EntityManagerFactory emf;
 
-	// Private constructor
 	private MovieDAO(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
-	// Singleton pattern
 	public static synchronized MovieDAO getInstance(EntityManagerFactory emf) {
 		if (instance == null) {
 			instance = new MovieDAO(emf);
@@ -46,7 +42,6 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to persist a movie to the database
-// Method to persist a movie to the database
 	@Override
 	public void persistEntity(MovieDTO movieDTO) {
 		EntityManager em = null;

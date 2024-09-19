@@ -58,7 +58,7 @@ public class Movie {
 	private List<Actor> actors = new ArrayList<>();
 
 	public Movie(MovieDTO movieDTO) {
-		this.id = movieDTO.getId();
+		//this.id = movieDTO.getId();
 		this.title = movieDTO.getTitle();
 		this.originalLanguage = movieDTO.getOriginalLanguage();
 		this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());

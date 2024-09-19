@@ -76,8 +76,7 @@ public class MovieDTO {
             MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
             return movieResponseDTO.getMovieList();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to convert JSON to MovieDTO list.");
         }
-        return null;
     }
 }

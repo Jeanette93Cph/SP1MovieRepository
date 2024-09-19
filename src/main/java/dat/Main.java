@@ -1,6 +1,7 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
@@ -51,11 +52,22 @@ public class Main {
 
 
         /*Testing the connection to the database*/
-       MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+      /*  MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
 
        for (MovieDTO moviesDTO : moviesDTOs) {
            movieDAO.persistEntity(moviesDTO);
-       }
+       } */
+
+       //------------------------------------------------------------/
+
+        GenreDAO genreDAO = GenreDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(GenreService.getAllGenresJSON());
+        System.out.println(genreDTOS);
+
+        for (GenreDTO genreDTO : genreDTOS) {
+            genreDAO.persistEntity(genreDTO);
+        }
+
 
 
     }
