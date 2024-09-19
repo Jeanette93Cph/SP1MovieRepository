@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.dtos.ActorDTO;
+import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import dat.dtos.MovieResponseDTO;
 
@@ -28,8 +29,8 @@ public class ActorService {
 	private static HttpClient client = HttpClient.newHttpClient();
 
 	//with help from chatgpt
-	public static String getAllActorsJSON(int page) {
-		Set<String> actorSet = new HashSet<>();
+	public static List<ActorDTO> getAllActorsJSON(int page) {
+		List<ActorDTO> listOfActorsDTO = new ArrayList<>();
 
 		try {
 			//get all movies based on filter: danish movies from the recent 5 years
@@ -42,15 +43,13 @@ public class ActorService {
 				String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
 				String jsonCredits = getJSONResponse(url);
 				List<ActorDTO> movieActors = ActorService.extractActorsFromCredits(jsonCredits);
-				//adds the names of actors to the set to ensure uniqueness
-				actorSet.addAll(movieActors.stream().map(ActorDTO::getName).collect(Collectors.toSet()));
+				listOfActorsDTO.addAll(movieActors.stream().map(ActorDTO::getName).collect(Collectors.toSet()));
 			}
-
 		} catch(IOException | InterruptedException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Error while fetching actors", e);
 		}
 		// Join all unique actors names from the set into a single string with a delimiter
-		return String.join(", ", actorSet);  // Joining with a comma and space delimiter
+		return String.join(", ", listOfActorsDTO);  // Joining with a comma and space delimiter
 
 	}
 
@@ -64,13 +63,6 @@ public class ActorService {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		return response.body();
 	}
-
-
-	// // help method to extractActorsFromCredits. with help from chatgpt
-	// @JsonIgnoreProperties(ignoreUnknown = true)
-	// public static class Credits {
-	// 	public List<ActorDTO> cast;
-	// }
 
 
 	// help method to getAllActorsJSON(). with help from chatgpt

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public interface GenericDAO<T, D> {
 	Collection<T> findAll();
-	void persistEntity(T entity);
+	T persistEntity(T entity);
 	void removeEntity(D id);
 	T findEntity(D id);
 	void updateEntity(T entity, D id);
