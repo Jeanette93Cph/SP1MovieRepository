@@ -8,7 +8,6 @@ import dat.entities.Movie;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,11 +33,9 @@ public class MovieDAO {
 	// CRUD METHODS
 
 	// Method to find all movies in the database
-	public void findAll () {
+	public List<MovieDTO> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
-			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
-			List<Movie> movies = query.getResultList();
-			movies.stream().map(MovieDTO::new).toList();
+			return em.createQuery("SELECT n new dat.dtos.MovieDTO(n) FROM Movie n", MovieDTO.class).getResultList();
 		} catch (Exception e) {
 			throw new JpaException("Failed to find movies.");
 		}

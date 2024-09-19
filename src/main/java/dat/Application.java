@@ -17,7 +17,7 @@ public class Application {
 
         FetchData f = new FetchData(emf);
 
-        f.fetchAllMovies();
+        //f.fetchAllMovies();
         // f.fetchAllActors();
         // f.fetchAllDirectors();
         // f.fetchAllGenres();

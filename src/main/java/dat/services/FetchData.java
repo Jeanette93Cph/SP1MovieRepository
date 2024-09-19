@@ -23,7 +23,7 @@ public class FetchData {
 
 	// List of all movies
 	public void fetchAllMovies () {
-		movieDAO.findAll();
+		System.out.println(movieDAO.findAll());
 	}
 
 	// List of all actors

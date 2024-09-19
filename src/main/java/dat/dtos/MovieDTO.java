@@ -10,6 +10,8 @@ import dat.entities.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -61,9 +63,12 @@ public class MovieDTO {
 		this.originalTitle = movie.getOriginalTitle();
 		this.voteAverage = movie.getVoteAverage();
 		this.voteCount = movie.getVoteCount();
-		this.genres = new MovieDTO(movie).getGenres();
-		this.actors = new MovieDTO(movie).getActors();
-		this.directors = new MovieDTO(movie).getDirectors();
+		//this.genres = new MovieDTO(movie).getGenres();
+		this.genres = new ArrayList<>();
+		//this.actors = new MovieDTO(movie).getActors();
+		this.actors = new ArrayList<>();
+		//this.directors = new MovieDTO(movie).getDirectors();
+		this.directors = new ArrayList<>();
 	}
 
 	// convert from JSON to List of MovieDTO
