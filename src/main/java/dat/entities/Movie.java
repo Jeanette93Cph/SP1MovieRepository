@@ -30,8 +30,9 @@ public class Movie {
 	@Column(name = "original_title")
 	private String originalTitle;
 
-	@Column(name = "release_date")
-	private LocalDate releaseDate;
+	@Column(name = "release_date", nullable = false, columnDefinition = "DATE")
+	//private LocalDate releaseDate;
+	private String releaseDate;
 
 	@Column(name = "popularity")
 	private Double popularity;
@@ -62,7 +63,8 @@ public class Movie {
 		//this.id = movieDTO.getId();
 		this.title = movieDTO.getTitle();
 		this.originalLanguage = movieDTO.getOriginalLanguage();
-		this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());
+		//this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());
+		this.releaseDate = movieDTO.getReleaseDate();
 		this.originalTitle = movieDTO.getOriginalTitle();
 		this.popularity = movieDTO.getPopularity();
 		this.voteAverage = movieDTO.getVoteAverage();

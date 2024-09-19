@@ -8,10 +8,10 @@ import jakarta.persistence.EntityManagerFactory;
 
 public class FetchData {
 
-	private MovieDAO movieDAO;
-	private GenreDAO genreDAO;
-	private ActorDAO actorDAO;
-	private DirectorDAO directorDAO;
+	private final MovieDAO movieDAO;
+	private final GenreDAO genreDAO;
+	private final ActorDAO actorDAO;
+	private final DirectorDAO directorDAO;
 
 	// Constructor to initialize the DAOs
 	public FetchData(EntityManagerFactory emf) {
