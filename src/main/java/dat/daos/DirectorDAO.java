@@ -2,6 +2,8 @@ package dat.daos;
 
 import dat.dtos.DirectorDTO;
 import dat.entities.Director;
+import dat.entities.Movie;
+import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -30,7 +32,7 @@ public class DirectorDAO
 
 
     //Persist one director
-    public DirectorDTO persistDirector(DirectorDTO directorDTO)
+    public DirectorDTO persistEntity(DirectorDTO directorDTO)
     {
         Director director = new Director();
         try(EntityManager em = emf.createEntityManager())
@@ -69,25 +71,72 @@ public class DirectorDAO
     }
 
 
-
     public static List<DirectorDTO> findAll()
     {
          try(EntityManager em = emf.createEntityManager())
          {
              return em.createQuery("SELECT new dat.dtos.DirectorDTO(d) FROM Director d", DirectorDTO.class).getResultList();
          }
+    }
 
+    public static DirectorDTO findEntity(Long id)
+    {
+        try(EntityManager em = emf.createEntityManager())
+        {
+            return new DirectorDTO(em.find(Director.class, id));
+        }
+    }
 
+    public static DirectorDTO updateEntity(DirectorDTO directorDTO, Long id)
+    {
+        try(EntityManager em = emf.createEntityManager())
+        {
+            em.getTransaction().begin();
+            Director director = em.find(Director.class, id);
 
+            if(director == null)
+            {
+                throw new JpaException("No director found with id: " + id);
+            }
 
+            director.setName(directorDTO.getName());
+            director.setId(directorDTO.getId());
+
+            em.merge(director);
+            em.getTransaction().commit();
+
+            return new DirectorDTO(director);
+
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to update director: ");
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
 
+    public static void removeEntity(Long id)
+    {
+        try(EntityManager em = emf.createEntityManager())
+        {
+            Director director = em.find(Director.class, id);
+            if (director == null) {
+                throw new JpaException("No director found with id: " + id);
+            }
+            em.getTransaction().begin();
+            em.remove(director);
+            em.getTransaction().commit();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to delete director: ");
+            e.printStackTrace();
+        }
 
-
-
-
+    }
 
 
 

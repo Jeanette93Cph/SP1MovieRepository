@@ -44,10 +44,25 @@ public class Main {
 
         //persist directorList to database
         DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-       directorDAO.persistListOfDirectors(allDirectorsDTO);
+       //directorDAO.persistListOfDirectors(allDirectorsDTO);
 
        //find all directors in the database
-        // DirectorDAO.findAll().forEach(System.out::println);
+        //DirectorDAO.findAll().forEach(System.out::println);
+
+        //find director by id
+        //System.out.println(DirectorDAO.findEntity(558205L));
+
+        //update director
+        DirectorDTO directorDTO1 = DirectorDAO.findEntity(558205L);
+       // directorDTO1.setName("Julie Sørensen");
+        //DirectorDAO.updateEntity(directorDTO1, 558205L);
+        //System.out.println(DirectorDAO.findEntity(558205L));
+
+        //delete director
+        DirectorDAO.removeEntity(558205L);
+
+
+
 
 
         /* GENRE */
