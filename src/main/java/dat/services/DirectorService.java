@@ -25,8 +25,8 @@ public class DirectorService {
     private static final String URL = "https://api.themoviedb.org/3/movie/";
     private static final HttpClient client = HttpClient.newHttpClient();
 
-    public static String getAllDirectorsJSON(int page) {
-        Set<String> directorSet = new HashSet<>();
+    public static List<DirectorDTO> getAllDirectorsFromJSON(int page) {
+        List<DirectorDTO> listOfDirectorsDTO = new ArrayList<>();
 
         try {
             // Get all movies based on filter: danish movies from the recent 5 years
@@ -35,23 +35,19 @@ public class DirectorService {
             List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
 
             // Retrieve directors for each movie
-            for (Long movieID : movieIDs) {
+            for (Long movieID : movieIDs)
+            {
                 String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
                 String jsonCredits = getJSONResponse(url);
-                List<DirectorDTO> movieDirectors = DirectorService.extractDirectorsFromCredits(jsonCredits);
-
-                // Add the names of directors to the set to ensure uniqueness
-                directorSet.addAll(movieDirectors.stream()
-                        .map(director -> "ID: " + director.getId() + ", Name: " + director.getName())
-                        .collect(Collectors.toSet()));
+                DirectorDTO directorDTO = DirectorService.extractDirectorFromCredits(jsonCredits);
+                listOfDirectorsDTO.add(directorDTO);
             }
+            return listOfDirectorsDTO;
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Join all unique director names from the set into a single string with a delimiter
-        return String.join(", ", directorSet);  // Joining with a comma and space delimiter
+        return null;
     }
 
 
@@ -66,15 +62,13 @@ public class DirectorService {
         return response.body();
     }
 
-    public static List<DirectorDTO> extractDirectorsFromCredits(String jsonCredits) {
+    public static DirectorDTO extractDirectorFromCredits(String jsonCredits) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
             // Deserialize the JSON credits into a Credits object
             CreditDTO credits = objectMapper.readValue(jsonCredits, CreditDTO.class);
 
-            // Create a list to store directors
-            List<DirectorDTO> directors = new ArrayList<>();
 
             // Iterate through the crew and find the director(s)
             for (CrewMemberDTO crewMemberDTO : credits.crew) {
@@ -82,11 +76,9 @@ public class DirectorService {
                     DirectorDTO directorDTO = new DirectorDTO();
                     directorDTO.setName(crewMemberDTO.name); // Assign the director's name
                     directorDTO.setId(crewMemberDTO.id); // Assign the director's name
-                    directors.add(directorDTO);
+                    return directorDTO;
                 }
             }
-
-            return directors; // Return the list of directors
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.DirectorDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
@@ -10,6 +11,9 @@ import dat.services.ActorService;
 import dat.services.DirectorService;
 import dat.services.GenreService;
 import dat.services.MovieService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+
 import java.util.List;
 
 public class Main {
@@ -28,18 +32,22 @@ public class Main {
         //
         // /* ACTORS */
         // //Printing all cast from the danish movies for the recent 5 years
-        String jsonAllActors = ActorService.getAllActorsJSON(3);
-         List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
-        actorDTOS.forEach(System.out::println);
+        //String jsonAllActors = ActorService.getAllActorsJSON(3);
+         //List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
+        //actorDTOS.forEach(System.out::println);
+
 
         /* DIRECTORS */
         //Printing all directors from the danish movies for the recent 5 years
-        //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
-        //System.out.println(jsonAllDirectors);
-        //
-        // //Printing all directors from the danish movies for the recent 5 years as DirectorDTO's
-        //List<DirectorDTO> directorDTOS = DirectorDTO.convertToDTOFromJSONList(jsonAllDirectors);
-       //directorDTOS.forEach(System.out::println);
+       List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
+        //allDirectorsDTO.forEach(System.out::println);
+
+        //persist directorList to database
+        DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+       directorDAO.persistListOfDirectors(allDirectorsDTO);
+
+       //find all directors in the database
+        // DirectorDAO.findAll().forEach(System.out::println);
 
 
         /* GENRE */

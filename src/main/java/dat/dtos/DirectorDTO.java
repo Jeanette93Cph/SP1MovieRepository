@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DirectorDTO {
 
-    @Id
     @JsonProperty("id")
     private Long id;
 
@@ -29,27 +28,16 @@ public class DirectorDTO {
 
     private static List<DirectorDTO> directors;
 
-
-
-    public static List<DirectorDTO> convertToDTOFromJSONList(String json)
-    {
-        ObjectMapper objectMapper = new ObjectMapper();
-        //enabling it to properly serialize / deserialize date and time like LocalDate
-        objectMapper.registerModule(new JavaTimeModule());
-
-        try
-        {
-            if(!json.trim().startsWith("["))
-            {
-                json = convertPlainStringToJSONArray(json);
-            }
-            return objectMapper.readValue(json, new TypeReference<List<DirectorDTO>>() {});
-        } catch (JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+    public DirectorDTO(Director director) {
+        this.id = director.getId();
+        this.name = director.getName();
     }
+
+    public DirectorDTO()
+    {
+
+    }
+
 
     private static String convertPlainStringToJSONArray(String plainString) {
         return Arrays.stream(plainString.split(",\\s*"))
