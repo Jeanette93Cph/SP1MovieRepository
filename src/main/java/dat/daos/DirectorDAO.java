@@ -35,11 +35,18 @@ public class DirectorDAO
     public DirectorDTO persistEntity(DirectorDTO directorDTO)
     {
         Director director = new Director();
+        director.setId(directorDTO.getId());
+        director.setName(directorDTO.getName());
+
         try(EntityManager em = emf.createEntityManager())
         {
             em.getTransaction().begin();
             em.persist(director);
             em.getTransaction().commit();
+        }
+        catch(Exception e)
+        {
+            throw new JpaException("Failed to persist director:" + e.getMessage());
         }
         return new DirectorDTO(director);
     }
@@ -65,7 +72,9 @@ public class DirectorDAO
             }
             em.getTransaction().commit();
         } catch (Exception e) {
+            System.out.println("Failed to persist list of directors: ");
             e.printStackTrace();
+
         }
         return persistedlist;
     }
@@ -77,13 +86,24 @@ public class DirectorDAO
          {
              return em.createQuery("SELECT new dat.dtos.DirectorDTO(d) FROM Director d", DirectorDTO.class).getResultList();
          }
+         catch(Exception e){
+             throw new JpaException("Failed to find all directors.");
+         }
     }
 
     public static DirectorDTO findEntity(Long id)
     {
         try(EntityManager em = emf.createEntityManager())
         {
+            Director director = em.find(Director.class, id);
+            if(director == null)
+            {
+                throw new JpaException("No director found with id: " + id);
+            }
             return new DirectorDTO(em.find(Director.class, id));
+        }
+        catch (Exception e) {
+            throw new JpaException("Failed to find director.");
         }
     }
 
