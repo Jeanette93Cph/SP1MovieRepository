@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,18 +69,25 @@ public class Movie {
 		this.voteCount = movieDTO.getVoteCount();
 
 		// Assume that each movie has only one director
-		this.director = new Director(movieDTO.getDirectors().get(0));
+		//this.director = new Director(movieDTO.getDirectors().get(0));
 
 		// Assume that each movie has at least one genre
 		this.genres = new ArrayList<>();
-		for (var genreDTO : movieDTO.getGenres()) {
-			this.genres.add(new Genre(genreDTO));
-		}
 
 		// Assume that each movie has at least one actor
 		this.actors = new ArrayList<>();
-		for (var actorDTO : movieDTO.getActors()) {
-			this.actors.add(new Actor(actorDTO));
-		}
+
+
+		// Assume that each movie has at least one genre
+//		this.genres = new ArrayList<>();
+//		for (var genreDTO : movieDTO.getGenres()) {
+//			this.genres.add(new Genre(genreDTO));
+//		}
+//
+//		// Assume that each movie has at least one actor
+//		this.actors = new ArrayList<>();
+//		for (var actorDTO : movieDTO.getActors()) {
+//			this.actors.add(new Actor(actorDTO));
+//		}
 	}
 }

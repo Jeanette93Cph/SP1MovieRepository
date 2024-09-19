@@ -42,7 +42,7 @@ public class DirectorService {
 
                 // Add the names of directors to the set to ensure uniqueness
                 directorSet.addAll(movieDirectors.stream()
-                        .map(DirectorDTO::getName)
+                        .map(director -> "ID: " + director.getId() + ", Name: " + director.getName())
                         .collect(Collectors.toSet()));
             }
 
@@ -71,10 +71,20 @@ public class DirectorService {
             ObjectMapper objectMapper = new ObjectMapper();
 
             // Deserialize the JSON credits into a Credits object
-            CreditDTO creditDTO = objectMapper.readValue(jsonCredits, CreditDTO.class);
+            CreditDTO credits = objectMapper.readValue(jsonCredits, CreditDTO.class);
 
             // Create a list to store directors
-            var directors = getDirectorDTOS(creditDTO);
+            List<DirectorDTO> directors = new ArrayList<>();
+
+            // Iterate through the crew and find the director(s)
+            for (CrewMemberDTO crewMemberDTO : credits.crew) {
+                if ("Director".equalsIgnoreCase(crewMemberDTO.job)) {
+                    DirectorDTO directorDTO = new DirectorDTO();
+                    directorDTO.setName(crewMemberDTO.name); // Assign the director's name
+                    directorDTO.setId(crewMemberDTO.id); // Assign the director's name
+                    directors.add(directorDTO);
+                }
+            }
 
             return directors; // Return the list of directors
 
@@ -82,20 +92,5 @@ public class DirectorService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private static List<DirectorDTO> getDirectorDTOS (CreditDTO creditDTO) {
-        List<DirectorDTO> directors = new ArrayList<>();
-
-        // Iterate through the crew and find the director(s)
-        for (CrewMemberDTO crewMemberDTO : creditDTO.crewMemberDTOList) {
-            if ("Director".equalsIgnoreCase(crewMemberDTO.job)) {
-                DirectorDTO directorDTO = new DirectorDTO();
-                directorDTO.setName(crewMemberDTO.name); // Assign the director's name
-                directorDTO.setId(crewMemberDTO.id); // Assign the director's name
-                directors.add(directorDTO);
-            }
-        }
-        return directors;
     }
 }

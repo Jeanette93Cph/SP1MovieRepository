@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreditDTO {
-	public List<CrewMemberDTO> crewMemberDTOList;
+	public List<CrewMemberDTO> crew;
 }
