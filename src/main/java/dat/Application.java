@@ -1,28 +1,19 @@
 package dat;
 
-import dat.config.HibernateConfig;
-import dat.daos.GenreDAO;
-import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
 import dat.services.ActorService;
-import dat.services.DirectorService;
-import dat.services.GenreService;
-import dat.services.MovieService;
+
 import java.util.List;
 
-public class Main {
+public class Application {
     public static void main(String[] args) {
 
         //ACTORS
         //Printing all actors from the danish movies for the recent 5 years
-        String jsonAllActors = ActorService.getAllActorsJSON(3);
-         List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
-        actorDTOS.forEach(System.out::println);
+        List<ActorDTO> actors = ActorDTO.convertToDTOFromJSONList(ActorService.getAllActorsJSON(1));
+        System.out.println(actors);
 
-        //DIRECTORS
+        // DIRECTORS
         //Printing all directors from the danish movies for the recent 5 years
         //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
         //System.out.println(jsonAllDirectors);

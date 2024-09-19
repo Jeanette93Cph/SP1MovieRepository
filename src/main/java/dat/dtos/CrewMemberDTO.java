@@ -2,23 +2,17 @@ package dat.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CrewMemberDTO {
 
-	@JsonProperty("name")
 	public String name;
-
-
 	public String job;
+
+	public List<CrewMemberDTO> crew;
 
 	@JsonProperty("id")
 	public Long id;
-
 }
