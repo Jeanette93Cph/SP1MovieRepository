@@ -1,6 +1,7 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
@@ -29,21 +30,49 @@ public class Main {
         // //Printing all danish movies for the recent 5 years as MovieDTO's
         List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
         // moviesDTOs.forEach(System.out::println);
-        //
+
+        MovieDAO movieDAO1 = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        movieDAO1.findAll().forEach(System.out::println);
+
+
         // /* ACTORS */
         // //Printing all cast from the danish movies for the recent 5 years
-        //String jsonAllActors = ActorService.getAllActorsJSON(3);
-         //List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
+        //List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
         //actorDTOS.forEach(System.out::println);
+
+        //persist actorList to database
+        //ActorDAO actorDAO = ActorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+       //actorDAO.persistListOfActors(actorDTOS);
+
+        //persist one actor to database
+//        ActorDTO actorDTO = new ActorDTO();
+//        actorDTO.setId(222L);
+//        actorDTO.setName("Jørgen Jørgensen");
+//        ActorDAO.persistEntity(actorDTO);
+
+        //find all actors in the database
+        //ActorDAO.findAll().forEach(System.out::println);
+
+        //find actor by id
+        //System.out.println(ActorDAO.findEntity(2383415L));
+
+        //update actor
+//        ActorDTO actorDTO1 = ActorDAO.findEntity(222L);
+//        actorDTO1.setName("Morten Jørgensen");
+//        ActorDAO.updateEntity(actorDTO1, 222L);
+//        System.out.println(ActorDAO.findEntity(222L));
+
+        //delete actor
+        //ActorDAO.removeEntity(222L);
 
 
         /* DIRECTORS */
         //Printing all directors from the danish movies for the recent 5 years
-       List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
+        //List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
         //allDirectorsDTO.forEach(System.out::println);
 
         //persist directorList to database
-        DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        //DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
         //directorDAO.persistListOfDirectors(allDirectorsDTO);
 
         //persist one director to database
@@ -66,8 +95,6 @@ public class Main {
 
         //delete director
        //DirectorDAO.removeEntity(333L);
-        
-
 
 
         /* GENRE */
