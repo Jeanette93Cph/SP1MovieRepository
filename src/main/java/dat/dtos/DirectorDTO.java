@@ -2,25 +2,21 @@ package dat.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.entities.Director;
-import dat.entities.Movie;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DirectorDTO {
 
-    @Id
     @JsonProperty("id")
     private Long id;
 
@@ -29,26 +25,9 @@ public class DirectorDTO {
 
     private static List<DirectorDTO> directors;
 
-
-
-    public static List<DirectorDTO> convertToDTOFromJSONList(String json)
-    {
-        ObjectMapper objectMapper = new ObjectMapper();
-        //enabling it to properly serialize / deserialize date and time like LocalDate
-        objectMapper.registerModule(new JavaTimeModule());
-
-        try
-        {
-            if(!json.trim().startsWith("["))
-            {
-                json = convertPlainStringToJSONArray(json);
-            }
-            return objectMapper.readValue(json, new TypeReference<List<DirectorDTO>>() {});
-        } catch (JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+    public DirectorDTO(Director director) {
+        this.id = director.getId();
+        this.name = director.getName();
     }
 
     private static String convertPlainStringToJSONArray(String plainString) {
