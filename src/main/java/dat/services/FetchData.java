@@ -7,6 +7,8 @@ import dat.daos.MovieDAO;
 
 public class FetchData {
 
+	//All methods are static, so we don't need to create an instance of FetchData
+
 	public static MovieDAO movieDAO;
 	public static GenreDAO genreDAO;
 	public static ActorDAO actorDAO;
@@ -14,87 +16,87 @@ public class FetchData {
 
 	// List of all movies
 	public static void fetchAllMovies() {
-		//movieDAO.findAll();
+		movieDAO.findAll();
 	}
 
 	// List of all actors
 	public static void fetchAllActors() {
-		//actorDAO.findAll();
+		actorDAO.findAll();
 	}
 
 	// List of all directors
 	public static void fetchAllDirectors() {
-		//directorDAO.findAll();
+		directorDAO.findAll();
 	}
 
 	// List of all genres
 	public static void fetchAllGenres() {
-		//genreDAO.findAll();
+		genreDAO.findAll();
 	}
 
 	// List of movies with a specific genre
 	public static void fetchMoviesByGenre(String genre) {
-		//movieDAO.findMovieByGenre(genre);
+		movieDAO.findMovieByGenre(genre);
 	}
 
 	// List of movies with a specific actor
 	public static void fetchMoviesByActor(String actor) {
-		//movieDAO.findByActor(actor);
+		movieDAO.findByActor(actor);
 	}
 
 	// List of movies with a specific director
 	public static void fetchMoviesByDirector(String director) {
-		//movieDAO.findByDirector(director);
+		movieDAO.findByDirector(director);
 	}
 
 	// Update a movie by title
 	public static void updateMovieByTitle(String title) {
-		//movieDAO.updateByTitle(title);
+		movieDAO.updateByTitle(title);
 	}
 
 	// Update a movie by release date
 	public static void updateMovieByReleaseDate(String releaseDate) {
-		//movieDAO.updateByReleaseDate(releaseDate);
+		movieDAO.updateByReleaseDate(releaseDate);
 	}
 
 	// Delete a movie by title
 	public static void deleteMovieByTitle(String title) {
-		//movieDAO.deleteByTitle(title);
+		movieDAO.deleteByTitle(title);
 	}
 
 	// Delete a movie by release date
 	public static void deleteMovieByReleaseDate(String releaseDate) {
-		//movieDAO.deleteByReleaseDate(releaseDate);
+		movieDAO.deleteByReleaseDate(releaseDate);
 	}
 
-	// Search for a movie by title - case insensitive
+	// Search for a movie by title - should be case insensitive
 	public static void searchMovieByTitle(String title) {
-		//movieDAO.searchByTitle(title);
+		movieDAO.searchByTitle(title);
 	}
 
 	// Get the average rating of a movie
 	public static void getAverageRating(String title) {
-		//movieDAO.getAverageRating(title);
+		movieDAO.getAverageRating(title);
 	}
 
 	// Get the average rating of all movies
 	public static void getAverageRatingOfAllMovies() {
-		//movieDAO.getAverageRatingOfAllMovies();
+		movieDAO.getAverageRatingOfAllMovies();
 	}
 
 	// Get the top 10 lowest rated movies
 	public static void getTop10LowestRatedMovies() {
-		//movieDAO.getTop10LowestRatedMovies();
+		movieDAO.getTop10LowestRatedMovies();
 	}
 
 	// Get the top 10 highest rated movies
 	public static void getTop10HighestRatedMovies() {
-		//movieDAO.getTop10HighestRatedMovies();
+		movieDAO.getTop10HighestRatedMovies();
 	}
 
 	// Get the top 10 most popular movies
 	public static void getTop10MostPopularMovies() {
-		//movieDAO.getTop10MostPopularMovies();
+		movieDAO.getTop10MostPopularMovies();
 	}
 
 

@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 
+	//All methods here interact with the database
+
 	private static MovieDAO instance;
 	private final EntityManagerFactory emf;
 
@@ -29,6 +31,8 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 		}
 		return instance;
 	}
+
+	// CRUD METHODS
 
 	// Method to find all movies in the database
 	@Override
@@ -139,5 +143,59 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 		} finally {
 			if (em != null) em.close();
 		}
+	}
+
+	// OTHER METHODS
+
+	// Method to find a movie by genre
+	public void findMovieByGenre (String genre) {
+	}
+
+	// Method to find a movie by actor
+	public void findByActor (String actor) {
+	}
+
+	// Method to find a movie by director
+	public void findByDirector (String director) {
+	}
+
+	// Method to update a movie by title
+	public void updateByTitle (String title) {
+	}
+
+	// Method to update a movie by release date
+	public void updateByReleaseDate (String releaseDate) {
+	}
+
+	// Method to delete a movie by title
+	public void deleteByTitle (String title) {
+	}
+
+	// Method to delete a movie by release date
+	public void deleteByReleaseDate (String releaseDate) {
+	}
+
+	// Method to search for a movie by title - should be case sensitive
+	public void searchByTitle (String title) {
+	}
+
+	// Method to get the average rating of a movie
+	public void getAverageRating (String title) {
+	}
+
+	// Method to get the average rating of all movies
+	public void getAverageRatingOfAllMovies () {
+	}
+
+	// Method to get the top 10 lowest rated movies
+	public void getTop10LowestRatedMovies () {
+	}
+
+	// Method to get the top 10 highest rated movies
+	public void getTop10HighestRatedMovies () {
+	}
+
+	// Method to get the top 10 most popular movies
+	public void getTop10MostPopularMovies () {
 	}
 }

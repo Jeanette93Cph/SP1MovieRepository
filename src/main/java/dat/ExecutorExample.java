@@ -1,4 +1,4 @@
-package dat.services;
+package dat;
 
 import java.net.URI;
 import java.net.http.HttpClient;
