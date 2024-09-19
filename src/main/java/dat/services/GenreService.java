@@ -13,6 +13,8 @@ public class GenreService {
 
 
     public static String getAllGenresJSON () {
+
+        //https://api.themoviedb.org/3/genre/movie/list?api_key=<<APIKEY>>
         String url = GENRE + "?api_key=" + API_KEY;
 
         HttpClient client = HttpClient.newHttpClient();

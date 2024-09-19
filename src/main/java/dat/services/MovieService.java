@@ -23,6 +23,7 @@ public class MovieService {
 
     public static String getAllMoviesJSON(int page) {
 
+        //https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&primary_release_date.lte=2024-10-01&sort_by=popularity.desc&with_original_language=da&api_key=<<APIKEY>>&page=1
         String url = BASE_URL_MOVIE_DANISH_RECENT_5_YEARS + "&api_key=" + API_KEY + "&page=" + page;
 
         HttpClient client = HttpClient.newHttpClient();

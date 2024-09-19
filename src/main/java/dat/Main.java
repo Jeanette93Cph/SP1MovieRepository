@@ -16,13 +16,13 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        // /* ACTORS */
-        // //Printing all cast from the danish movies for the recent 5 years
-        // String jsonAllActors = ActorService.getAllActorsJSON(3);
-        //  List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
-        // actorDTOS.forEach(System.out::println);
+        //ACTORS
+        //Printing all actors from the danish movies for the recent 5 years
+        String jsonAllActors = ActorService.getAllActorsJSON(3);
+         List<ActorDTO> actorDTOS = ActorDTO.convertToDTOFromJSONList(jsonAllActors);
+        actorDTOS.forEach(System.out::println);
 
-        /* DIRECTORS */
+        //DIRECTORS
         //Printing all directors from the danish movies for the recent 5 years
         //String jsonAllDirectors = DirectorService.getAllDirectorsJSON(1);
         //System.out.println(jsonAllDirectors);

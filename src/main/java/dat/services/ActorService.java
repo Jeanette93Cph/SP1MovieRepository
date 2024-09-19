@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.dtos.ActorDTO;
+import dat.dtos.CreditDTO;
 import dat.dtos.MovieDTO;
 import dat.dtos.MovieResponseDTO;
 
@@ -43,8 +44,8 @@ public class ActorService {
             List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
 
             //retrieving actors for each movie
-            for (Long movieID : movieIDs)
-            {
+            for (Long movieID : movieIDs) {
+				//https://api.themoviedb.org/3/movie/1115377/credits?api_key=<<APIKEY>>&page=1
                 String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
                 String jsonCredits = getJSONResponse(url);
                 List<ActorDTO> movieActors = ActorService.extractActorsFromCredits(jsonCredits);
@@ -62,8 +63,7 @@ public class ActorService {
     }
 
 	// help method to getAllActorsJSON(). with help from chatgpt
-	private static String getJSONResponse(String url) throws IOException, InterruptedException
-	{
+	private static String getJSONResponse(String url) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(url))
 				.GET()
@@ -73,26 +73,18 @@ public class ActorService {
 		return response.body();
 	}
 
-
-	// help method to extractActorsFromCredits. with help from chatgpt
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Credits
-	{
-		public List<ActorDTO> cast;
-	}
-
-
 	// help method to getAllActorsJSON(). with help from chatgpt
-	public static List<ActorDTO> extractActorsFromCredits(String jsonCredits)
-	{
-		try
-		{
+	public static List<ActorDTO> extractActorsFromCredits(String jsonCredits) {
+		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			//deserialize the JSON credits into a Credits object
-			Credits credits = objectMapper.readValue(jsonCredits, Credits.class);
+			CreditDTO creditsDTO = objectMapper.readValue(jsonCredits, CreditDTO.class);
 
-			return credits.cast;
+			return creditsDTO.getCrew().stream()
+					.filter(crewDTO -> crewDTO.getJob().equals("Actor"))
+					.map(crewDTO -> new ActorDTO(crewDTO.getName()))
+					.collect(Collectors.toList());
 
 		} catch(JsonProcessingException e)
 		{
