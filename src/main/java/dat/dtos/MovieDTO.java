@@ -10,7 +10,6 @@ import dat.entities.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -19,64 +18,64 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
 
-    @JsonProperty("id")
-    private Long id;
+	@JsonProperty("id")
+	private Long id;
 
-    @JsonProperty("title")
-    private String title;
+	@JsonProperty("title")
+	private String title;
 
-    @JsonProperty("original_language")
-    private String originalLanguage;
+	@JsonProperty("original_language")
+	private String originalLanguage;
 
-    @JsonProperty("release_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private String releaseDate;
+	@JsonProperty("release_date")
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String releaseDate;
 
-    @JsonProperty("popularity")
-    private Double popularity;
+	@JsonProperty("popularity")
+	private Double popularity;
 
-    @JsonProperty("original_title")
-    private String originalTitle;
+	@JsonProperty("original_title")
+	private String originalTitle;
 
-    @JsonProperty("vote_average")
-    private Double voteAverage;
+	@JsonProperty("vote_average")
+	private Double voteAverage;
 
-    @JsonProperty("vote_count")
-    private Integer voteCount;
+	@JsonProperty("vote_count")
+	private Integer voteCount;
 
-    @JsonProperty("genres")
-    private List<GenreDTO> genres;
+	@JsonProperty("genres")
+	private List<GenreDTO> genres;
 
-    @JsonProperty("actors")
-    private List<ActorDTO> actors;
+	@JsonProperty("actors")
+	private List<ActorDTO> actors;
 
-    @JsonProperty("directors")
-    private List<DirectorDTO> directors;
+	@JsonProperty("directors")
+	private List<DirectorDTO> directors;
 
-    public MovieDTO (Movie movie) {
-        this.id = movie.getId();
-        this.title = movie.getTitle();
-        this.originalLanguage = movie.getOriginalLanguage();
-        this.releaseDate = movie.getReleaseDate().toString();
-        this.popularity = movie.getPopularity();
-        this.originalTitle = movie.getOriginalTitle();
-        this.voteAverage = movie.getVoteAverage();
-        this.voteCount = movie.getVoteCount();
-        this.genres = new MovieDTO(movie).getGenres();
-        this.actors = new MovieDTO(movie).getActors();
-        this.directors = new MovieDTO(movie).getDirectors();
-    }
+	public MovieDTO (Movie movie) {
+		this.id = movie.getId();
+		this.title = movie.getTitle();
+		this.originalLanguage = movie.getOriginalLanguage();
+		this.releaseDate = movie.getReleaseDate().toString();
+		this.popularity = movie.getPopularity();
+		this.originalTitle = movie.getOriginalTitle();
+		this.voteAverage = movie.getVoteAverage();
+		this.voteCount = movie.getVoteCount();
+		this.genres = new MovieDTO(movie).getGenres();
+		this.actors = new MovieDTO(movie).getActors();
+		this.directors = new MovieDTO(movie).getDirectors();
+	}
 
-    // convert from JSON to List of MovieDTO
-    public static List<MovieDTO> convertToDTOFromJSONList(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+	// convert from JSON to List of MovieDTO
+	public static List<MovieDTO> convertToDTOFromJSONList(String json) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
 
-        try {
-            MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
-            return movieResponseDTO.getMovieList();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to convert JSON to MovieDTO list.");
-        }
-    }
+		try {
+			MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
+			return movieResponseDTO.getMovieList();
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Failed to convert JSON to MovieDTO list.");
+		}
+	}
 }

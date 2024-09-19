@@ -15,13 +15,13 @@ because the JSON response contains more data (pages, totalresults) beside the li
 public class MovieResponseDTO {
 
     @JsonProperty("page")
-    private int page;
+    private Integer page;
 
     @JsonProperty("total_pages")
-    private int totalPages;
+    private Integer totalPages;
 
     @JsonProperty("total_results")
-    private int totalResults;
+    private Integer totalResults;
 
     @JsonProperty("results")
     private List<MovieDTO> movieList;

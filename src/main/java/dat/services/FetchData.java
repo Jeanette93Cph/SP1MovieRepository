@@ -4,6 +4,7 @@ import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
 import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
+import jakarta.persistence.EntityManagerFactory;
 
 public class FetchData {
 

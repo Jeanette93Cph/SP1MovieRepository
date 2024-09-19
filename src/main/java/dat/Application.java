@@ -1,6 +1,7 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.MovieDAO;
 import dat.services.FetchData;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -17,22 +18,22 @@ public class Application {
         FetchData f = new FetchData(emf);
 
         f.fetchAllMovies();
-        f.fetchAllActors();
-        f.fetchAllDirectors();
-        f.fetchAllGenres();
-        f.fetchMoviesByGenre("genre");
-        f.fetchMoviesByActor("actor name");
-        f.fetchMoviesByDirector("director name");
-        f.updateMovieByTitle("title");
-        f.updateMovieByReleaseDate("1999-03-31");
-        f.deleteMovieByTitle("title");
-        f.deleteMovieByReleaseDate("1999-03-31");
-        f.searchMovieByTitle("title");
-        f.getAverageRating("title");
-        f.getAverageRatingOfAllMovies();
-        f.getTop10HighestRatedMovies();
-        f.getTop10LowestRatedMovies();
-        f.getTop10MostPopularMovies();
+        // f.fetchAllActors();
+        // f.fetchAllDirectors();
+        // f.fetchAllGenres();
+        // f.fetchMoviesByGenre("genre");
+        // f.fetchMoviesByActor("actor name");
+        // f.fetchMoviesByDirector("director name");
+        // f.updateMovieByTitle("title");
+        // f.updateMovieByReleaseDate("1999-03-31");
+        // f.deleteMovieByTitle("title");
+        // f.deleteMovieByReleaseDate("1999-03-31");
+        // f.searchMovieByTitle("title");
+        // f.getAverageRating("title");
+        // f.getAverageRatingOfAllMovies();
+        // f.getTop10HighestRatedMovies();
+        // f.getTop10LowestRatedMovies();
+        // f.getTop10MostPopularMovies();
 
         // Close the EntityManagerFactory when done
         emf.close();

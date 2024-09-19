@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -41,17 +42,17 @@ public class Movie {
 	@Column(name = "vote_count")
 	private Integer voteCount;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "director_id")
 	private Director director;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "movie_genre",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	private List<Genre> genres = new ArrayList<>();
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "movie_actor",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "actor_id"))
