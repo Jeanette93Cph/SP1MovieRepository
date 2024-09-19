@@ -62,9 +62,10 @@ public class Movie {
 		this.title = movieDTO.getTitle();
 		this.originalLanguage = movieDTO.getOriginalLanguage();
 		this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());
-		this.rating = movieDTO.getRating();
+		this.originalTitle = movieDTO.getOriginalTitle();
 		this.popularity = movieDTO.getPopularity();
 		this.voteAverage = movieDTO.getVoteAverage();
+		this.voteCount = movieDTO.getVoteCount();
 
 		// Assume that each movie has only one director
 		this.director = new Director(movieDTO.getDirectors().get(0));
