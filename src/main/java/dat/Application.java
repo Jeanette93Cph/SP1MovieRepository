@@ -1,7 +1,5 @@
 package dat;
 
-import dat.config.HibernateConfig;
-import dat.daos.MovieDAO;
 import dat.services.FetchData;
 
 public class Application {
@@ -11,8 +9,8 @@ public class Application {
         //RUN THE APPLICATION
         System.out.println("TMBD API Application");
 
-        //FetchData.fetchAllMovies();
-        //FetchData.fetchAllActors();
+        FetchData.fetchAllMovies();
+        // FetchData.fetchAllActors();
         //FetchData.fetchAllDirectors();
         //FetchData.fetchAllGenres();
         //FetchData.fetchMoviesByGenre("genre");
