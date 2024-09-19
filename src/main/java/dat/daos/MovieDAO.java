@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MovieDAO implements GenericDAO<MovieDTO, Long> {
+public class MovieDAO {
 
 	//All methods here interact with the database
 
@@ -35,11 +35,13 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	// CRUD METHODS
 
 	// Method to find all movies in the database
-	@Override
 	public Collection<MovieDTO> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
+			em.getTransaction().begin();
 			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
 			List<Movie> movies = query.getResultList();
+			em.getTransaction().commit();
+			em.close();
 			return movies.stream().map(MovieDTO::new).collect(Collectors.toList());
 		} catch (Exception e) {
 			throw new JpaException("Failed to find all movies.");
@@ -47,7 +49,6 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to persist a movie to the database
-	@Override
 	public void persistEntity (MovieDTO movieDTO) {
 		EntityManager em = null;
 		try {
@@ -84,7 +85,6 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to delete a movie from the database
-	@Override
 	public void removeEntity (Long id) {
 		EntityManager em = null;
 		try {
@@ -107,7 +107,6 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to find a movie by id
-	@Override
 	public MovieDTO findEntity (Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Movie movie = em.find(Movie.class, id);
@@ -121,7 +120,6 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to update a movie in the database by id
-	@Override
 	public void updateEntity (MovieDTO movieDTO, Long id) {
 		EntityManager em = null;
 		try {
