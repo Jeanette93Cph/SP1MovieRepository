@@ -46,6 +46,7 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Method to persist a movie to the database
+// Method to persist a movie to the database
 	@Override
 	public void persistEntity(MovieDTO movieDTO) {
 		EntityManager em = null;
@@ -56,18 +57,16 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 			em.getTransaction().begin();
 			Movie movie = new Movie(movieDTO);
 
-			if (movieDTO.getDirectors() != null && !movieDTO.getDirectors().isEmpty())
-			{
+			if (movieDTO.getDirectors() != null && !movieDTO.getDirectors().isEmpty()) {
 				Director director = finalEm.find(Director.class, movieDTO.getDirectors().get(0).getId());
 			}
 
-			if(movieDTO.getGenres() !=null)
-			{
+			if(movieDTO.getGenres() !=null) {
 				List<Genre> genres = movieDTO.getGenres().stream().map(genreDTO -> finalEm.find(Genre.class, genreDTO.getId())).collect(Collectors.toList());
 				movie.setGenres(genres);
 			}
 
-			if(movieDTO.getActors() != null){
+			if(movieDTO.getActors() != null) {
 				List<Actor> actors = movieDTO.getActors().stream().map(actorDTO -> finalEm.find(Actor.class, actorDTO.getId())).collect(Collectors.toList());
 				movie.setActors(actors);
 			}
