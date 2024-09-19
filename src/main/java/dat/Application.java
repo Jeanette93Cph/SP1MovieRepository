@@ -9,24 +9,25 @@ public class Application {
         //RUN THE APPLICATION
         System.out.println("TMBD API Application");
 
-        FetchData.fetchAllMovies();
-        // FetchData.fetchAllActors();
-        //FetchData.fetchAllDirectors();
-        //FetchData.fetchAllGenres();
-        //FetchData.fetchMoviesByGenre("genre");
-        //FetchData.fetchMoviesByActor("actor name");
-        //FetchData.fetchMoviesByDirector("director name");
-        //FetchData.updateMovieByTitle("title");
-        //FetchData.updateMovieByReleaseDate("1999-03-31");
-        //FetchData.deleteMovieByTitle("title");
-        //FetchData.deleteMovieByReleaseDate("1999-03-31");
-        //FetchData.searchMovieByTitle("title");
-        //FetchData.getAverageRating("title");
-        //FetchData.getAverageRatingOfAllMovies();
-        //FetchData.getTop10HighestRatedMovies();
-        //FetchData.getTop10LowestRatedMovies();
-        //FetchData.getTop10MostPopularMovies();
+        FetchData f = new FetchData();
 
+        f.fetchAllMovies();
+        f.fetchAllActors();
+        f.fetchAllDirectors();
+        f.fetchAllGenres();
+        f.fetchMoviesByGenre("genre");
+        f.fetchMoviesByActor("actor name");
+        f.fetchMoviesByDirector("director name");
+        f.updateMovieByTitle("title");
+        f.updateMovieByReleaseDate("1999-03-31");
+        f.deleteMovieByTitle("title");
+        f.deleteMovieByReleaseDate("1999-03-31");
+        f.searchMovieByTitle("title");
+        f.getAverageRating("title");
+        f.getAverageRatingOfAllMovies();
+        f.getTop10HighestRatedMovies();
+        f.getTop10LowestRatedMovies();
+        f.getTop10MostPopularMovies();
 
         //PERSISTING DATA TO DATABASE
 
