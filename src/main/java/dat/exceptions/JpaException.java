@@ -11,7 +11,7 @@ public class JpaException extends RuntimeException {
 
     private static final Logger logger = (Logger) LoggerFactory.getLogger(JpaException.class);
 
-    public JpaException(String message) {
+    public JpaException (String message) {
         super(message);
         writeToLog(message);
     }

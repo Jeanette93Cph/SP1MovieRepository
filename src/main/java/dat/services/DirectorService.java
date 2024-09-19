@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.CrewMemberDTO;
 import dat.dtos.DirectorDTO;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -30,7 +29,8 @@ public class DirectorService {
 			List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
 
 			// Retrieve directors for each movie
-			for (Long movieID : movieIDs) {
+			for (Long movieID : movieIDs)
+			{
 				String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
 				String jsonCredits = getJSONResponse(url);
 				DirectorDTO directorDTO = DirectorService.extractDirectorFromCredits(jsonCredits);
@@ -43,6 +43,7 @@ public class DirectorService {
 		}
 		return null;
 	}
+
 
 	// help method to getAllActorsJSON(). with help from chatgpt
 	static String getJSONResponse (String url) throws IOException, InterruptedException {
@@ -61,6 +62,7 @@ public class DirectorService {
 
 			// Deserialize the JSON credits into a Credits object
 			CreditDTO credits = objectMapper.readValue(jsonCredits, CreditDTO.class);
+
 
 			// Iterate through the crew and find the director(s)
 			for (CrewMemberDTO crewMemberDTO : credits.crew) {

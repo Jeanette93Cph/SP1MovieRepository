@@ -1,17 +1,38 @@
 package dat;
 
-import dat.dtos.ActorDTO;
-import dat.services.ActorService;
-
-import java.util.List;
+import dat.services.FetchData;
 
 public class Application {
+
     public static void main(String[] args) {
+
+        //run the application
+        System.out.println("TMBD API Application");
+
+        FetchData.fetchAllMovies();
+        FetchData.fetchAllActors();
+        FetchData.fetchAllDirectors();
+        FetchData.fetchAllGenres();
+        FetchData.fetchMoviesByGenre("genre");
+        FetchData.fetchMoviesByActor("actor name");
+        FetchData.fetchMoviesByDirector("director name");
+        //FetchData.updateMovieByTitle("title");
+        //FetchData.updateMovieByReleaseDate("1999-03-31");
+        //FetchData.deleteMovieByTitle("title");
+        //FetchData.deleteMovieByReleaseDate("1999-03-31");
+        FetchData.searchMovieByTitle("title");
+        FetchData.getAverageRating("title");
+        FetchData.getAverageRatingOfAllMovies();
+        FetchData.getTop10HighestRatedMovies();
+        FetchData.getTop10LowestRatedMovies();
+        FetchData.getTop10MostPopularMovies();
+
+
 
         //ACTORS
         //Printing all actors from the danish movies for the recent 5 years
-        List<ActorDTO> actors = ActorDTO.convertToDTOFromJSONList(ActorService.getAllActorsJSON(1));
-        System.out.println(actors);
+        // List<ActorDTO> actors = ActorDTO.convertToDTOFromJSONList(ActorService.getAllActorsJSON(1));
+        // System.out.println(actors);
 
         // DIRECTORS
         //Printing all directors from the danish movies for the recent 5 years

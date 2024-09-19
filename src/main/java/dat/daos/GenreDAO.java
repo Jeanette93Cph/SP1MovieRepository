@@ -62,5 +62,6 @@ public class GenreDAO implements GenericDAO<GenreDTO, Long> {
 	@Override
 	public void updateEntity (GenreDTO entity, Long id) {
 
+
 	}
 }
