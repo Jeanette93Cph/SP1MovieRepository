@@ -32,33 +32,120 @@ Class Application {
 
 
 package "config" {
-Class HibernateConfig
+Class HibernateConfig {
+- emf : EntityManagerFactory
+- emfTest : EntityManagerFactory
+}
 }
 
 package "daos" {
-Class ActorDao
-Class DirectorDao
-Class GenreDao
-Class MovieDao
+Interface IDAO {
+	List<T> findAll();
+	T persistEntity(T entity);
+	void removeEntity(Long id);
+	T findEntity(Long id);
+	T updateEntity(T entity, Long id);
 }
 
+Class ActorDao {
+- actorDAO : ActorDAO
+- emf : EntityManagerFactory
++ findAll() : List<ActorDTO>
++ persistEntity(Actor entity)
++ removeEntity(Long id)
++ findEntity(Long id) : Actor
++ updateEntity(Actor entity, Long id)
+}
+
+Class DirectorDao {
+- directorDAO : DirectorDAO
+- emf : EntityManagerFactory
++ findAll() : List<DirectorDTO>
++ persistEntity(Director entity)
++ removeEntity(Long id)
++ findEntity(Long id) : Director
++ updateEntity(Director entity, Long id)
+}
+
+Class GenreDao {
+- genreDAO : GenreDAO
+- emf : EntityManagerFactory
++ findAll() : List<GenreDTO>
++ persistEntity(Genre entity)
++ removeEntity(Long id)
++ findEntity(Long id) : Genre
++ updateEntity(Genre entity, Long id)
+}
+
+Class MovieDao {
+- movieDAO : MovieDAO
+- emf : EntityManagerFactory
++ findAll() : List<MovieDTO>
++ persistEntity(Movie entity)
++ removeEntity(Long id)
++ findEntity(Long id) : Movie
++ updateEntity(Movie entity, Long id)
+}
+}
 
 package "dtos" {
-Class ActorDTO
-Class CrewMemberDTO
-Class DirectorDTO
-Class GenreDTO
-Class MovieDTO
-Class MovieResponseDTO
+Class ActorDTO {
+- id : Long
++ name : String
++ department : String
++ character : String
++ popularity : Double
++ List<ActorDTO> actors
+}
+
+Class CrewMemberDTO {
++ id : Long
++ name : String
++ job : String
++ List<CrewMemberDTO> crew;
+}
+
+Class DirectorDTO {
+- id : Long
++ name : String
++ List<DirectorDTO> directors
+}
+
+Class GenreDTO {
+- id : Long
++ name : String
++ List<GenreDTO> genres
+}
+
+Class MovieDTO {
+- id : Long
+- title : String
+- originalLanguage : String
+- releaseDate : LocalDate
+- popularity : Double
+- originalTitle : String
+- voteAverage : Double
+- voteCount : Integer
+- List<GenreDTO> genres
+- List<ActorDTO> actors
+- List<DirectorDTO> directors
+}
+
+Class MovieResponseDTO {
+- page : Integer
+- totalPages : Integer
+- totalResults : Integer
+- List<MovieDTO> movieList
+}
 }
 
 package "entities" {
 Class Actor {
-+ id : Long
-+ name : String
-+ department : String
-+ popularity : Double
-+ character : String
+- id : Long
+- name : String
+- department : String
+- popularity : Double
+- character : String
 }
 
 Class Director {
@@ -67,13 +154,13 @@ Class Director {
 - Set<Movie> movies
 }
 
-Class Genre{
+Class Genre {
 - id : Long
 - name : String
 - Set<Movie> movies
 }
 
-Class Movie{
+Class Movie {
 - id : Long
 - title : String
 - originalLanguage : String
@@ -85,6 +172,7 @@ Class Movie{
 - Director director
 - List<Genre> genres
 - List<Actors> actors
+}
 }
 
 package "exceptions" {
@@ -98,19 +186,25 @@ Class Logger {
   +exceptionLog(String in)
   +consoleLog(String in)
 }
-
-package "services" {
-Class ActorService
-Class DirectorService
-Class FetchData
-Class GenreService
-Class MovieService
-Class SyncApiService
 }
 
+package "services" {
+Class ActorService {
+  }
+
+Class DirectorService {
+  }
+
+Class FetchData {}
+Class GenreService {}
+Class MovieService {}
+Class SyncApiService {}
+}
+
+
 ' Define relationships
-
-
-
-
+IDAO <|-- ActorDao : implements
+IDAO <|-- DirectorDao : implements
+IDAO <|-- GenreDao : implements
+IDAO <|-- MovieDao : implements
 @enduml@enduml
