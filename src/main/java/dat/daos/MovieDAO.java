@@ -5,13 +5,11 @@ import dat.entities.Actor;
 import dat.entities.Director;
 import dat.entities.Genre;
 import dat.entities.Movie;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-
 import java.util.List;
 
-public class MovieDAO {
+public class MovieDAO implements IDAO<Movie> {
 
 	private final EntityManager entityManager;
 
@@ -19,7 +17,7 @@ public class MovieDAO {
 		this.entityManager = entityManager;
 	}
 
-	// Save a list of movies into the database
+	// Method to save a list of movies to the database
 	public void saveMovies(List<MovieDTO> movieDTOs) {
 		EntityTransaction transaction = entityManager.getTransaction();
 
@@ -27,8 +25,7 @@ public class MovieDAO {
 			transaction.begin();
 
 			for (MovieDTO movieDTO : movieDTOs) {
-				// Convert MovieDTO to Movie entity
-				Movie movie = convertToEntity(movieDTO);
+				Movie movie = convertToEntity(movieDTO); // Convert MovieDTO to Movie entity
 
 				// Ensure the director, actors, and genres are saved first
 				if (movie.getDirector() != null) {
@@ -115,5 +112,31 @@ public class MovieDAO {
 		movie.setGenres(genres);
 
 		return movie;
+	}
+
+	@Override
+	public void create (Movie movie) {
+
+	}
+
+	@Override
+	public void read (Movie movie) {
+
+	}
+
+
+	@Override
+	public void update (Movie movie) {
+
+	}
+
+	@Override
+	public void delete (Movie movie) {
+
+	}
+
+	@Override
+	public Movie findById (int id) {
+		return null;
 	}
 }

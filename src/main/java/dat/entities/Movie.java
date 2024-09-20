@@ -21,7 +21,7 @@ public class Movie {
 	@Column(name = "title", nullable = false, length = 100)
 	private String title;
 
-	@Column(name = "original_title", nullable = false, length = 100)
+	@Column(name = "original_language", nullable = false, length = 100)
 	private String originalLanguage;
 
 	@Column(name = "release_date", nullable = false, length = 10)
@@ -29,6 +29,8 @@ public class Movie {
 
 	@Column(name = "popularity", nullable = false)
 	private Double popularity;
+
+	@Column(name = "original_title", nullable = false, length = 100)
 
 	@Column(name = "vote_average", nullable = false)
 	private Double voteAverage;

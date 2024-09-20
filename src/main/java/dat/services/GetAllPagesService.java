@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class MovieDataService {
+public class GetAllPagesService {
 
 	private static final int THREAD_POOL_SIZE = 10;
 
