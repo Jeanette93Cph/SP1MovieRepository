@@ -77,7 +77,7 @@ public class FetchData {
 
 	// Get the top 10 highest rated movies
 	public List<MovieDTO> getTop10HighestRatedMovies() {
-		List<MovieDTO> movies = movieDAO.findAll();
+		List<MovieDTO> movies = MovieDAO.findAll();
 		movies.stream()
 				.sorted(Comparator.comparing(MovieDTO::getVoteAverage).reversed())
 				.limit(10)

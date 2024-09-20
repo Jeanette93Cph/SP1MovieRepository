@@ -1,20 +1,16 @@
 package dat.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dat.dtos.GenreDTO;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genres")
-public class Genre
-{
+public class Genre {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
@@ -26,11 +22,8 @@ public class Genre
 	@ManyToMany(mappedBy = "genres")
 	private List<Movie> movies;
 
-
-	public Genre(GenreDTO genreDTO)
-	{
+	public Genre (GenreDTO genreDTO) {
 		this.id = genreDTO.getId();
 		this.name = genreDTO.getName();
 	}
-
 }

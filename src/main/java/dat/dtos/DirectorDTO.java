@@ -10,13 +10,17 @@ import dat.entities.Director;
 import dat.entities.Movie;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DirectorDTO {
 
@@ -32,12 +36,6 @@ public class DirectorDTO {
         this.id = director.getId();
         this.name = director.getName();
     }
-
-    public DirectorDTO()
-    {
-
-    }
-
 
     private static String convertPlainStringToJSONArray(String plainString) {
         return Arrays.stream(plainString.split(",\\s*"))

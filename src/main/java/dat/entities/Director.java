@@ -1,11 +1,9 @@
 package dat.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import dat.dtos.DirectorDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.Set;
-
 import lombok.*;
 
 @Entity

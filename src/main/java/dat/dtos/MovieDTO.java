@@ -12,7 +12,6 @@ import dat.entities.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +49,7 @@ public class MovieDTO {
     @JsonProperty("director")
     private DirectorDTO director;
 
-    public MovieDTO (Movie movie)
-    {
+    public MovieDTO (Movie movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
         this.originalLanguage = movie.getOriginalLanguage();
@@ -79,7 +77,6 @@ public class MovieDTO {
         }
     }
 
-
     // convert from JSON to List of MovieDTO
     public static List<MovieDTO> convertToDTOFromJSONList(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -89,8 +86,7 @@ public class MovieDTO {
             MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
             return movieResponseDTO.getMovieList();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+           throw new RuntimeException("Error converting JSON to MovieDTO: " + e.getMessage());
         }
-        return null;
     }
 }

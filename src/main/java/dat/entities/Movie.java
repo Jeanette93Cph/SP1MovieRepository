@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class Movie {
 		this.voteAverage = movieDTO.getVoteAverage();
 
 		// Assume that each movie has only one director
-
 		if (movieDTO.getDirector() != null) {
 			this.director = new Director(movieDTO.getDirector());
 		} else {
@@ -72,5 +70,4 @@ public class Movie {
 		// Assume that each movie has at least one actor
 		this.actors = new ArrayList<>();
 	}
-
 }
