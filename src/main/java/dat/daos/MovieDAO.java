@@ -6,22 +6,27 @@ import dat.entities.Director;
 import dat.entities.Genre;
 import dat.entities.Movie;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieDAO implements IDAO<Movie> {
 
-	private final EntityManager entityManager;
+	public EntityManagerFactory emf;
 
-	public MovieDAO(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public MovieDAO(EntityManagerFactory emf) {
+		this.emf = emf;
 	}
 
 	// Method to save a list of movies to the database
-	public void saveMovies(List<MovieDTO> movieDTOs) {
-		EntityTransaction transaction = entityManager.getTransaction();
+	public void saveMovies (List<MovieDTO> movieDTOs) {
+		EntityTransaction transaction = null;
 
-		try {
+		try (EntityManager em = emf.createEntityManager()) {
+			transaction = em.getTransaction();
 			transaction.begin();
 
 			for (MovieDTO movieDTO : movieDTOs) {
@@ -31,10 +36,10 @@ public class MovieDAO implements IDAO<Movie> {
 				if (movie.getDirector() != null) {
 					Director director = movie.getDirector();
 					// Check if the director already exists in the database
-					Director existingDirector = entityManager.find(Director.class, director.getId());
+					Director existingDirector = em.find(Director.class, director.getId());
 					if (existingDirector == null) {
 						// Insert new director
-						entityManager.persist(director);
+						em.persist(director);
 					} else {
 						movie.setDirector(existingDirector);
 					}
@@ -42,27 +47,27 @@ public class MovieDAO implements IDAO<Movie> {
 
 				// Persist actors and genres
 				for (Actor actor : movie.getActors()) {
-					Actor existingActor = entityManager.find(Actor.class, actor.getId());
+					Actor existingActor = em.find(Actor.class, actor.getId());
 					if (existingActor == null) {
 						// Insert new actor
-						entityManager.persist(actor);
+						em.persist(actor);
 					} else {
 						actor = existingActor;
 					}
 				}
 
 				for (Genre genre : movie.getGenres()) {
-					Genre existingGenre = entityManager.find(Genre.class, genre.getId());
+					Genre existingGenre = em.find(Genre.class, genre.getId());
 					if (existingGenre == null) {
 						// Insert new genre
-						entityManager.persist(genre);
+						em.persist(genre);
 					} else {
 						genre = existingGenre;
 					}
 				}
 
 				// Finally, persist the movie after ensuring all dependencies are saved
-				entityManager.persist(movie);
+				em.persist(movie);
 			}
 
 			transaction.commit();
@@ -76,7 +81,7 @@ public class MovieDAO implements IDAO<Movie> {
 	}
 
 	// Convert MovieDTO to Movie entity
-	private Movie convertToEntity(MovieDTO movieDTO) {
+	private Movie convertToEntity (MovieDTO movieDTO) {
 		Movie movie = new Movie();
 		movie.setId(movieDTO.getId());
 		movie.setTitle(movieDTO.getTitle());
@@ -116,27 +121,70 @@ public class MovieDAO implements IDAO<Movie> {
 
 	@Override
 	public void create (Movie movie) {
-
+		try (EntityManager em = emf.createEntityManager()) {
+			em.getTransaction().begin();
+			em.persist(movie);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void read (Movie movie) {
-
 	}
 
 
 	@Override
 	public void update (Movie movie) {
-
 	}
 
 	@Override
 	public void delete (Movie movie) {
-
 	}
 
 	@Override
-	public Movie findById (int id) {
+	public Movie findById (Long id) {
 		return null;
 	}
+
+	@Override
+	public List<Movie> findAll () {
+		try (EntityManager em = emf.createEntityManager()) {
+			Query query = em.createQuery("SELECT m FROM Movie m");
+			List<Movie> movies = query.getResultList();
+			return movies;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// Search for a movie by genre (case-insensitive, partial match)
+	public List<MovieDTO> searchForMovieByGenre(String genre) {
+		try (EntityManager em = emf.createEntityManager()) {
+			// JPQL query with case-insensitive search using LOWER() and LIKE
+			Query query = em.createQuery(
+					"SELECT m FROM Movie m JOIN m.genres g WHERE LOWER(g.name) LIKE LOWER(CONCAT('%', :genreName, '%'))");
+			query.setParameter("genreName", genre);
+
+			// Execute query and get the result list of movies
+			List<Movie> movies = query.getResultList();
+
+			// Convert List<Movie> to List<MovieDTO>
+			return movies.stream()
+					.map(this::convertToMovieDTO)
+					.collect(Collectors.toList());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null; // Or you can handle this better by throwing a custom exception
+		}
+	}
+
+	// Method to convert Movie entity to MovieDTO
+	private MovieDTO convertToMovieDTO(Movie movie) {
+		return new MovieDTO(movie.getId(), movie.getTitle(), movie.getReleaseDate(), movie.getGenres());
+	}
+
 }

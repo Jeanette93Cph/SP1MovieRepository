@@ -31,6 +31,7 @@ public class Movie {
 	private Double popularity;
 
 	@Column(name = "original_title", nullable = false, length = 100)
+	private String originalTitle;
 
 	@Column(name = "vote_average", nullable = false)
 	private Double voteAverage;
