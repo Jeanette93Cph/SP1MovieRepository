@@ -37,6 +37,11 @@ public class DirectorDTO {
         this.name = director.getName();
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     private static String convertPlainStringToJSONArray(String plainString) {
         return Arrays.stream(plainString.split(",\\s*"))
                 .map(name -> String.format("{\"name\": \"%s\"}", name.trim()))

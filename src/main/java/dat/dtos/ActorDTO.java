@@ -25,4 +25,9 @@ public class ActorDTO {
         this.id = actor.getId();
         this.name = actor.getName();
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

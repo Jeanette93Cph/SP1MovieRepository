@@ -24,15 +24,15 @@ public class Application {
 
 		System.out.println("THE MOVIE DB API APPLICATION");
 
-		f.fetchAllActors();
-		// f.fetchAllMovies();
+		// f.fetchAllActors();
+		f.fetchAllMovies();
 		// f.getAverageRatingOfAllMovies();
 		// f.getAverageRating("The Promised Land");
 		// f.getTop10MostPopularMovies();
 		// f.getTop10HighestRatedMovies();
 		// f.getTop10LowestRatedMovies();
 
-		populateDatabase();
+		//populateDatabase();
 	}
 
 	private static void populateDatabase () {

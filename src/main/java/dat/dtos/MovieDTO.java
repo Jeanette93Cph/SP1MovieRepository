@@ -77,6 +77,19 @@ public class MovieDTO {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%-15s | %-40s | %-25s | %-30s | %-22s | %-22s",
+                "Id: " + id,
+                "Title: " + title,
+                "Original Language: " + originalLanguage,
+                "Release Date: " + releaseDate,
+                "Popularity: " + popularity,
+                "Vote Average: " + voteAverage
+        );
+    }
+
     // convert from JSON to List of MovieDTO
     public static List<MovieDTO> convertToDTOFromJSONList(String json) {
         ObjectMapper objectMapper = new ObjectMapper();

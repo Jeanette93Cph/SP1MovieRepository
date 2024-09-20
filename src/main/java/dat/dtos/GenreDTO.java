@@ -31,6 +31,11 @@ public class GenreDTO {
 		this.name = genre.getName();
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	// convert from JSON to List of ActorDTO
 	public static List<GenreDTO> convertToDTOFromJSONList (String json) {
 		ObjectMapper objectMapper = new ObjectMapper();
