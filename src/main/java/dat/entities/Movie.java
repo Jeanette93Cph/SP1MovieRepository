@@ -66,11 +66,11 @@ public class Movie {
 			this.director = null;
 		}
 
-		// Assume that each movie has at least one genre
-		this.genres = new ArrayList<>();
-
-		// Assume that each movie has at least one actor
-		this.actors = new ArrayList<>();
+//		// Assume that each movie has at least one genre
+//		this.genres = new ArrayList<>();
+//
+//		// Assume that each movie has at least one actor
+//		this.actors = new ArrayList<>();
 	}
 
 }

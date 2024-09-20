@@ -98,7 +98,7 @@ public class MovieDAO
 				} else{
 					movie = new Movie(dto);
 					setRelationships(em, movie, dto);
-					movie = em.merge(movie);
+					em.merge(movie);
 				}
 
 				//add the persisted DTO to the result list
@@ -227,13 +227,12 @@ public class MovieDAO
 		}
 
 		// Set Genres
-		if (dto.getGenres() != null) {
+		if (dto.getGenreIDs() != null) {
 			List<Genre> genres = new ArrayList<>();
-			for (GenreDTO genreDTO : dto.getGenres()) {
-				Genre genre = em.find(Genre.class, genreDTO.getId());
+			for (Long genreID : dto.getGenreIDs()) {
+				Genre genre = em.find(Genre.class, genreID);
 				if (genre == null) {
-					genre = new Genre(genreDTO);
-					em.persist(genre);
+					System.out.println("missing genre with ID's");
 				}
 				genres.add(genre);
 			}

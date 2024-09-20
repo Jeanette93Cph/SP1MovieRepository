@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dat.daos.GenreDAO;
 import dat.entities.Actor;
 import dat.entities.Genre;
 import dat.entities.Movie;
@@ -21,6 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
+
+    //used in method MovieDTO.convertToDTOFromJSONList
+    private GenreDAO genreDAO;
 
     @JsonProperty("id")
     private Long id;
@@ -40,6 +44,9 @@ public class MovieDTO {
 
     @JsonProperty("vote_average")
     private Double voteAverage;
+
+    @JsonProperty("genre_ids")
+    private List<Long> genreIDs;
 
     @JsonProperty("genres")
     private List<GenreDTO> genres;
@@ -81,13 +88,35 @@ public class MovieDTO {
 
 
     // convert from JSON to List of MovieDTO
-    public static List<MovieDTO> convertToDTOFromJSONList(String json) {
+    public List<MovieDTO> convertToDTOFromJSONList(String json, GenreDAO genreDAO) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
+        this.genreDAO = genreDAO;
+
         try {
             MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
-            return movieResponseDTO.getMovieList();
+            List<MovieDTO> movieDTOList = movieResponseDTO.getMovieList();
+
+            //List to hold converted movie entites
+            List<Movie> movies = new ArrayList<>();
+
+            // Loop through each MovieDTO and convert to Movie entity
+            for(MovieDTO movieDTO : movieDTOList)
+            {
+                Movie movie = new Movie(movieDTO);
+
+                // Fetch genres using genreIds via GenreDAO
+                if (movieDTO.getGenreIDs() != null && !movieDTO.getGenreIDs().isEmpty()) {
+                    List<Genre> genres = genreDAO.findByIds(movieDTO.getGenreIDs());
+                    // Set the fetched genres in the movie
+                    movie.setGenres(genres);
+                }
+                movies.add(movie);
+            }
+
+            return  movieDTOList;
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import dat.entities.Genre;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,4 +162,33 @@ public class GenreDAO
         }
 
     }
+
+
+    //Method to help get data to tabel 'movie_genre'
+    public List<Genre> findByIds(List<Long> genreIds)
+    {
+        try(EntityManager em = emf.createEntityManager())
+        {
+            em.getTransaction().begin();
+
+            if (genreIds == null || genreIds.isEmpty())
+            {
+                // return empty list if no genre IDs are provided
+                return new ArrayList<>();
+            }
+            TypedQuery<Genre> query = em.createQuery("SELECT g FROM Genre g WHERE g.id IN :ids", Genre.class);
+            query.setParameter("ids", genreIds);
+
+            List<Genre> genres = query.getResultList();
+            em.getTransaction().commit();
+            return  genres;
+        } catch(Exception e)
+        {
+            e.getMessage();
+        }
+        return null;
+    }
+
+
+
 }

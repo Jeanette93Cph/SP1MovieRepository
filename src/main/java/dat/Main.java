@@ -25,16 +25,19 @@ public class Main {
 
 
         //Printing all danish movies for the recent 5 years in JSON
-        //String jsonAllMovies = MovieService.getAllMoviesJSON(1);
+        String jsonAllMovies = MovieService.getAllMoviesJSON(1);
         // System.out.println(jsonAllMovies);
-        //
+
+        GenreDAO genreDAO = GenreDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+
         // Printing all danish movies for the recent 5 years as MovieDTO's
-        // List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
+        MovieDTO movieDTO = new MovieDTO();
+        List<MovieDTO> moviesDTOs = movieDTO.convertToDTOFromJSONList(jsonAllMovies, genreDAO);
         // moviesDTOs.forEach(System.out::println);
 
         //persist movieList to database
-        //MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //movieDAO.persistListOfMovies(moviesDTOs);
+        MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        movieDAO.persistListOfMovies(moviesDTOs);
 
         //persist one movie to database
 //        MovieDTO movieDTO = new MovieDTO();
