@@ -2,24 +2,19 @@ package dat;
 
 import dat.config.HibernateConfig;
 import dat.daos.ActorDAO;
-import dat.daos.DirectorDAO;
-import dat.daos.GenreDAO;
-import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
 import dat.services.ActorService;
-import dat.services.DirectorService;
-import dat.services.GenreService;
-import dat.services.MovieService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import dat.services.FetchData;
 
 import java.util.List;
 
-public class Main {
+public class Application {
     public static void main(String[] args) {
+
+        //FetchData f = new FetchData(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+
+        //f.fetchAllActors();
 
         //the_movie_db
 
@@ -60,12 +55,12 @@ public class Main {
 
         // /* ACTORS */
         // //Printing all cast from the danish movies for the recent 5 years
-        //List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
+        List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
         //actorDTOS.forEach(System.out::println);
 
         //persist actorList to database
-        //ActorDAO actorDAO = ActorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-       //actorDAO.persistListOfActors(actorDTOS);
+        ActorDAO actorDAO = ActorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        actorDAO.persistListOfActors(actorDTOS);
 
         //persist one actor to database
 //        ActorDTO actorDTO = new ActorDTO();
@@ -91,7 +86,7 @@ public class Main {
 
         /* DIRECTORS */
         //Printing all directors from the danish movies for the recent 5 years
-        //List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
+        List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
         //allDirectorsDTO.forEach(System.out::println);
 
         //persist directorList to database
