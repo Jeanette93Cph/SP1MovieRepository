@@ -11,12 +11,9 @@ import dat.entities.Movie;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MovieDAO
 {
@@ -201,8 +198,7 @@ public class MovieDAO
 	}
 
 
-
-	//Help method to set the director, actors and genres
+	//Help method to set the director, actors and genres. help from chatgpt
 	private static void setRelationships(EntityManager em, Movie movie, MovieDTO dto)
 	{
 		// Set Director

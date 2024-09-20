@@ -3,6 +3,7 @@ package dat;
 import dat.config.HibernateConfig;
 import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
+import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
@@ -42,7 +43,7 @@ public class Main {
 //        MovieDAO.persistEntity(movieDTO);
 
         //find all movies in the database
-        MovieDAO movieDAO1 = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        //MovieDAO movieDAO1 = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
         //movieDAO1.findAll().forEach(System.out::println);
 
         //find movie by id
@@ -55,9 +56,7 @@ public class Main {
 //        System.out.println(MovieDAO.findEntity(222L));
 
         //delete movie
-        MovieDAO.removeEntity(222L);
-
-
+        //MovieDAO.removeEntity(222L);
 
         // /* ACTORS */
         // //Printing all cast from the danish movies for the recent 5 years
@@ -123,18 +122,33 @@ public class Main {
 
         /* GENRE */
         //Printing all genres
-         //String allGenres = GenreService.getAllGenresJSON();
+        //String allGenres = GenreService.getAllGenresJSON();
         //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
-       //genreDTOS.forEach(System.out::println);
 
+        //persist genreList to database
+        //GenreDAO genreDAO = GenreDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        //genreDAO.persistListOfGenres(genreDTOS);
 
+        //persist one genre to database
+//        GenreDTO genreDTO = new GenreDTO();
+//        genreDTO.setName("Bedste genre");
+//        genreDTO.setId(333L);
+//        genreDAO.persistEntity(genreDTO);
 
-        /*Testing the connection to the database*/
-//        MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-//
-//        for (MovieDTO moviesDTO : moviesDTOs) {
-//            movieDAO.persistEntity(moviesDTO);
-//        }
+        //find all genres in the database
+        //GenreDAO.findAll().forEach(System.out::println);
+
+        //find genre by id
+        //System.out.println(GenreDAO.findEntity(36L));
+
+        //update genre
+//        GenreDTO genreDTO1 = GenreDAO.findEntity(333L);
+//        genreDTO1.setName("Fantastisk genre");
+//        GenreDAO.updateEntity(genreDTO1, 333L);
+//        System.out.println(GenreDAO.findEntity(333L));
+
+        //delete genre
+        //GenreDAO.removeEntity(333L);
 
 
     }

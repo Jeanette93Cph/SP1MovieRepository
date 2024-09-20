@@ -14,7 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "actors")
-public class Actor {
+public class Actor
+{
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;

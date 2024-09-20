@@ -1,16 +1,13 @@
 package dat.entities;
 
-import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -19,7 +16,6 @@ import java.util.stream.Collectors;
 @Table(name = "movies")
 public class Movie {
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -63,7 +59,6 @@ public class Movie {
 		this.voteAverage = movieDTO.getVoteAverage();
 
 		// Assume that each movie has only one director
-		//this.director = new Director(movieDTO.getDirector());
 
 		if (movieDTO.getDirector() != null) {
 			this.director = new Director(movieDTO.getDirector());
@@ -76,9 +71,6 @@ public class Movie {
 
 		// Assume that each movie has at least one actor
 		this.actors = new ArrayList<>();
-
 	}
-
-
 
 }

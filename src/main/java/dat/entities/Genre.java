@@ -5,6 +5,7 @@ import dat.dtos.GenreDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,9 +13,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genres")
-public class Genre {
+public class Genre
+{
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -23,12 +24,13 @@ public class Genre {
 
 	@ToString.Exclude // Prevent infinite loop when fetching data
 	@ManyToMany(mappedBy = "genres")
-	private Set<Movie> movies;
+	private List<Movie> movies;
 
-	public Genre(GenreDTO genreDTO) {
+
+	public Genre(GenreDTO genreDTO)
+	{
 		this.id = genreDTO.getId();
 		this.name = genreDTO.getName();
 	}
-
 
 }

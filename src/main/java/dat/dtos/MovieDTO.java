@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.entities.Actor;
-import dat.entities.Director;
 import dat.entities.Genre;
 import dat.entities.Movie;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -79,19 +77,7 @@ public class MovieDTO {
         for (Actor actor : movie.getActors()) {
             this.actors.add(new ActorDTO(actor));
         }
-
-
-
-//        this.director = new DirectorDTO(movie.getDirector());
-//
-//        // Assume that each movie has at least one genre
-//        this.genres = new ArrayList<>();
-//
-//        // Assume that each movie has at least one actor
-//        this.actors = new ArrayList<>();
     }
-
-
 
 
     // convert from JSON to List of MovieDTO
