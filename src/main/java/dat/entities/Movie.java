@@ -1,73 +1,51 @@
 package dat.entities;
 
-import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
+
 import java.util.List;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "movies")
 public class Movie {
+
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "title", nullable = false)
+	@Column(name = "title", nullable = false, length = 100)
 	private String title;
 
-	@Column(name = "original_language")
+	@Column(name = "original_title", nullable = false, length = 100)
 	private String originalLanguage;
 
-	@Column(name = "release_date")
+	@Column(name = "release_date", nullable = false, length = 10)
 	private String releaseDate;
 
-	@Column(name = "popularity")
+	@Column(name = "popularity", nullable = false)
 	private Double popularity;
 
-	@Column(name = "vote_average")
+	@Column(name = "vote_average", nullable = false)
 	private Double voteAverage;
+
+	@ManyToMany
+	@JoinTable(name = "movie_actors",
+			joinColumns = @JoinColumn(name = "movie_id"),
+			inverseJoinColumns = @JoinColumn(name = "actor_id"))
+	private List<Actor> actors;
 
 	@ManyToOne
 	@JoinColumn(name = "director_id")
 	private Director director;
 
 	@ManyToMany
-	@JoinTable(name = "movie_genre",
+	@JoinTable(name = "movie_genres",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "genre_id"))
-	private List<Genre> genres = new ArrayList<>();
-
-	@ManyToMany
-	@JoinTable(name = "movie_actor",
-			joinColumns = @JoinColumn(name = "movie_id"),
-			inverseJoinColumns = @JoinColumn(name = "actor_id"))
-	private List<Actor> actors = new ArrayList<>();
-
-	public Movie(MovieDTO movieDTO) {
-		this.id = movieDTO.getId();
-		this.title = movieDTO.getTitle();
-		this.originalLanguage = movieDTO.getOriginalLanguage();
-		this.releaseDate = movieDTO.getReleaseDate();
-		this.popularity = movieDTO.getPopularity();
-		this.voteAverage = movieDTO.getVoteAverage();
-
-		// Assume that each movie has only one director
-		if (movieDTO.getDirector() != null) {
-			this.director = new Director(movieDTO.getDirector());
-		} else {
-			this.director = null;
-		}
-
-		// Assume that each movie has at least one genre
-		this.genres = new ArrayList<>();
-
-		// Assume that each movie has at least one actor
-		this.actors = new ArrayList<>();
-	}
+	private List<Genre> genres;
 }

@@ -1,8 +1,9 @@
 package dat.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.ActorDTO;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,63 +13,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorService {
+
 	private static final String API_KEY = System.getenv("api_key");
-	private static final String URL = "https://api.themoviedb.org/3/movie/";
+	private static final String URL = "https://api.themoviedb.org/3/movie/%d/credits?api_key=%s";
 
-	public static List<ActorDTO> getAllActorsFromJSON (int page) {
-		List<ActorDTO> listOfActorsDTO = new ArrayList<>();
+	private static final HttpClient httpClient = HttpClient.newHttpClient();
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	// Fetch actors for a given movie ID
+	public static List<ActorDTO> getActorsJSON(Long movieId) {
+		List<ActorDTO> actors = new ArrayList<>();
 
 		try {
-			// get all movies based on filter: danish movies from the recent 5 years
-			String jsonAllMovies = MovieService.getAllMoviesJSON(page);
-			// get all movieIDs based on filter
-			List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
+			String url = String.format(URL, movieId, API_KEY);
+			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
-			// retrieving actors for each movie
-			for (Long movieID : movieIDs) {
-				String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
-				String jsonCredits = getJSONResponse(url);
-				List<ActorDTO> actorList = ActorService.extractActorsFromCredits(jsonCredits);
-				if (actorList != null) {
-					listOfActorsDTO.addAll(actorList);
+			// Send the request and get the response
+			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+			if (response.statusCode() == 200) {
+				// Parse the response body
+				JsonNode rootNode = objectMapper.readTree(response.body());
+				JsonNode castNode = rootNode.get("cast");
+
+				// If the "cast" node is not empty, map it to a list of ActorDTOs
+				if (castNode != null && castNode.isArray()) {
+					for (JsonNode actorNode : castNode) {
+						ActorDTO actor = parseActor(actorNode);
+						actors.add(actor);
+					}
 				}
+			} else {
+				System.err.println("Failed to fetch actors. Status Code: " + response.statusCode());
 			}
-			return listOfActorsDTO;
-
 		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException("Failed to fetch actors: " + e.getMessage());
+			System.err.println("Error fetching actors: " + e.getMessage());
 		}
+
+		return actors;
 	}
 
-	// help method to getAllActorsJSON(). with help from chatgpt
-	private static String getJSONResponse (String url) throws IOException, InterruptedException {
-		HttpClient httpClient = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.GET()
-				.build();
+	// Helper method to parse individual actor from the cast array
+	private static ActorDTO parseActor(JsonNode actorNode) {
+		Long id = actorNode.get("id").asLong();
+		String name = actorNode.get("name").asText();
 
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-		return response.body();
-	}
-
-
-	// help method to getAllActorsJSON(). with help from chatgpt
-	public static List<ActorDTO> extractActorsFromCredits (String jsonCredits) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			// deserialize the JSON credits into a ActorDTO object
-			ActorDTO actorDTO = objectMapper.readValue(jsonCredits, ActorDTO.class);
-
-			List<ActorDTO> listActorDTO = actorDTO.cast;
-
-			if (listActorDTO == null) {
-				System.out.println("No actors found in credits.");
-			}
-			return listActorDTO;
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Failed to extract actors from credits: " + e.getMessage());
-		}
+		return new ActorDTO(id, name);
 	}
 }

@@ -5,14 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dat.entities.Actor;
-import dat.entities.Genre;
 import dat.entities.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Data
@@ -46,10 +43,10 @@ public class MovieDTO {
     @JsonProperty("actors")
     private List<ActorDTO> actors;
 
-    @JsonProperty("director")
+    @JsonProperty("directors")
     private DirectorDTO director;
 
-    public MovieDTO (Movie movie) {
+    public MovieDTO(Movie movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
         this.originalLanguage = movie.getOriginalLanguage();
@@ -57,49 +54,28 @@ public class MovieDTO {
         this.popularity = movie.getPopularity();
         this.voteAverage = movie.getVoteAverage();
 
-        if (movie.getDirector() != null) {
-            this.director = new DirectorDTO(movie.getDirector());
-        } else {
-            this.director = null;
-        }
-
-        // Initialize genres and actors based on the Movie entity
-
-        this.genres = new ArrayList<>();
-        for (Genre genre : movie.getGenres()) {
-            this.genres.add(new GenreDTO(genre));
-        }
-
-        // Initialize actors
-        this.actors = new ArrayList<>();
-        for (Actor actor : movie.getActors()) {
-            this.actors.add(new ActorDTO(actor));
-        }
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "%-15s | %-40s | %-25s | %-30s | %-22s | %-22s",
-                "Id: " + id,
-                "Title: " + title,
-                "Original Language: " + originalLanguage,
-                "Release Date: " + releaseDate,
-                "Popularity: " + popularity,
-                "Vote Average: " + voteAverage
-        );
-    }
-
-    // convert from JSON to List of MovieDTO
-    public static List<MovieDTO> convertToDTOFromJSONList(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
+    public static List<MovieDTO> convertToDTOFromJSONList (String json) {
         try {
-            MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
-            return movieResponseDTO.getMovieList();
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, MovieDTO.class));
         } catch (JsonProcessingException e) {
-           throw new RuntimeException("Error converting JSON to MovieDTO: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+            return null;
         }
     }
+
+    // @Override
+    // public String toString() {
+    //     return String.format(
+    //             "%-15s | %-40s | %-25s | %-30s | %-22s | %-22s",
+    //             "Movie id: " + id,
+    //             "Title: " + title,
+    //             "Original Language: " + originalLanguage,
+    //             "Release Date: " + releaseDate,
+    //             "Popularity: " + popularity,
+    //             "Vote Average: " + voteAverage
+    //     );
+    // }
 }

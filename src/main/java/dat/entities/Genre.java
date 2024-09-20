@@ -2,11 +2,14 @@ package dat.entities;
 
 import dat.dtos.GenreDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genres")
@@ -18,7 +21,6 @@ public class Genre {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@ToString.Exclude // Prevent infinite loop when fetching data
 	@ManyToMany(mappedBy = "genres")
 	private List<Movie> movies;
 

@@ -1,76 +1,56 @@
 package dat.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dat.dtos.CrewMemberDTO;
 import dat.dtos.DirectorDTO;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DirectorService {
 
 	private static final String API_KEY = System.getenv("api_key");
-	private static final String URL = "https://api.themoviedb.org/3/movie/";
+	private static final String URL = "https://api.themoviedb.org/3/movie/%d/credits?api_key=%s";
 
-	public static List<DirectorDTO> getAllDirectorsFromJSON (int page) {
-		List<DirectorDTO> listOfDirectorsDTO = new ArrayList<>();
+	private static final HttpClient httpClient = HttpClient.newHttpClient();
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
+	// Fetch director for a given movie ID
+	public static DirectorDTO getDirectorsJSON(Long movieId) {
 		try {
-			// Get all movies based on filter: danish movies from the recent 5 years
-			String jsonAllMovies = MovieService.getAllMoviesJSON(page);
-			// Get all movieIDs based on filter
-			List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
+			String url = String.format(URL, movieId, API_KEY);
+			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
-			// Retrieve directors for each movie
-			for (Long movieID : movieIDs) {
-				String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
-				String jsonCredits = getJSONResponse(url);
-				DirectorDTO directorDTO = DirectorService.extractDirectorFromCredits(jsonCredits);
-				listOfDirectorsDTO.add(directorDTO);
-			}
-			return listOfDirectorsDTO;
+			// Send the request and get the response
+			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException("Error while fetching data from the API: " + e.getMessage());
-		}
-	}
+			if (response.statusCode() == 200) {
+				// Parse the response body
+				JsonNode rootNode = objectMapper.readTree(response.body());
+				JsonNode crewNode = rootNode.get("crew");
 
-	// help method to getAllActorsJSON(). with help from chatgpt
-	static String getJSONResponse (String url) throws IOException, InterruptedException {
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.GET()
-				.build();
-
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		return response.body();
-	}
-
-	public static DirectorDTO extractDirectorFromCredits (String jsonCredits) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			// Deserialize the JSON credits into a Credits object
-			CrewMemberDTO crewMember = objectMapper.readValue(jsonCredits, CrewMemberDTO.class);
-
-			// Iterate through the crew and find the director(s)
-			for (CrewMemberDTO crewMemberDTO : crewMember.crew) {
-				if ("Director".equalsIgnoreCase(crewMemberDTO.job)) {
-					DirectorDTO directorDTO = new DirectorDTO();
-					directorDTO.setName(crewMemberDTO.name); // Assign the director's name
-					directorDTO.setId(crewMemberDTO.id); // Assign the director's name
-					return directorDTO;
+				// If the "crew" node is not empty, look for a director
+				if (crewNode != null && crewNode.isArray()) {
+					for (JsonNode crewMember : crewNode) {
+						String job = crewMember.get("job").asText();
+						if ("Director".equalsIgnoreCase(job)) {
+							Long id = crewMember.get("id").asLong();
+							String name = crewMember.get("name").asText();
+							return new DirectorDTO(id, name);
+						}
+					}
 				}
+			} else {
+				System.err.println("Failed to fetch director. Status Code: " + response.statusCode());
 			}
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Error while deserializing JSON: " + e.getMessage());
+		} catch (IOException | InterruptedException e) {
+			System.err.println("Error fetching director: " + e.getMessage());
 		}
+
+		// Return null if no director was found
 		return null;
 	}
 }

@@ -2,9 +2,11 @@ package dat.entities;
 
 import dat.dtos.DirectorDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.Set;
-import lombok.*;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,9 +23,9 @@ public class Director {
 
 	@ToString.Exclude // Prevent infinite loop when fetching data
 	@OneToMany(mappedBy = "director")
-	private Set<Movie> movies;
+	private List<Movie> movies;
 
-	public Director(DirectorDTO directorDTO) {
+	public Director (DirectorDTO directorDTO) {
 		this.id = directorDTO.getId();
 		this.name = directorDTO.getName();
 	}

@@ -1,9 +1,12 @@
 package dat.entities;
 
 import dat.dtos.ActorDTO;
+import dat.entities.Movie;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import java.util.List;
 
 @Entity
@@ -19,7 +22,6 @@ public class Actor {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@ToString.Exclude // Prevent infinite loop when fetching data
 	@ManyToMany(mappedBy = "actors")
 	private List<Movie> movies;
 

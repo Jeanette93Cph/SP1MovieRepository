@@ -8,18 +8,21 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-//being used in DirectorService
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CrewMemberDTO {
 
-	public String name;
-	public String job;
+	@JsonProperty("name")
+	private String name;
 
-	public List<CrewMemberDTO> crew;
+	@JsonProperty("job")
+	private String job;
+
+	@JsonProperty("crew")
+	private List<CrewMemberDTO> crew;
 
 	@JsonProperty("id")
-	public Long id;
+	private Long id;
 }

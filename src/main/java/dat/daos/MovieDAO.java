@@ -1,212 +1,119 @@
 package dat.daos;
 
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
 import dat.entities.Genre;
 import dat.entities.Movie;
-import dat.exceptions.JpaException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 
-import java.util.ArrayList;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
 import java.util.List;
 
 public class MovieDAO {
 
-	// Singleton instance
-	private MovieDAO instance;
-	private EntityManagerFactory emf;
+	private final EntityManager entityManager;
 
-	// Private constructor
-	public MovieDAO (EntityManagerFactory emf) {
-		this.emf = emf;
+	public MovieDAO(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
-	// Singleton pattern
-	public MovieDAO getInstance (EntityManagerFactory emf) {
-		if (instance == null) {
-			instance = new MovieDAO(emf);
-		}
-		return instance;
-	}
+	// Save a list of movies into the database
+	public void saveMovies(List<MovieDTO> movieDTOs) {
+		EntityTransaction transaction = entityManager.getTransaction();
 
-	// Persist one movie
-	public MovieDTO persistEntity (MovieDTO movieDTO) {
-		Movie movie;
+		try {
+			transaction.begin();
 
-		try (EntityManager em = emf.createEntityManager()) {
-			em.getTransaction().begin();
+			for (MovieDTO movieDTO : movieDTOs) {
+				// Convert MovieDTO to Movie entity
+				Movie movie = convertToEntity(movieDTO);
 
-			// Find existing movie, or create a new one if it doesn't exist
-			movie = em.find(Movie.class, movieDTO.getId());
-			if (movie == null) {
-				// Use constructor to map basic fields
-				movie = new Movie(movieDTO);
-			} else {
-				// Update movie fields from DTO if already exists
-				movie = new Movie(movieDTO);
-			}
-
-			// Set the director, actors, and genres
-			setRelationships(em, movie, movieDTO);
-
-			if (movie.getId() == null) {
-				em.persist(movie);
-			} else {
-				// merge if it already exists
-				movie = em.merge(movie);
-			}
-
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			throw new JpaException("Failed to persist actor:" + e.getMessage());
-		}
-		return new MovieDTO(movie);
-	}
-
-
-	// Persist a list of movies
-	public List<MovieDTO> persistListOfMovies (List<MovieDTO> movieDTOList) {
-		List<MovieDTO> persistedlist = new ArrayList<>();
-
-		try (EntityManager em = emf.createEntityManager()) {
-			em.getTransaction().begin();
-
-			for (MovieDTO dto : movieDTOList) {
-				Movie movie = em.find(Movie.class, dto.getId());
-
-				if (movie == null) {
-					movie = new Movie(dto);
-					setRelationships(em, movie, dto);
-					em.persist(movie);
-				} else {
-					movie = new Movie(dto);
-					setRelationships(em, movie, dto);
-					movie = em.merge(movie);
+				// Ensure the director, actors, and genres are saved first
+				if (movie.getDirector() != null) {
+					Director director = movie.getDirector();
+					// Check if the director already exists in the database
+					Director existingDirector = entityManager.find(Director.class, director.getId());
+					if (existingDirector == null) {
+						// Insert new director
+						entityManager.persist(director);
+					} else {
+						movie.setDirector(existingDirector);
+					}
 				}
 
-				// add the persisted DTO to the result list
-				persistedlist.add(new MovieDTO(movie));
-			}
-			em.getTransaction().commit();
+				// Persist actors and genres
+				for (Actor actor : movie.getActors()) {
+					Actor existingActor = entityManager.find(Actor.class, actor.getId());
+					if (existingActor == null) {
+						// Insert new actor
+						entityManager.persist(actor);
+					} else {
+						actor = existingActor;
+					}
+				}
 
-		} catch (Exception e) {
-			System.out.println("Failed to persist list of movies: " + e.getMessage());
-			e.printStackTrace();
-		}
-		return persistedlist;
-	}
+				for (Genre genre : movie.getGenres()) {
+					Genre existingGenre = entityManager.find(Genre.class, genre.getId());
+					if (existingGenre == null) {
+						// Insert new genre
+						entityManager.persist(genre);
+					} else {
+						genre = existingGenre;
+					}
+				}
 
-
-	public List<MovieDTO> findAll () {
-		try (EntityManager em = emf.createEntityManager()) {
-			return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m", MovieDTO.class).getResultList();
-		} catch (Exception e) {
-			throw new JpaException("Failed to find all movies." + e.getMessage());
-		}
-	}
-
-	public MovieDTO findEntity (Long id) {
-		try (EntityManager em = emf.createEntityManager()) {
-			Movie movie = em.find(Movie.class, id);
-			if (movie == null) {
-				throw new JpaException("No movie found with id: " + id);
-			}
-			return new MovieDTO(em.find(Movie.class, id));
-		} catch (Exception e) {
-			throw new JpaException("Failed to find movie.");
-		}
-	}
-
-	public MovieDTO updateEntity (MovieDTO movieDTO, Long id) {
-		try (EntityManager em = emf.createEntityManager()) {
-			em.getTransaction().begin();
-			Movie movie = em.find(Movie.class, id);
-
-			if (movie == null) {
-				throw new JpaException("No movie found with id: " + id);
+				// Finally, persist the movie after ensuring all dependencies are saved
+				entityManager.persist(movie);
 			}
 
-			movie.setPopularity(movieDTO.getPopularity());
-			movie.setTitle(movieDTO.getTitle());
-			movie.setOriginalLanguage(movieDTO.getOriginalLanguage());
-			movie.setReleaseDate(movieDTO.getReleaseDate());
-			movie.setVoteAverage(movieDTO.getVoteAverage());
-
-			setRelationships(em, movie, movieDTO);
-
-			em.merge(movie);
-			em.getTransaction().commit();
-
-			return new MovieDTO(movie);
+			transaction.commit();
 
 		} catch (Exception e) {
-			System.out.println("Failed to update movie: " + e.getMessage());
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public void removeEntity (Long id) {
-		try (EntityManager em = emf.createEntityManager()) {
-			Movie movie = em.find(Movie.class, id);
-			if (movie == null) {
-				throw new JpaException("No movie found with id: " + id);
+			if (transaction.isActive()) {
+				transaction.rollback();
 			}
-			em.getTransaction().begin();
-			em.remove(movie);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			System.out.println("Failed to delete movie: ");
-			e.printStackTrace();
+			throw new RuntimeException("Failed to save movies: " + e.getMessage(), e);
 		}
 	}
 
+	// Convert MovieDTO to Movie entity
+	private Movie convertToEntity(MovieDTO movieDTO) {
+		Movie movie = new Movie();
+		movie.setId(movieDTO.getId());
+		movie.setTitle(movieDTO.getTitle());
+		movie.setOriginalLanguage(movieDTO.getOriginalLanguage());
+		movie.setReleaseDate(movieDTO.getReleaseDate());
+		movie.setPopularity(movieDTO.getPopularity());
+		movie.setVoteAverage(movieDTO.getVoteAverage());
 
-	// Method to set the director, actors and genres
-	private static void setRelationships (EntityManager em, Movie movie, MovieDTO dto) {
-		// Set Director
-		DirectorDTO directorDTO = dto.getDirector();
-		if (directorDTO != null) {
-			Director director = em.find(Director.class, directorDTO.getId());
-			if (director == null) {
-				director = new Director(directorDTO);
-				em.persist(director);
-			}
+		// Convert and set actors
+		List<Actor> actors = movieDTO.getActors().stream().map(actorDTO -> {
+			Actor actor = new Actor();
+			actor.setId(actorDTO.getId());
+			actor.setName(actorDTO.getName());
+			return actor;
+		}).toList();
+		movie.setActors(actors);
+
+		// Check if the director is null before setting it
+		if (movieDTO.getDirector() != null) {
+			Director director = new Director();
+			director.setId(movieDTO.getDirector().getId());
+			director.setName(movieDTO.getDirector().getName());
 			movie.setDirector(director);
 		}
 
-		// Set Actors
-		if (dto.getActors() != null) {
-			List<Actor> actors = new ArrayList<>();
-			for (ActorDTO actorDTO : dto.getActors()) {
-				Actor actor = em.find(Actor.class, actorDTO.getId());
-				if (actor == null) {
-					actor = new Actor(actorDTO);
-					em.persist(actor);
-				}
-				actors.add(actor);
-			}
-			movie.setActors(actors);
-		}
+		// Convert and set genres
+		List<Genre> genres = movieDTO.getGenres().stream().map(genreDTO -> {
+			Genre genre = new Genre();
+			genre.setId(genreDTO.getId());
+			genre.setName(genreDTO.getName());
+			return genre;
+		}).toList();
+		movie.setGenres(genres);
 
-		// Set Genres
-		if (dto.getGenres() != null) {
-			List<Genre> genres = new ArrayList<>();
-			for (GenreDTO genreDTO : dto.getGenres()) {
-				Genre genre = em.find(Genre.class, genreDTO.getId());
-				if (genre == null) {
-					genre = new Genre(genreDTO);
-					em.persist(genre);
-				}
-				genres.add(genre);
-			}
-			movie.setGenres(genres);
-		}
+		return movie;
 	}
 }
