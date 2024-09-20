@@ -15,7 +15,6 @@ public class ActorDAO
 {
 
     private static ActorDAO actorDAO;
-
     private static EntityManagerFactory emf;
 
     private ActorDAO(EntityManagerFactory emf)

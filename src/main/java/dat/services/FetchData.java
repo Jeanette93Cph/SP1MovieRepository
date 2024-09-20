@@ -35,109 +35,22 @@ public class FetchData {
 		return allActors;
 	}
 
-
-/* 	public List<MovieDTO> sortByTitle() {
-		List<MovieDTO> allMovies = movieDAO.findAll();
-		allMovies.stream()
-				.sorted((Comparator.comparing(MovieDTO::getTitle)));
-				.forEach(System.out::println);
-		return allMovies;
-	}
-
-	public List<MovieDTO> sortByReleaseDate() {
-		List<MovieDTO> allmovies = movieDAO.findAll();
-		allmovies.stream()
-				.sorted(Comparator.comparing(MovieDTO::getReleaseDate))
-				.forEach(System.out::println);
-		return allmovies;
-	}
-
-	public List<MovieDTO> sortByRating() {
-		List<MovieDTO> allMovies = movieDAO.findAll();
-		allMovies.stream()
-				.sorted(Comparator.comparing(MovieDTO::getVoteAverage))
-				.forEach(System.out::println);
-		return allMovies;
-	}
-
-	// List of all movies
+	//List of all movies
 	public List<MovieDTO> fetchAllMovies () {
 		List<MovieDTO> allmovies = movieDAO.findAll();
 		allmovies.forEach(System.out::println);
 		return allmovies;
 	}
 
-	// List of all actors
-	public List<ActorDTO> fetchAllActors() {
-		List<ActorDTO> allActors = actorDAO.findAll();
-		allActors.forEach(System.out::println);
-		return allActors;
-	}
-
-	// List of all directors
-	public List<DirectorDTO> fetchAllDirectors() {
-		List<DirectorDTO> allDirectors = directorDAO.findAll();
-		allDirectors.forEach(System.out::println);
-		return allDirectors;
-	}
-
-	// List of all genres
-	public List<GenreDTO> fetchAllGenres() {
-		List<GenreDTO> allGenres = genreDAO.findAll();
-		allGenres.forEach(System.out::println);
-		return allGenres;
-	}
-
-	// List of movies with a specific genre
-	public List<MovieDTO> fetchMoviesByGenre(String genre) {
-		return null;
-	}
-
-	// List of movies with a specific actor
-	public void fetchMoviesByActor(String actor) {
-		movieDAO.findByActor(actor);
-	}
-
-	// List of movies with a specific director
-	public void fetchMoviesByDirector(String director) {
-		movieDAO.findByDirector(director);
-	}
-
-	// Update a movie by title
-	public void updateMovieByTitle(String title) {
-		movieDAO.updateByTitle(title);
-	}
-
-	// Update a movie by release date
-	public void updateMovieByReleaseDate(String releaseDate) {
-		movieDAO.updateByReleaseDate(releaseDate);
-	}
-
-	// Delete a movie by title
-	public void deleteMovieByTitle(String title) {
-		movieDAO.deleteByTitle(title);
-	}
-
-	// Delete a movie by release date
-	public void deleteMovieByReleaseDate(String releaseDate) {
-		movieDAO.deleteByReleaseDate(releaseDate);
-	}
-
-	// Search for a movie by title - should be case insensitive
-	public List<MovieDTO> searchMovieByTitle(String title) {
-		List<MovieDTO> movies = movieDAO.findAll();
-		movies.stream()
-				.filter(movie -> movie.getOriginalTitle().toLowerCase().contains(title.toLowerCase()))
-				.forEach(System.out::println);
-		return movies;
-	}
-
 	// Get the average rating of a movie
 	public List<MovieDTO> getAverageRating(String title) {
 		List<MovieDTO> movies = movieDAO.findAll();
-		movies.stream()
-				.filter(movie -> movie.getOriginalTitle().equals(title))
-				.forEach(System.out::println);
+		double averageRating = movies.stream()
+				.filter(movie -> movie.getTitle().equals(title))
+				.mapToDouble(MovieDTO::getVoteAverage)
+				.average()
+				.orElse(0);
+		System.out.println("Average rating of " + title + ": " + averageRating);
 		return movies;
 	}
 
@@ -180,5 +93,5 @@ public class FetchData {
 				.limit(10)
 				.forEach(System.out::println);
 		return movies;
-	} */
+	}
 }

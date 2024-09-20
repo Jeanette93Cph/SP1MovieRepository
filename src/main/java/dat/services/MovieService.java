@@ -1,13 +1,11 @@
 package dat.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.MovieDTO;
 import dat.dtos.MovieResponseDTO;
 import dat.exceptions.JpaException;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;

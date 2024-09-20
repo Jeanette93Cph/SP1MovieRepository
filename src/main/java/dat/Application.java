@@ -2,44 +2,42 @@ package dat;
 
 import dat.config.HibernateConfig;
 import dat.daos.ActorDAO;
+import dat.daos.DirectorDAO;
+import dat.daos.GenreDAO;
+import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
-import dat.services.ActorService;
-import dat.services.FetchData;
+import dat.dtos.GenreDTO;
+import dat.dtos.MovieDTO;
+import dat.services.*;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 
 public class Application {
     public static void main(String[] args) {
 
-        //FetchData f = new FetchData(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
+        FetchData f = new FetchData(emf);
+
+        System.out.println("THE MOVIE DB API APPLICATION");
 
         //f.fetchAllActors();
+        //f.fetchAllMovies();
+        //f.getAverageRatingOfAllMovies();
+        //f.getAverageRating("The Promised Land");
+        //f.getTop10MostPopularMovies();
+        //f.getTop10HighestRatedMovies();
+        //f.getTop10LowestRatedMovies();
 
-        //the_movie_db
-
-
-        //Printing all danish movies for the recent 5 years in JSON
-        //String jsonAllMovies = MovieService.getAllMoviesJSON(1);
-        // System.out.println(jsonAllMovies);
-        //
-        // Printing all danish movies for the recent 5 years as MovieDTO's
-        // List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
-        // moviesDTOs.forEach(System.out::println);
-
-        //persist movieList to database
-        //MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //movieDAO.persistListOfMovies(moviesDTOs);
+        //populateDatabase();
+//-------------------------/
 
         //persist one movie to database
 //        MovieDTO movieDTO = new MovieDTO();
 //        movieDTO.setId(222L);
 //        movieDTO.setTitle("En rigtig god film");
 //        MovieDAO.persistEntity(movieDTO);
-
-        //find all movies in the database
-        //MovieDAO movieDAO1 = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //movieDAO1.findAll().forEach(System.out::println);
 
         //find movie by id
        // System.out.println(MovieDAO.findEntity(545330L));
@@ -52,15 +50,6 @@ public class Application {
 
         //delete movie
         //MovieDAO.removeEntity(222L);
-
-        // /* ACTORS */
-        // //Printing all cast from the danish movies for the recent 5 years
-        List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
-        //actorDTOS.forEach(System.out::println);
-
-        //persist actorList to database
-        ActorDAO actorDAO = ActorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        actorDAO.persistListOfActors(actorDTOS);
 
         //persist one actor to database
 //        ActorDTO actorDTO = new ActorDTO();
@@ -84,15 +73,6 @@ public class Application {
         //ActorDAO.removeEntity(222L);
 
 
-        /* DIRECTORS */
-        //Printing all directors from the danish movies for the recent 5 years
-        List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
-        //allDirectorsDTO.forEach(System.out::println);
-
-        //persist directorList to database
-        //DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //directorDAO.persistListOfDirectors(allDirectorsDTO);
-
         //persist one director to database
         //DirectorDTO directorDTO = new DirectorDTO();
         //directorDTO.setName("Hans Hansen");
@@ -113,16 +93,6 @@ public class Application {
 
         //delete director
        //DirectorDAO.removeEntity(333L);
-
-
-        /* GENRE */
-        //Printing all genres
-        //String allGenres = GenreService.getAllGenresJSON();
-        //List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
-
-        //persist genreList to database
-        //GenreDAO genreDAO = GenreDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //genreDAO.persistListOfGenres(genreDTOS);
 
         //persist one genre to database
 //        GenreDTO genreDTO = new GenreDTO();
@@ -145,6 +115,29 @@ public class Application {
         //delete genre
         //GenreDAO.removeEntity(333L);
 
-
     }
-}
+
+    private static void populateDatabase (EntityManagerFactory emf) {
+
+        //persist directors to database
+        List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1); //fetch all data from the movie db api
+        DirectorDAO directorDAO = DirectorDAO.getInstance(emf);
+        directorDAO.persistListOfDirectors(allDirectorsDTO);
+
+        //persist genres to database
+        String allGenres = GenreService.getAllGenresJSON();
+        List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+        GenreDAO genreDAO = GenreDAO.getInstance(emf);
+        genreDAO.persistListOfGenres(genreDTOS);
+
+        //persist actors to database
+        List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
+        ActorDAO actorDAO = ActorDAO.getInstance(emf);
+        actorDAO.persistListOfActors(actorDTOS);
+
+        //persist movieList to database
+        String jsonAllMovies = MovieService.getAllMoviesJSON(1);
+        List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
+        MovieDAO movieDAO = MovieDAO.getInstance(emf);
+        movieDAO.persistListOfMovies(moviesDTOs);
+    }
