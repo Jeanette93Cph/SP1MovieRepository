@@ -1,5 +1,6 @@
 package dat.daos;
 
+import dat.dtos.ActorDTO;
 import dat.entities.Actor;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -24,8 +25,8 @@ public class ActorDAO {
 	}
 
 	//henter data med entitet.
-	public Collection<Actor> findAll () {
-		return List.of();
+	public List<ActorDTO> findAll () {
+		return null;
 	}
 
 	public void persistEntity (Actor entity) {

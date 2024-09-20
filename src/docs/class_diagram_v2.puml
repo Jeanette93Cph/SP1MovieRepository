@@ -26,7 +26,7 @@ skinparam Component {
 
 ''
 
-Class Main {
+Class Application {
   +main(String[] args)
 }
 
@@ -36,23 +36,55 @@ Class HibernateConfig
 }
 
 package "daos" {
-Interface IDAO
+Class ActorDao
+Class DirectorDao
+Class GenreDao
 Class MovieDao
 }
 
+
 package "dtos" {
 Class ActorDTO
-Class MovieDTO
+Class CrewMemberDTO
+Class DirectorDTO
 Class GenreDTO
 Class MovieDTO
-Class DirectorDTO
+Class MovieResponseDTO
 }
 
 package "entities" {
-Class Actor
-Class Movie
-Class Genre
-Class Director
+Class Actor {
++ id : Long
++ name : String
++ department : String
++ popularity : Double
++ character : String
+}
+
+Class Director {
+- id : Long
+- name : String
+- Set<Movie> movies
+}
+
+Class Genre{
+- id : Long
+- name : String
+- Set<Movie> movies
+}
+
+Class Movie{
+- id : Long
+- title : String
+- originalLanguage : String
+- originalTitle : String
+- releaseDate : LocalDate
+- popularity : Double
+- voteAverage : Double
+- voteCount : Integer
+- Director director
+- List<Genre> genres
+- List<Actors> actors
 }
 
 package "exceptions" {
@@ -62,14 +94,18 @@ package "exceptions" {
 }
 
 package "resources" {
-Class Logger
+Class Logger {
+  +exceptionLog(String in)
+  +consoleLog(String in)
 }
 
 package "services" {
-Class MovieService
 Class ActorService
-Class GenreService
 Class DirectorService
+Class FetchData
+Class GenreService
+Class MovieService
+Class SyncApiService
 }
 
 ' Define relationships

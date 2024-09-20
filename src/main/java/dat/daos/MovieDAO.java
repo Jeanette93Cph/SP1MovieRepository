@@ -188,5 +188,5 @@ public class MovieDAO {
 
 	// Method to get the top 10 most popular movies
 	public void getTop10MostPopularMovies () {
-	}
+	} */
 }

@@ -27,7 +27,7 @@ public class GenreDAO {
 		return instance;
 	}
 
-	public Collection<GenreDTO> findAll () {
+	public List<GenreDTO> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
 			TypedQuery<Genre> query = em.createQuery("SELECT g FROM Genre g", Genre.class);
 			List<Genre> genres = query.getResultList();

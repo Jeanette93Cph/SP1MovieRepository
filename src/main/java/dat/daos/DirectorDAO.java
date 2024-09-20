@@ -56,7 +56,7 @@ public class DirectorDAO {
 		return persistedlist;
 	}
 
-	public static List<DirectorDTO> findAll() {
+	public List<DirectorDTO> findAll() {
 		try(EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT new dat.dtos.DirectorDTO(d) FROM Director d", DirectorDTO.class).getResultList();
 		}
