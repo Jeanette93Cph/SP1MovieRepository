@@ -14,14 +14,17 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 public class Application {
+
+	public static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	//public static EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
+
 	public static void main (String[] args) {
 
-		EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
 		FetchData f = new FetchData(emf);
 
 		System.out.println("THE MOVIE DB API APPLICATION");
 
-		// f.fetchAllActors();
+		f.fetchAllActors();
 		// f.fetchAllMovies();
 		// f.getAverageRatingOfAllMovies();
 		// f.getAverageRating("The Promised Land");
@@ -29,11 +32,15 @@ public class Application {
 		// f.getTop10HighestRatedMovies();
 		// f.getTop10LowestRatedMovies();
 
-		// populateDatabase();
-
+		populateDatabase();
 	}
 
-	private static void populateDatabase (DirectorDAO directorDAO, GenreDAO genreDAO, ActorDAO actorDAO, MovieDAO movieDAO) {
+	private static void populateDatabase () {
+		DirectorDAO directorDAO = new DirectorDAO(emf);
+		GenreDAO genreDAO = new GenreDAO(emf);
+		ActorDAO actorDAO = new ActorDAO(emf);
+		MovieDAO movieDAO = new MovieDAO(emf);
+
 		// persist directors to database
 		List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1); // fetch all data from the movie db api
 		directorDAO.persistListOfDirectors(allDirectorsDTO); // persist all directors to the database

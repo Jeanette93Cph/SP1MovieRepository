@@ -14,7 +14,7 @@ public class ActorDAO {
 	private ActorDAO actorDAO;
 	private EntityManagerFactory emf;
 
-	private ActorDAO (EntityManagerFactory emf) {
+	public ActorDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 

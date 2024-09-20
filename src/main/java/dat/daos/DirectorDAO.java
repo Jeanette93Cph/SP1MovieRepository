@@ -14,7 +14,7 @@ public class DirectorDAO {
 	private DirectorDAO directorDAO;
 	private EntityManagerFactory emf;
 
-	private DirectorDAO (EntityManagerFactory emf) {
+	public DirectorDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 

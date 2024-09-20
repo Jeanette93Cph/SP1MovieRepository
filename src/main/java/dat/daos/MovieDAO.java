@@ -22,7 +22,7 @@ public class MovieDAO {
 	private EntityManagerFactory emf;
 
 	// Private constructor
-	private MovieDAO (EntityManagerFactory emf) {
+	public MovieDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 

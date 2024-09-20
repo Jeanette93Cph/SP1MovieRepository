@@ -1,45 +1,34 @@
 package dat.services;
 
 import dat.daos.ActorDAO;
-import dat.daos.DirectorDAO;
-import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
 import jakarta.persistence.EntityManagerFactory;
-
 import java.util.Comparator;
 import java.util.List;
 
 public class FetchData {
 
-	private final MovieDAO movieDAO;
-	private final GenreDAO genreDAO;
-	private final ActorDAO actorDAO;
-	private final DirectorDAO directorDAO;
+	private ActorDAO actorDAO;
+	private MovieDAO movieDAO;
 
-	// Constructor to initialize the DAOs
-	public FetchData(EntityManagerFactory emf) {
-		this.movieDAO = MovieDAO.getInstance(emf);
-		this.genreDAO = GenreDAO.getInstance(emf);
-		this.actorDAO = ActorDAO.getInstance(emf);
-		this.directorDAO = DirectorDAO.getInstance(emf);
+	public FetchData (EntityManagerFactory emf) {
+		this.actorDAO = new ActorDAO(emf);
+		this.movieDAO = new MovieDAO(emf);
 	}
 
 	// List of all actors
-	public List<ActorDTO> fetchAllActors() {
+	public void fetchAllActors() {
 		List<ActorDTO> allActors = actorDAO.findAll();
 		allActors.forEach(System.out::println);
-		return allActors;
 	}
 
 	//List of all movies
 	public List<MovieDTO> fetchAllMovies () {
-		List<MovieDTO> allmovies = movieDAO.findAll();
-		allmovies.forEach(System.out::println);
-		return allmovies;
+		List<MovieDTO> allMovies = movieDAO.findAll();
+		allMovies.forEach(System.out::println);
+		return allMovies;
 	}
 
 	// Get the average rating of a movie
@@ -77,7 +66,7 @@ public class FetchData {
 
 	// Get the top 10 highest rated movies
 	public List<MovieDTO> getTop10HighestRatedMovies() {
-		List<MovieDTO> movies = MovieDAO.findAll();
+		List<MovieDTO> movies = movieDAO.findAll();
 		movies.stream()
 				.sorted(Comparator.comparing(MovieDTO::getVoteAverage).reversed())
 				.limit(10)

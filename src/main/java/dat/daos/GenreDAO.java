@@ -12,7 +12,7 @@ public class GenreDAO {
 	private GenreDAO genreDAO;
 	private EntityManagerFactory emf;
 
-	private GenreDAO (EntityManagerFactory emf) {
+	public GenreDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
