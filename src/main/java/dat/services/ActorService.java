@@ -32,9 +32,9 @@ public class ActorService {
 
 
     //with help from chatgpt
-    public static String getAllActorsJSON(int page)
+    public static List<ActorDTO> getAllActorsFromJSON(int page)
     {
-        Set<String> actorSet = new HashSet<>();
+        List<ActorDTO> listOfActorsDTO = new ArrayList<>();
 
         try {
             //get all movies based on filter: danish movies from the recent 5 years
@@ -47,18 +47,19 @@ public class ActorService {
             {
                 String url = URL + movieID + "/credits?api_key=" + API_KEY + "&page=" + page;
                 String jsonCredits = getJSONResponse(url);
-                List<ActorDTO> movieActors = ActorService.extractActorsFromCredits(jsonCredits);
-                //adds the names of actors to the set to ensure uniqueness
-                actorSet.addAll(movieActors.stream().map(ActorDTO::getName).collect(Collectors.toSet()));
+                List<ActorDTO> actorList = ActorService.extractActorsFromCredits(jsonCredits);
+               	if(actorList != null)
+				{
+					listOfActorsDTO.addAll(actorList);
+				}
             }
+			return listOfActorsDTO;
 
         } catch(IOException | InterruptedException e)
         {
             e.printStackTrace();
         }
-        // Join all unique actors names from the set into a single string with a delimiter
-        return String.join(", ", actorSet);  // Joining with a comma and space delimiter
-
+        return null;
     }
 
 	// help method to getAllActorsJSON(). with help from chatgpt
@@ -74,13 +75,6 @@ public class ActorService {
 	}
 
 
-	// help method to extractActorsFromCredits. with help from chatgpt
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Credits
-	{
-		public List<ActorDTO> cast;
-	}
-
 
 	// help method to getAllActorsJSON(). with help from chatgpt
 	public static List<ActorDTO> extractActorsFromCredits(String jsonCredits)
@@ -89,10 +83,18 @@ public class ActorService {
 		{
 			ObjectMapper objectMapper = new ObjectMapper();
 
-			//deserialize the JSON credits into a Credits object
-			Credits credits = objectMapper.readValue(jsonCredits, Credits.class);
+			//deserialize the JSON credits into a ActorDTO object
+			ActorDTO actorDTO = objectMapper.readValue(jsonCredits, ActorDTO.class);
 
-			return credits.cast;
+			List<ActorDTO> listActorDTO = actorDTO.cast;
+
+			if(listActorDTO == null)
+			{
+				System.out.println("No actors found in credits.");
+			}
+
+
+			return listActorDTO;
 
 		} catch(JsonProcessingException e)
 		{

@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dat.entities.Actor;
+import dat.entities.Genre;
 import dat.entities.Movie;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,9 +35,6 @@ public class MovieDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String releaseDate;
 
-    @JsonProperty("rating")
-    private Double rating;
-
     @JsonProperty("popularity")
     private Double popularity;
 
@@ -47,21 +47,38 @@ public class MovieDTO {
     @JsonProperty("actors")
     private List<ActorDTO> actors;
 
-    @JsonProperty("directors")
-    private List<DirectorDTO> directors;
+    @JsonProperty("director")
+    private DirectorDTO director;
 
-    public MovieDTO (Movie movie) {
+    public MovieDTO (Movie movie)
+    {
         this.id = movie.getId();
         this.title = movie.getTitle();
         this.originalLanguage = movie.getOriginalLanguage();
-        this.releaseDate = movie.getReleaseDate().toString();
-        this.rating = movie.getRating();
+        this.releaseDate = movie.getReleaseDate();
         this.popularity = movie.getPopularity();
         this.voteAverage = movie.getVoteAverage();
-        this.genres = new MovieDTO(movie).getGenres();
-        this.actors = new MovieDTO(movie).getActors();
-        this.directors = new MovieDTO(movie).getDirectors();
+
+        if (movie.getDirector() != null) {
+            this.director = new DirectorDTO(movie.getDirector());
+        } else {
+            this.director = null;
+        }
+
+        // Initialize genres and actors based on the Movie entity
+
+        this.genres = new ArrayList<>();
+        for (Genre genre : movie.getGenres()) {
+            this.genres.add(new GenreDTO(genre));
+        }
+
+        // Initialize actors
+        this.actors = new ArrayList<>();
+        for (Actor actor : movie.getActors()) {
+            this.actors.add(new ActorDTO(actor));
+        }
     }
+
 
     // convert from JSON to List of MovieDTO
     public static List<MovieDTO> convertToDTOFromJSONList(String json) {
