@@ -189,16 +189,15 @@ Class Logger {
 }
 
 package "services" {
-Class ActorService {
-  }
-
-Class DirectorService {
-  }
+Class ApiService {
++ GenreService()
++ MovieService()
++ DirectorService()
++ ActorService()
++ SyncApiService()
+}
 
 Class FetchData {}
-Class GenreService {}
-Class MovieService {}
-Class SyncApiService {}
 }
 
 
