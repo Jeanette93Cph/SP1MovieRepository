@@ -29,4 +29,6 @@ public class Genre {
 		this.id = genreDTO.getId();
 		this.name = genreDTO.getName();
 	}
+
+
 }

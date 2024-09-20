@@ -1,5 +1,6 @@
 package dat.entities;
 
+import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Table(name = "movies")
 public class Movie {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -29,10 +30,7 @@ public class Movie {
 	private String originalLanguage;
 
 	@Column(name = "release_date")
-	private LocalDate releaseDate;
-
-	@Column(name = "rating")
-	private Double rating;
+	private String releaseDate;
 
 	@Column(name = "popularity")
 	private Double popularity;
@@ -57,16 +55,21 @@ public class Movie {
 	private List<Actor> actors = new ArrayList<>();
 
 	public Movie(MovieDTO movieDTO) {
-		//this.id = movieDTO.getId();
+		this.id = movieDTO.getId();
 		this.title = movieDTO.getTitle();
 		this.originalLanguage = movieDTO.getOriginalLanguage();
-		this.releaseDate = LocalDate.parse(movieDTO.getReleaseDate());
-		this.rating = movieDTO.getRating();
+		this.releaseDate = movieDTO.getReleaseDate();
 		this.popularity = movieDTO.getPopularity();
 		this.voteAverage = movieDTO.getVoteAverage();
 
 		// Assume that each movie has only one director
-		//this.director = new Director(movieDTO.getDirectors().get(0));
+		//this.director = new Director(movieDTO.getDirector());
+
+		if (movieDTO.getDirector() != null) {
+			this.director = new Director(movieDTO.getDirector());
+		} else {
+			this.director = null;
+		}
 
 		// Assume that each movie has at least one genre
 		this.genres = new ArrayList<>();
@@ -74,17 +77,8 @@ public class Movie {
 		// Assume that each movie has at least one actor
 		this.actors = new ArrayList<>();
 
-
-		// Assume that each movie has at least one genre
-//		this.genres = new ArrayList<>();
-//		for (var genreDTO : movieDTO.getGenres()) {
-//			this.genres.add(new Genre(genreDTO));
-//		}
-//
-//		// Assume that each movie has at least one actor
-//		this.actors = new ArrayList<>();
-//		for (var actorDTO : movieDTO.getActors()) {
-//			this.actors.add(new Actor(actorDTO));
-//		}
 	}
+
+
+
 }

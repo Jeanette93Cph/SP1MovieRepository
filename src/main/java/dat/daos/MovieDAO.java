@@ -1,5 +1,8 @@
 package dat.daos;
 
+import dat.dtos.ActorDTO;
+import dat.dtos.DirectorDTO;
+import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
@@ -9,16 +12,19 @@ import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MovieDAO implements GenericDAO<MovieDTO, Long> {
+public class MovieDAO
+{
 
 	// Singleton instance
 	private static MovieDAO instance;
 
-	private final EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 
 	// Private constructor
 	private MovieDAO(EntityManagerFactory emf) {
@@ -26,70 +32,158 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 	}
 
 	// Singleton pattern
-	public static synchronized MovieDAO getInstance(EntityManagerFactory emf) {
+	public static MovieDAO getInstance(EntityManagerFactory emf) {
 		if (instance == null) {
 			instance = new MovieDAO(emf);
 		}
 		return instance;
 	}
 
-	// Method to find all movies in the database
-	@Override
-	public Collection<MovieDTO> findAll() {
-		try (EntityManager em = emf.createEntityManager()) {
-			TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m", Movie.class);
-			List<Movie> movies = query.getResultList();
-			return movies.stream().map(MovieDTO::new).collect(Collectors.toList());
-		} catch (Exception e) {
-			throw new JpaException("Failed to find all movies.");
-		}
-	}
 
-	// Method to persist a movie to the database
-	@Override
-	public void persistEntity(MovieDTO movieDTO) {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
-			final EntityManager finalEm = em;
+	//Persist one movie
+	public static MovieDTO persistEntity(MovieDTO movieDTO)
+	{
+		Movie movie;
 
+		try(EntityManager em = emf.createEntityManager())
+		{
 			em.getTransaction().begin();
-			Movie movie = new Movie(movieDTO);
 
-			if (movieDTO.getDirectors() != null && !movieDTO.getDirectors().isEmpty())
+			// Find existing movie, or create a new one if it doesn't exist
+			movie = em.find(Movie.class, movieDTO.getId());
+			if (movie == null) {
+				// Use constructor to map basic fields
+				movie = new Movie(movieDTO);
+			} else {
+				// Update movie fields from DTO if already exists
+				movie = new Movie(movieDTO);
+			}
+
+			// Set the director, actors, and genres
+			setRelationships(em, movie, movieDTO);
+
+			if(movie.getId() == null)
 			{
-				Director director = finalEm.find(Director.class, movieDTO.getDirectors().get(0).getId());
+				em.persist(movie);
+			} else{
+				//merge if it already exists
+				movie = em.merge(movie);
 			}
 
-			if(movieDTO.getGenres() !=null)
-			{
-				List<Genre> genres = movieDTO.getGenres().stream().map(genreDTO -> finalEm.find(Genre.class, genreDTO.getId())).collect(Collectors.toList());
-				movie.setGenres(genres);
-			}
-
-			if(movieDTO.getActors() != null){
-				List<Actor> actors = movieDTO.getActors().stream().map(actorDTO -> finalEm.find(Actor.class, actorDTO.getId())).collect(Collectors.toList());
-				movie.setActors(actors);
-			}
-
-			em.persist(movie);
 			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em != null && em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
+		}
+		catch(Exception e)
+		{
+			throw new JpaException("Failed to persist actor:" + e.getMessage());
+		}
+		return new MovieDTO(movie);
+	}
+
+
+	//Persist a list of movies
+	public List<MovieDTO> persistListOfMovies(List<MovieDTO> movieDTOList)
+	{
+		List<MovieDTO> persistedlist = new ArrayList<>();
+
+		try(EntityManager em = emf.createEntityManager())
+		{
+			em.getTransaction().begin();
+
+			for(MovieDTO dto : movieDTOList)
+			{
+				Movie movie = em.find(Movie.class, dto.getId());
+
+				if(movie == null)
+				{
+					movie = new Movie(dto);
+					setRelationships(em, movie, dto);
+					em.persist(movie);
+				} else{
+					movie = new Movie(dto);
+					setRelationships(em, movie, dto);
+					movie = em.merge(movie);
+				}
+
+				//add the persisted DTO to the result list
+				persistedlist.add(new MovieDTO(movie));
 			}
-			throw new JpaException("Failed to persist movie:" + e.getMessage());
-		} finally {
-			if (em != null) em.close();
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+			System.out.println("Failed to persist list of movies: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return persistedlist;
+	}
+
+
+	public static List<MovieDTO> findAll()
+	{
+		try(EntityManager em = emf.createEntityManager())
+		{
+			return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m", MovieDTO.class).getResultList();
+		}
+		catch(Exception e){
+			throw new JpaException("Failed to find all movies." + e.getMessage());
 		}
 	}
 
-	// Method to delete a movie from the database
-	@Override
-	public void removeEntity(Long id) {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
+	public static MovieDTO findEntity(Long id)
+	{
+		try(EntityManager em = emf.createEntityManager())
+		{
+			Movie movie = em.find(Movie.class, id);
+			if(movie == null)
+			{
+				throw new JpaException("No movie found with id: " + id);
+			}
+			return new MovieDTO(em.find(Movie.class, id));
+		}
+		catch (Exception e) {
+			throw new JpaException("Failed to find movie.");
+		}
+	}
+
+	public static MovieDTO updateEntity(MovieDTO movieDTO, Long id)
+	{
+		try(EntityManager em = emf.createEntityManager())
+		{
+			em.getTransaction().begin();
+			Movie movie = em.find(Movie.class, id);
+
+			if(movie == null)
+			{
+				throw new JpaException("No movie found with id: " + id);
+			}
+
+			movie.setPopularity(movieDTO.getPopularity());
+			movie.setTitle(movieDTO.getTitle());
+			movie.setOriginalLanguage(movieDTO.getOriginalLanguage());
+			movie.setReleaseDate(movieDTO.getReleaseDate());
+			movie.setVoteAverage(movieDTO.getVoteAverage());
+
+			setRelationships(em, movie, movieDTO);
+
+			em.merge(movie);
+			em.getTransaction().commit();
+
+			return new MovieDTO(movie);
+
+		}
+		catch (Exception e)
+		{
+			System.out.println("Failed to update movie: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+
+	public static void removeEntity(Long id)
+	{
+		try(EntityManager em = emf.createEntityManager())
+		{
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
 				throw new JpaException("No movie found with id: " + id);
@@ -97,52 +191,58 @@ public class MovieDAO implements GenericDAO<MovieDTO, Long> {
 			em.getTransaction().begin();
 			em.remove(movie);
 			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em != null && em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Failed to delete movie: ");
+			e.printStackTrace();
+		}
+
+	}
+
+
+
+	//Help method to set the director, actors and genres
+	private static void setRelationships(EntityManager em, Movie movie, MovieDTO dto)
+	{
+		// Set Director
+		DirectorDTO directorDTO = dto.getDirector();
+		if (directorDTO != null) {
+			Director director = em.find(Director.class, directorDTO.getId());
+			if (director == null) {
+				director = new Director(directorDTO);
+				em.persist(director);
 			}
-			throw new JpaException("Failed to remove movie.");
-		} finally {
-			if (em != null) em.close();
+			movie.setDirector(director);
+		}
+
+		// Set Actors
+		if (dto.getActors() != null) {
+			List<Actor> actors = new ArrayList<>();
+			for (ActorDTO actorDTO : dto.getActors()) {
+				Actor actor = em.find(Actor.class, actorDTO.getId());
+				if (actor == null) {
+					actor = new Actor(actorDTO);
+					em.persist(actor);
+				}
+				actors.add(actor);
+			}
+			movie.setActors(actors);
+		}
+
+		// Set Genres
+		if (dto.getGenres() != null) {
+			List<Genre> genres = new ArrayList<>();
+			for (GenreDTO genreDTO : dto.getGenres()) {
+				Genre genre = em.find(Genre.class, genreDTO.getId());
+				if (genre == null) {
+					genre = new Genre(genreDTO);
+					em.persist(genre);
+				}
+				genres.add(genre);
+			}
+			movie.setGenres(genres);
 		}
 	}
 
-	// Method to find a movie by id
-	@Override
-	public MovieDTO findEntity(Long id) {
-		try (EntityManager em = emf.createEntityManager()) {
-			Movie movie = em.find(Movie.class, id);
-			if (movie == null) {
-				throw new JpaException("No movie found with id: " + id);
-			}
-			return new MovieDTO(movie);
-		} catch (Exception e) {
-			throw new JpaException("Failed to find movie.");
-		}
-	}
-
-	// Method to update a movie in the database by id
-	@Override
-	public void updateEntity(MovieDTO movieDTO, Long id) {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
-			Movie movie = em.find(Movie.class, id);
-			if (movie == null) {
-				throw new JpaException("No movie found with id: " + id);
-			}
-			em.getTransaction().begin();
-			// Update the movie with the new movieDTO
-			movie = new Movie(movieDTO);
-			em.merge(movie);
-			em.getTransaction().commit();
-		} catch (Exception e) {
-			if (em != null && em.getTransaction().isActive()) {
-				em.getTransaction().rollback();
-			}
-			throw new JpaException("Failed to update movie.");
-		} finally {
-			if (em != null) em.close();
-		}
-	}
 }

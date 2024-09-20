@@ -24,15 +24,39 @@ public class Main {
 
 
         //Printing all danish movies for the recent 5 years in JSON
-        String jsonAllMovies = MovieService.getAllMoviesJSON(2);
+        //String jsonAllMovies = MovieService.getAllMoviesJSON(1);
         // System.out.println(jsonAllMovies);
         //
         // //Printing all danish movies for the recent 5 years as MovieDTO's
-        List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
+        //List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
         // moviesDTOs.forEach(System.out::println);
 
+        //persist movieList to database
+        //MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
+        //movieDAO.persistListOfMovies(moviesDTOs);
+
+        //persist one movie to database
+//        MovieDTO movieDTO = new MovieDTO();
+//        movieDTO.setId(222L);
+//        movieDTO.setTitle("En rigtig god film");
+//        MovieDAO.persistEntity(movieDTO);
+
+        //find all movies in the database
         MovieDAO movieDAO1 = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        movieDAO1.findAll().forEach(System.out::println);
+        //movieDAO1.findAll().forEach(System.out::println);
+
+        //find movie by id
+       // System.out.println(MovieDAO.findEntity(545330L));
+
+        //update movie
+//        MovieDTO movieDTO1 = MovieDAO.findEntity(222L);
+//        movieDTO1.setTitle("Mega dårlig film");
+//        MovieDAO.updateEntity(movieDTO1, 222L);
+//        System.out.println(MovieDAO.findEntity(222L));
+
+        //delete movie
+        MovieDAO.removeEntity(222L);
+
 
 
         // /* ACTORS */
@@ -73,7 +97,7 @@ public class Main {
 
         //persist directorList to database
         //DirectorDAO directorDAO = DirectorDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));
-        //directorDAO.persistListOfDirectors(allDirectorsDTO);
+       // directorDAO.persistListOfDirectors(allDirectorsDTO);
 
         //persist one director to database
         //DirectorDTO directorDTO = new DirectorDTO();

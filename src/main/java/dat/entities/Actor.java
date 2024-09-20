@@ -6,6 +6,7 @@ import dat.dtos.ActorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ public class Actor {
 
 	@ToString.Exclude // Prevent infinite loop when fetching data
 	@ManyToMany(mappedBy = "actors")
-	private Set<Movie> movies;
+	private List<Movie> movies;
 
 	public Actor(ActorDTO actorDTO) {
 		this.id = actorDTO.getId();
