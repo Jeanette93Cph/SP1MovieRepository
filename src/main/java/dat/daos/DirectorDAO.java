@@ -14,6 +14,11 @@ public class DirectorDAO implements IDAO<Director> {
 	private static final Logger logger = LoggerFactory.getLogger(DirectorDAO.class);
 
 	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	EntityManager entityManager;
+
+	public DirectorDAO(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
 	@Override
 	public void create (Director t) {

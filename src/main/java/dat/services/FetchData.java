@@ -26,12 +26,15 @@ public class FetchData {
 	private DirectorDAO directorDAO;
 
 	// Constructor initializes MovieDAO with EntityManager
-	public FetchData(EntityManager entityManager) {
-		this.movieDAO = new MovieDAO(entityManager);  // Pass only EntityManager
+	public FetchData (EntityManager em) {
+		this.movieDAO = new MovieDAO(em);  // Pass only EntityManager
+		this.actorDAO = new ActorDAO(em);
+		this.genreDAO = new GenreDAO(em);
+		this.directorDAO = new DirectorDAO(em);
 	}
 
 	// List of all actors (convert entities to DTOs)
-	public void getAllActors() {
+	public void getAllActors () {
 		List<Actor> allActors = actorDAO.findAll(); // Returns entities
 		List<ActorDTO> actorDTOs = allActors.stream()
 				.map(this::convertToActorDTO)
@@ -40,7 +43,7 @@ public class FetchData {
 	}
 
 	// List of all movies
-	public List<MovieDTO> getAllMovies() {
+	public List<MovieDTO> getAllMovies () {
 		List<Movie> allMovies = movieDAO.findAll(); // Returns entities
 		List<MovieDTO> movieDTOList = allMovies.stream()
 				.map(this::convertToMovieDTO)
@@ -50,7 +53,7 @@ public class FetchData {
 	}
 
 	// List of all genres
-	public void getAllGenres() {
+	public void getAllGenres () {
 		List<Genre> allGenres = genreDAO.findAll(); // Returns entities
 		List<GenreDTO> genreDTOs = allGenres.stream()
 				.map(this::convertToGenreDTO)
@@ -59,7 +62,7 @@ public class FetchData {
 	}
 
 	// List of all directors
-	public List<DirectorDTO> getAllDirectors() {
+	public List<DirectorDTO> getAllDirectors () {
 		List<Director> allDirectors = directorDAO.findAll(); // Returns entities
 		List<DirectorDTO> directorDTOs = allDirectors.stream()
 				.map(this::convertToDirectorDTO)
@@ -69,7 +72,7 @@ public class FetchData {
 	}
 
 	// List of all actors in a movie
-	public List<MovieDTO> getActorsInMovie(String title) {
+	public List<MovieDTO> getActorsInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
@@ -77,7 +80,7 @@ public class FetchData {
 	}
 
 	// Get the average rating of a movie
-	public double getAverageRating(String title) {
+	public double getAverageRating (String title) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
@@ -87,16 +90,18 @@ public class FetchData {
 	}
 
 	// Get the average rating of all movies
-	public double getAverageRatingOfAllMovies() {
+	public void getAverageRatingOfAllMovies () {
 		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
+		double averageRating = movies.stream()
 				.mapToDouble(MovieDTO::getVoteAverage)
 				.average()
 				.orElse(0);
+
+		System.out.println("Average rating of all movies: " + averageRating);
 	}
 
 	// Get the top 10 lowest-rated movies
-	public List<MovieDTO> getTop10LowestRatedMovies() {
+	public List<MovieDTO> getTop10LowestRatedMovies () {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.sorted(Comparator.comparing(MovieDTO::getVoteAverage))
@@ -105,7 +110,7 @@ public class FetchData {
 	}
 
 	// Get the top 10 highest-rated movies
-	public List<MovieDTO> getTop10HighestRatedMovies() {
+	public List<MovieDTO> getTop10HighestRatedMovies () {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.sorted(Comparator.comparing(MovieDTO::getVoteAverage).reversed())
@@ -115,15 +120,26 @@ public class FetchData {
 
 	// Get the top 10 most popular movies
 	public List<MovieDTO> getTop10MostPopularMovies() {
-		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
-				.sorted(Comparator.comparing(MovieDTO::getPopularity).reversed())
-				.limit(10)
-				.toList();
+		List<Movie> allMovies = movieDAO.findAll();
+
+		System.out.println("Top 10 popular Movies");
+
+		// Filter out movies where popularity is null
+		return allMovies.stream()
+				.filter(movie -> movie.getPopularity() != null)
+				.sorted(Comparator.comparing(Movie::getPopularity).reversed())  // Sort by popularity in descending order
+				.limit(10)  // Limit to top 10
+				.map(this::convertToMovieDTO)  // Convert to DTOs
+				.peek(movie -> System.out.println(
+						"Movie ID: " + movie.getId()
+						+ ", Title: " + movie.getTitle()
+						+ ", Popularity: " + movie.getPopularity()
+				))  // Print each movie in the required format
+				.collect(Collectors.toList());
 	}
 
 	// Search for a movie by title (case-insensitive)
-	public List<MovieDTO> getMovieByTitle(String title) {
+	public List<MovieDTO> getMovieByTitle (String title) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
@@ -131,7 +147,7 @@ public class FetchData {
 	}
 
 	// Search for a movie by genre (case-insensitive)
-	public List<MovieDTO> getMovieByGenre(String genre) {
+	public List<MovieDTO> getMovieByGenre (String genre) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getGenres().stream()
@@ -140,7 +156,7 @@ public class FetchData {
 	}
 
 	// List of all movies that a particular actor has been part of
-	public List<MovieDTO> getMoviesByActor(String name) {
+	public List<MovieDTO> getMoviesByActor (String name) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getActors().stream().anyMatch(actor -> actor.getName().equals(name)))
@@ -148,7 +164,7 @@ public class FetchData {
 	}
 
 	// List of all movies that a particular director has directed
-	public List<MovieDTO> getMoviesByDirector(String name) {
+	public List<MovieDTO> getMoviesByDirector (String name) {
 		List<MovieDTO> movies = getAllMovies();
 		return movies.stream()
 				.filter(movie -> movie.getDirector().getName().equals(name))
@@ -156,7 +172,7 @@ public class FetchData {
 	}
 
 	// List directors in a movie
-	public void getDirectorsInMovie(String title) {
+	public void getDirectorsInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
 		movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
@@ -164,7 +180,7 @@ public class FetchData {
 	}
 
 	// List genres in a movie
-	public void getGenresInMovie(String title) {
+	public void getGenresInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
 		movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
@@ -172,7 +188,7 @@ public class FetchData {
 	}
 
 	// Search for a movie by string (can match in title, genre, director)
-	public void searchForMovieByString(String s) {
+	public void searchForMovieByString (String s) {
 		List<MovieDTO> movies = getAllMovies();
 		movies.stream()
 				.filter(movie -> movie.getTitle().toLowerCase().contains(s.toLowerCase())
@@ -182,33 +198,31 @@ public class FetchData {
 	}
 
 	// Add a new movie
-	public void addNewMovie(MovieDTO movieDTO) {
+	public void addNewMovie (MovieDTO movieDTO) {
 		movieDAO.create(convertToMovie(movieDTO));
 	}
 
 	// Update an existing movie
-	public void updateExistingMovie(MovieDTO movieDTO) {
+	public void updateExistingMovie (MovieDTO movieDTO) {
 		movieDAO.update(convertToMovie(movieDTO));
 	}
 
 	// Delete a movie
-	public void deleteMovie(MovieDTO movieDTO) {
+	public void deleteMovie (MovieDTO movieDTO) {
 		movieDAO.delete(convertToMovie(movieDTO));
 	}
 
 	// Conversion method from MovieDTO to Movie entity
-	private Movie convertToMovie(MovieDTO movieDTO) {
-		// Assuming you have a constructor for Movie that matches the DTO
+	private Movie convertToMovie (MovieDTO movieDTO) {
 		Movie movie = new Movie();
 		movie.setId(movieDTO.getId());
 		movie.setTitle(movieDTO.getTitle());
 		movie.setReleaseDate(movieDTO.getReleaseDate());
-		// Convert genres, actors, and other fields as needed
 		return movie;
 	}
 
 	// Conversion method from Movie to MovieDTO
-	private MovieDTO convertToMovieDTO(Movie movie) {
+	private MovieDTO convertToMovieDTO (Movie movie) {
 		return new MovieDTO(
 				movie.getId(),
 				movie.getTitle(),
@@ -218,7 +232,7 @@ public class FetchData {
 	}
 
 	// Conversion method from Actor entity to ActorDTO
-	private ActorDTO convertToActorDTO(Actor actor) {
+	private ActorDTO convertToActorDTO (Actor actor) {
 		return new ActorDTO(
 				actor.getId(),
 				actor.getName()
@@ -226,7 +240,7 @@ public class FetchData {
 	}
 
 	// Conversion method from Genre entity to GenreDTO
-	private GenreDTO convertToGenreDTO(Genre genre) {
+	private GenreDTO convertToGenreDTO (Genre genre) {
 		return new GenreDTO(
 				genre.getId(),
 				genre.getName()
@@ -234,7 +248,7 @@ public class FetchData {
 	}
 
 	// Conversion method from Director entity to DirectorDTO
-	private DirectorDTO convertToDirectorDTO(Director director) {
+	private DirectorDTO convertToDirectorDTO (Director director) {
 		return new DirectorDTO(
 				director.getId(),
 				director.getName()

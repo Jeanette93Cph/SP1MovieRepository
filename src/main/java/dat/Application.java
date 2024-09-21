@@ -33,16 +33,16 @@ public class Application {
 			FetchData f = new FetchData(em);
 
 			// Uncomment the methods below to test the functionality of the application
-			f.getAllMovies();
-			// f.getAllActors();
 			// f.getAllMovies();
+			// f.getAllActors();
 			// f.getAllGenres();
 			// f.getAllDirectors();
-			//
+
+
 			// f.getAverageRatingOfAllMovies();
 			// f.getAverageRating("The Promised Land");
 			//
-			// f.getTop10MostPopularMovies();
+			f.getTop10MostPopularMovies();
 			// f.getTop10HighestRatedMovies();
 			// f.getTop10LowestRatedMovies();
 			//
@@ -60,9 +60,6 @@ public class Application {
 			// MovieDTO MovieDTO = new MovieDTO();
 			// f.addNewMovie(MovieDTO);
 			// f.deleteMovie(MovieDTO);
-
-			// Test fetching all movies
-			f.getAllMovies().forEach(System.out::println);
 
 		} catch (Exception e) {
 			e.printStackTrace();

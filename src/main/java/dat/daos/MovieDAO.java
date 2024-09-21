@@ -20,7 +20,6 @@ public class MovieDAO implements IDAO<Movie> {
 	// private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
 	private EntityManager entityManager;
 
-	// Constructor accepts both EntityManagerFactory and EntityManager
 	public MovieDAO (EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
