@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 
-public abstract class GenreDAO implements IDAO<Genre> {
+public class GenreDAO implements IDAO<Genre> {
 
 	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
 

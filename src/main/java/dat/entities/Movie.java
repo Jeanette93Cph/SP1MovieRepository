@@ -46,7 +46,7 @@ public class Movie {
 	@JoinColumn(name = "director_id")
 	private Director director;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "movie_genres",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "genre_id"))

@@ -14,6 +14,10 @@ public class ActorDAO implements IDAO<Actor> {
 
 	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
 
+	public ActorDAO (EntityManager em) {
+		em = emf.createEntityManager();
+	}
+
 	@Override
 	public void create(Actor actor) {
 		try (EntityManager em = emf.createEntityManager()) {

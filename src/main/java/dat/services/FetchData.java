@@ -12,6 +12,7 @@ import dat.entities.Actor;
 import dat.entities.Genre;
 import dat.entities.Movie;
 import dat.entities.Director;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.util.Comparator;
@@ -19,18 +20,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FetchData {
-
 	private MovieDAO movieDAO;
-	private GenreDAO genreDAO;
 	private ActorDAO actorDAO;
+	private GenreDAO genreDAO;
 	private DirectorDAO directorDAO;
 
-	// Constructor with DAOs passed as parameters
-	public FetchData(EntityManagerFactory emf, MovieDAO movieDAO, GenreDAO genreDAO, ActorDAO actorDAO, DirectorDAO directorDAO) {
-		this.movieDAO = movieDAO;
-		this.genreDAO = genreDAO;
-		this.actorDAO = actorDAO;
-		this.directorDAO = directorDAO;
+	// Constructor initializes MovieDAO with EntityManager
+	public FetchData(EntityManager entityManager) {
+		this.movieDAO = new MovieDAO(entityManager);  // Pass only EntityManager
 	}
 
 	// List of all actors (convert entities to DTOs)

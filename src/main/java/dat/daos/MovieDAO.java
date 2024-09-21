@@ -1,5 +1,6 @@
 package dat.daos;
 
+import dat.config.HibernateConfig;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
@@ -15,10 +16,13 @@ import java.util.stream.Collectors;
 
 public class MovieDAO implements IDAO<Movie> {
 
-	public EntityManagerFactory emf;
+	private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	// private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	private EntityManager entityManager;
 
-	public MovieDAO(EntityManagerFactory emf) {
-		this.emf = emf;
+	// Constructor accepts both EntityManagerFactory and EntityManager
+	public MovieDAO (EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	// Method to save a list of movies to the database
@@ -161,7 +165,7 @@ public class MovieDAO implements IDAO<Movie> {
 	}
 
 	// Search for a movie by genre (case-insensitive, partial match)
-	public List<MovieDTO> searchForMovieByGenre(String genre) {
+	public List<MovieDTO> searchForMovieByGenre (String genre) {
 		try (EntityManager em = emf.createEntityManager()) {
 			// JPQL query with case-insensitive search using LOWER() and LIKE
 			Query query = em.createQuery(
@@ -183,7 +187,7 @@ public class MovieDAO implements IDAO<Movie> {
 	}
 
 	// Method to convert Movie entity to MovieDTO
-	private MovieDTO convertToMovieDTO(Movie movie) {
+	private MovieDTO convertToMovieDTO (Movie movie) {
 		return new MovieDTO(movie.getId(), movie.getTitle(), movie.getReleaseDate(), movie.getGenres());
 	}
 
