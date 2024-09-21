@@ -5,10 +5,7 @@ import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
 import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
+import dat.dtos.*;
 import dat.services.ActorService;
 import dat.services.DirectorService;
 import dat.services.GenreService;
@@ -30,7 +27,7 @@ public class Main {
         //
         // Printing all danish movies for the recent 5 years as MovieDTO's
         List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
-        // moviesDTOs.forEach(System.out::println);
+        //moviesDTOs.forEach(System.out::println);
 
         //persist movieList to database
         MovieDAO movieDAO = MovieDAO.getInstance(HibernateConfig.getEntityManagerFactory("the_movie_db"));

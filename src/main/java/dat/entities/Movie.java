@@ -35,7 +35,7 @@ public class Movie {
 	private Double voteAverage;
 
 	@ManyToOne
-	@JoinColumn(name = "director_id")
+	@JoinColumn(name = "director_id", referencedColumnName = "id")
 	private Director director;
 
 	@ManyToMany
