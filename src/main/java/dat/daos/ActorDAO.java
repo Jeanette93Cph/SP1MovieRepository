@@ -12,11 +12,11 @@ import java.util.List;
 
 public class ActorDAO implements IDAO<Actor> {
 
-	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
-	EntityManager entityManager;
+	private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	private EntityManager entityManager;
 
-	public ActorDAO(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public ActorDAO (EntityManagerFactory emf) {
+		this.emf = emf;
 	}
 
 	@Override

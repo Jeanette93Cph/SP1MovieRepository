@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dat.entities.Actor;
+import dat.entities.Director;
 import dat.entities.Genre;
 import dat.entities.Movie;
 import lombok.AllArgsConstructor;
@@ -16,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
 
@@ -59,12 +60,18 @@ public class MovieDTO {
     }
 
     // Constructor
-    public MovieDTO(Long id, String title, String releaseDate, List<Genre> genres) {
+    public MovieDTO(Long id, String title, String originalLanguage, String releaseDate, Double popularity, Double voteAverage, List<Genre> genres, List<Actor> actors, DirectorDTO director) {
         this.id = id;
         this.title = title;
+        this.originalLanguage = originalLanguage;
         this.releaseDate = releaseDate;
+        this.popularity = popularity;
+        this.voteAverage = voteAverage;
         this.genres = genres.stream().map(GenreDTO::new).collect(Collectors.toList());
+        this.actors = actors.stream().map(ActorDTO::new).collect(Collectors.toList());
+        this.director = director;
     }
+
 
     public static List<MovieDTO> convertToDTOFromJSONList (String json) {
         try {

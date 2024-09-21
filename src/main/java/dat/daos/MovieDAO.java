@@ -1,6 +1,7 @@
 package dat.daos;
 
 import dat.config.HibernateConfig;
+import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
@@ -17,11 +18,10 @@ import java.util.stream.Collectors;
 public class MovieDAO implements IDAO<Movie> {
 
 	private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
-	// private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
 	private EntityManager entityManager;
 
-	public MovieDAO (EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public MovieDAO (EntityManagerFactory emf) {
+		this.emf = emf;
 	}
 
 	// Method to save a list of movies to the database
@@ -154,7 +154,7 @@ public class MovieDAO implements IDAO<Movie> {
 	@Override
 	public List<Movie> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
-			Query query = em.createQuery("SELECT m FROM Movie m");
+			Query query = em.createQuery("SELECT m FROM Movie m LEFT JOIN FETCH m.actors", Movie.class);
 			List<Movie> movies = query.getResultList();
 			return movies;
 		} catch (Exception e) {
@@ -187,7 +187,26 @@ public class MovieDAO implements IDAO<Movie> {
 
 	// Method to convert Movie entity to MovieDTO
 	private MovieDTO convertToMovieDTO (Movie movie) {
-		return new MovieDTO(movie.getId(), movie.getTitle(), movie.getReleaseDate(), movie.getGenres());
+
+		DirectorDTO directorDTO = null;
+
+		// Check if the director is null before creating DirectorDTO
+		if (movie.getDirector() != null) {
+			Director director = movie.getDirector();
+			directorDTO = new DirectorDTO(director.getId(), director.getName());
+		}
+
+		return new MovieDTO(
+				movie.getId(),
+				movie.getTitle(),
+				movie.getOriginalLanguage(),
+				movie.getReleaseDate(),
+				movie.getPopularity(),
+				movie.getVoteAverage(),
+				movie.getGenres(),
+				movie.getActors(),
+				movie.getDirector() != null ? directorDTO : null
+		);
 	}
 
 }

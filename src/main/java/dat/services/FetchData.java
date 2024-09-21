@@ -26,11 +26,11 @@ public class FetchData {
 	private DirectorDAO directorDAO;
 
 	// Constructor initializes MovieDAO with EntityManager
-	public FetchData (EntityManager em) {
-		this.movieDAO = new MovieDAO(em);  // Pass only EntityManager
-		this.actorDAO = new ActorDAO(em);
-		this.genreDAO = new GenreDAO(em);
-		this.directorDAO = new DirectorDAO(em);
+	public FetchData (EntityManagerFactory emf) {
+		this.movieDAO = new MovieDAO(emf);  // Pass only EntityManager
+		this.actorDAO = new ActorDAO(emf);
+		this.genreDAO = new GenreDAO(emf);
+		this.directorDAO = new DirectorDAO(emf);
 	}
 
 	// List of all actors (convert entities to DTOs)
@@ -74,19 +74,26 @@ public class FetchData {
 	// List of all actors in a movie
 	public List<MovieDTO> getActorsInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All actors in " + title + ":");
+
 		return movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
+				.peek(movie -> movie.getActors().forEach(actor -> System.out.println(actor.getName())))
 				.toList();
 	}
 
 	// Get the average rating of a movie
 	public double getAverageRating (String title) {
 		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
+		double averageRating = movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
 				.mapToDouble(MovieDTO::getVoteAverage)
 				.average()
 				.orElse(0);
+
+		System.out.println("\nAverage rating of " + title + ": " + averageRating);
+		return averageRating;
 	}
 
 	// Get the average rating of all movies
@@ -97,29 +104,52 @@ public class FetchData {
 				.average()
 				.orElse(0);
 
-		System.out.println("Average rating of all movies: " + averageRating);
+		System.out.println("\nAverage rating of all movies: " + averageRating);
 	}
 
 	// Get the top 10 lowest-rated movies
 	public List<MovieDTO> getTop10LowestRatedMovies () {
-		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
-				.sorted(Comparator.comparing(MovieDTO::getVoteAverage))
+		List<Movie> allMovies = movieDAO.findAll();
+
+		System.out.println("Top 10 lowest-rated Movies");
+
+		// Filter out movies where voteAverage is null
+		return allMovies.stream()
+				.filter(movie -> movie.getVoteAverage() != null)
+				.sorted(Comparator.comparing(Movie::getVoteAverage))
 				.limit(10)
-				.toList();
+				.map(this::convertToMovieDTO)
+				.peek(movie -> System.out.println(
+						"Movie ID: " + movie.getId()
+								+ ", Title: " + movie.getTitle()
+								+ ", Vote Average: " + movie.getVoteAverage()
+				))
+				.collect(Collectors.toList());
 	}
 
 	// Get the top 10 highest-rated movies
 	public List<MovieDTO> getTop10HighestRatedMovies () {
-		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
-				.sorted(Comparator.comparing(MovieDTO::getVoteAverage).reversed())
+		List<Movie> allMovies = movieDAO.findAll();
+
+		System.out.println("Top 10 highest-rated Movies");
+
+		// Filter out movies where voteAverage is null
+		return allMovies.stream()
+				.filter(movie -> movie.getVoteAverage() != null)
+				.sorted(Comparator.comparing(Movie::getVoteAverage).reversed())
 				.limit(10)
-				.toList();
+				.map(this::convertToMovieDTO)
+				.peek(movie -> System.out.println(
+						"Movie ID: " + movie.getId()
+								+ ", Title: " + movie.getTitle()
+								+ ", Vote Average: " + movie.getVoteAverage()
+				))
+				.collect(Collectors.toList());
+
 	}
 
 	// Get the top 10 most popular movies
-	public List<MovieDTO> getTop10MostPopularMovies() {
+	public List<MovieDTO> getTop10MostPopularMovies () {
 		List<Movie> allMovies = movieDAO.findAll();
 
 		System.out.println("Top 10 popular Movies");
@@ -132,8 +162,8 @@ public class FetchData {
 				.map(this::convertToMovieDTO)  // Convert to DTOs
 				.peek(movie -> System.out.println(
 						"Movie ID: " + movie.getId()
-						+ ", Title: " + movie.getTitle()
-						+ ", Popularity: " + movie.getPopularity()
+								+ ", Title: " + movie.getTitle()
+								+ ", Popularity: " + movie.getPopularity()
 				))  // Print each movie in the required format
 				.collect(Collectors.toList());
 	}
@@ -141,55 +171,78 @@ public class FetchData {
 	// Search for a movie by title (case-insensitive)
 	public List<MovieDTO> getMovieByTitle (String title) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All movies with title " + title + ":");
+
 		return movies.stream()
-				.filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
+				.filter(movie -> movie.getTitle().toLowerCase().equals(title.toLowerCase()))
+				.peek(movie -> System.out.println(movie.getTitle()))
 				.toList();
 	}
 
-	// Search for a movie by genre (case-insensitive)
-	public List<MovieDTO> getMovieByGenre (String genre) {
-		List<MovieDTO> movies = getAllMovies();
-		return movies.stream()
-				.filter(movie -> movie.getGenres().stream()
-						.anyMatch(genreDTO -> genreDTO.getName().toLowerCase().contains(genre.toLowerCase())))
-				.toList();
-	}
+	// // Search for a movie by genre (case-insensitive)
+	// public List<MovieDTO> getMovieByGenre (String genre) {
+	// 	List<MovieDTO> movies = MovieDAO.searchForMovieByGenre(genre);
+	//
+	// 	System.out.println("All movies with genre " + genre + ":");
+	// 	movies.forEach(System.out::println);
+	// 	return movies;
+	// }
 
 	// List of all movies that a particular actor has been part of
 	public List<MovieDTO> getMoviesByActor (String name) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All movies with " + name);
+
 		return movies.stream()
-				.filter(movie -> movie.getActors().stream().anyMatch(actor -> actor.getName().equals(name)))
+				.filter(movie -> movie.getActors().stream()
+						.anyMatch(actorDTO -> actorDTO.getName().equals(name)))
+				.peek(movie -> System.out.println(movie.getTitle()))
 				.toList();
 	}
 
 	// List of all movies that a particular director has directed
 	public List<MovieDTO> getMoviesByDirector (String name) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All movies with " + name);
+
 		return movies.stream()
 				.filter(movie -> movie.getDirector().getName().equals(name))
+				.peek(movie -> System.out.println(movie.getTitle()))
 				.toList();
 	}
 
 	// List directors in a movie
-	public void getDirectorsInMovie (String title) {
+	public List<MovieDTO> getDirectorsInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
-		movies.stream()
+
+		System.out.println("All directors in movie with the title " + title + ":");
+		return movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
-				.forEach(movie -> System.out.println(movie.getDirector().getName()));
+				.peek(movie -> System.out.println(movie.getDirector().getName()))
+				.toList();
 	}
 
 	// List genres in a movie
-	public void getGenresInMovie (String title) {
+	public List<MovieDTO> getGenresInMovie (String title) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All genres in movie with the title " + title + ":");
 		movies.stream()
 				.filter(movie -> movie.getTitle().equals(title))
 				.forEach(movie -> movie.getGenres().forEach(genre -> System.out.println(genre.getName())));
+		return movies;
+
 	}
 
 	// Search for a movie by string (can match in title, genre, director)
 	public void searchForMovieByString (String s) {
 		List<MovieDTO> movies = getAllMovies();
+
+		System.out.println("All movies with:  " + s);
+
 		movies.stream()
 				.filter(movie -> movie.getTitle().toLowerCase().contains(s.toLowerCase())
 						|| movie.getGenres().stream().anyMatch(genre -> genre.getName().toLowerCase().contains(s.toLowerCase()))
@@ -222,14 +275,27 @@ public class FetchData {
 	}
 
 	// Conversion method from Movie to MovieDTO
-	private MovieDTO convertToMovieDTO (Movie movie) {
+	private MovieDTO convertToMovieDTO(Movie movie) {
+		DirectorDTO directorDTO = null;
+
+		if (movie.getDirector() != null) {
+			Director director = movie.getDirector();
+			directorDTO = new DirectorDTO(director.getId(), director.getName());
+		}
+
 		return new MovieDTO(
 				movie.getId(),
 				movie.getTitle(),
+				movie.getOriginalLanguage(),
 				movie.getReleaseDate(),
-				movie.getGenres()
+				movie.getPopularity(),
+				movie.getVoteAverage(),
+				movie.getGenres(),
+				movie.getActors(),
+				directorDTO
 		);
 	}
+
 
 	// Conversion method from Actor entity to ActorDTO
 	private ActorDTO convertToActorDTO (Actor actor) {

@@ -4,6 +4,7 @@ import dat.config.HibernateConfig;
 import dat.entities.Director;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,15 +14,17 @@ public class DirectorDAO implements IDAO<Director> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DirectorDAO.class);
 
-	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
-	EntityManager entityManager;
+	private EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("tester");
+	private EntityManager entityManager;
 
-	public DirectorDAO(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public DirectorDAO (EntityManagerFactory emf) {
+		this.emf = emf;
 	}
 
 	@Override
 	public void create (Director t) {
+		EntityTransaction transaction = null;
+
 		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
 			em.persist(t);
@@ -33,6 +36,8 @@ public class DirectorDAO implements IDAO<Director> {
 
 	@Override
 	public void read (Director director) {
+		EntityTransaction transaction = null;
+
 		try (EntityManager em = emf.createEntityManager()) {
 			Director director1 = em.find(Director.class, director.getId());
 			System.out.println(director1);
@@ -41,6 +46,8 @@ public class DirectorDAO implements IDAO<Director> {
 
 	@Override
 	public void update (Director director) {
+		EntityTransaction transaction = null;
+
 		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
 			em.merge(director);
@@ -53,7 +60,9 @@ public class DirectorDAO implements IDAO<Director> {
 	//example with logging
 	@Override
 	public void delete(Director director) {
-		EntityManager em = null;
+		EntityTransaction transaction = null;
+		EntityManager em = emf.createEntityManager();
+
 		try {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
@@ -89,6 +98,8 @@ public class DirectorDAO implements IDAO<Director> {
 
 	@Override
 	public Director findById (Long id) {
+		EntityTransaction transaction = null;
+
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.find(Director.class, id);
 		} catch (Exception e) {
@@ -99,6 +110,8 @@ public class DirectorDAO implements IDAO<Director> {
 
 	@Override
 	public List<Director> findAll() {
+		EntityTransaction transaction = null;
+
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT d FROM Director d", Director.class).getResultList();
 		} catch (Exception e) {
