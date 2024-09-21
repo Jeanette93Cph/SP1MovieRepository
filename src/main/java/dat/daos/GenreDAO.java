@@ -15,7 +15,7 @@ public class GenreDAO
 
     private static EntityManagerFactory emf;
 
-    private GenreDAO(EntityManagerFactory emf)
+    public GenreDAO(EntityManagerFactory emf)
     {
         this.emf = emf;
     }

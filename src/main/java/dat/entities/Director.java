@@ -15,7 +15,7 @@ import lombok.*;
 @Table(name = "directors")
 public class Director {
 	@Id
-	@Column(name = "id", nullable = false)
+	@Column(name = "director_id", nullable = false)
 	private Long id;
 
 	@Column(name = "name", nullable = false, length = 100)

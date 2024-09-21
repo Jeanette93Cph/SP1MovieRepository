@@ -73,10 +73,29 @@ public class MovieDTO {
         }
 
         // Initialize actors
-        this.actors = new ArrayList<>();
+           this.actors = new ArrayList<>();
         for (Actor actor : movie.getActors()) {
             this.actors.add(new ActorDTO(actor));
         }
+
+        for(ActorDTO actorDTO : this.actors)
+        {
+            Actor actor = new Actor(actorDTO);
+            movie.addActor(actor);
+        }
+
+
+//        if (this.actors != null) {
+//            for (ActorDTO actorDTO : this.actors) {
+//                Actor actor = new ActorDTO();
+//                actorDTO.setId(actor.getId());
+//                actorDTO.setName(actor.getName());
+//
+//                // Add the actor to the movie using the helper method
+//                movie.addActor(actor);
+//            }
+//        }
+
     }
 
 

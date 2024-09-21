@@ -23,8 +23,8 @@ public class MovieDAO
 
 	private static EntityManagerFactory emf;
 
-	// Private constructor
-	private MovieDAO(EntityManagerFactory emf) {
+	// Public constructor
+	public MovieDAO(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
@@ -46,6 +46,7 @@ public class MovieDAO
 		{
 			em.getTransaction().begin();
 
+
 			// Find existing movie, or create a new one if it doesn't exist
 			movie = em.find(Movie.class, movieDTO.getId());
 			if (movie == null) {
@@ -58,6 +59,7 @@ public class MovieDAO
 
 			// Set the director, actors, and genres
 			setRelationships(em, movie, movieDTO);
+
 
 			if(movie.getId() == null)
 			{
@@ -197,6 +199,23 @@ public class MovieDAO
 
 	}
 
+	public MovieDTO findGenreInASpecificMovie(String title)
+	{
+		try (EntityManager em = emf.createEntityManager()) {
+			return em.createQuery(
+							"SELECT new dat.dtos.MovieDTO(m) " +
+									"FROM Movie m " +
+									"JOIN m.genre g " +  // Assuming there's a field 'genre' in the Movie entity for the relationship
+									"WHERE m.title = :title", MovieDTO.class)
+					.setParameter("title", title) // Use setParameter for safely passing the title
+					.getSingleResult(); // Assuming you want one result since you're filtering by title
+		} catch (Exception e) {
+			throw new JpaException("Failed to find genre in movie '" + title + "': " + e.getMessage());
+		}
+	}
+
+
+
 
 	//Help method to set the director, actors and genres. help from chatgpt
 	private static void setRelationships(EntityManager em, Movie movie, MovieDTO dto)
@@ -214,17 +233,31 @@ public class MovieDAO
 
 		// Set Actors
 		if (dto.getActors() != null) {
-			List<Actor> actors = new ArrayList<>();
 			for (ActorDTO actorDTO : dto.getActors()) {
 				Actor actor = em.find(Actor.class, actorDTO.getId());
 				if (actor == null) {
 					actor = new Actor(actorDTO);
 					em.persist(actor);
 				}
-				actors.add(actor);
+				movie.addActor(actor);
+				actor.addMovie(movie);
+
 			}
-			movie.setActors(actors);
 		}
+
+//		// Set Actors
+//		if (dto.getActors() != null) {
+//			List<Actor> actors = new ArrayList<>();
+//			for (ActorDTO actorDTO : dto.getActors()) {
+//				Actor actor = em.find(Actor.class, actorDTO.getId());
+//				if (actor == null) {
+//					actor = new Actor(actorDTO);
+//					em.persist(actor);
+//				}
+//				actors.add(actor);
+//			}
+//			movie.setActors(actors);
+//		}
 
 		// Set Genres
 		if (dto.getGenres() != null) {

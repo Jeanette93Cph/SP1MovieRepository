@@ -1,5 +1,5 @@
 package dat.entities;
-
+import dat.dtos.ActorDTO;
 import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "movies")
 public class Movie {
 	@Id
-	@Column(name = "id", nullable = false)
+	@Column(name = "movie_id", nullable = false)
 	private Long id;
 
 	@Column(name = "title", nullable = false)
@@ -34,21 +34,45 @@ public class Movie {
 	@Column(name = "vote_average")
 	private Double voteAverage;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "director_id")
 	private Director director;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "movie_genre",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	private List<Genre> genres = new ArrayList<>();
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "movie_actor",
 			joinColumns = @JoinColumn(name = "movie_id"),
 			inverseJoinColumns = @JoinColumn(name = "actor_id"))
 	private List<Actor> actors = new ArrayList<>();
+
+
+//	public void addActor(Actor actor)
+//	{
+//		if(this.actors == null)
+//		{
+//			this.actors = new ArrayList<>();
+//		}
+//		this.actors.add(actor);
+//		actor.getMovies().add(this);
+//	}
+
+	public void addActor(Actor actor) {
+		if (this.actors == null) {
+			this.actors = new ArrayList<>();
+		}
+		if (!this.actors.contains(actor)) {
+			this.actors.add(actor);
+			actor.getMovies().add(this);  // Add movie to actor's list
+		}
+	}
+
+
+
 
 	public Movie(MovieDTO movieDTO) {
 		this.id = movieDTO.getId();
@@ -71,6 +95,7 @@ public class Movie {
 
 		// Assume that each movie has at least one actor
 		this.actors = new ArrayList<>();
+
 	}
 
 }

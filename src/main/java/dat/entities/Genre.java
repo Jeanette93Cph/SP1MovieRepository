@@ -16,7 +16,7 @@ import java.util.Set;
 public class Genre
 {
 	@Id
-	@Column(name = "id", nullable = false)
+	@Column(name = "genre_id", nullable = false)
 	private Long id;
 
 	@Column(name = "name", nullable = false, length = 100)

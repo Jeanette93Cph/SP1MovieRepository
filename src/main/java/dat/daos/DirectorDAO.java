@@ -16,7 +16,7 @@ public class DirectorDAO
 
     private static EntityManagerFactory emf;
 
-    private DirectorDAO(EntityManagerFactory emf)
+    public DirectorDAO(EntityManagerFactory emf)
     {
         this.emf = emf;
     }
