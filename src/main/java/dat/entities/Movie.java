@@ -73,4 +73,13 @@ public class Movie {
 		this.actors = new ArrayList<>();
 	}
 
+
+	//ensure bidirectional association
+	public void addActor(Actor actor)
+	{
+		actors.add(actor);
+		actor.getMovies().add(this);
+	}
+
+
 }

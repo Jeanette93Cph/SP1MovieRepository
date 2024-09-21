@@ -222,6 +222,8 @@ public class MovieDAO
 					em.persist(actor);
 				}
 				actors.add(actor);
+				//maintain bidrectional relationship
+				actor.getMovies().add(movie);
 			}
 			movie.setActors(actors);
 		}
