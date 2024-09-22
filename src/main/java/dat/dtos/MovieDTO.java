@@ -48,7 +48,6 @@ public class MovieDTO {
     @JsonProperty("cast")
     private List<CrewMemberDTO> crew;
 
-
     @JsonProperty("genres")
     private List<GenreDTO> genres;
 
@@ -105,21 +104,6 @@ public class MovieDTO {
 //            }
 //        }
 
-    }
-
-
-    // convert from JSON to List of MovieDTO
-    public static List<MovieDTO> convertToDTOFromJSONList(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        try {
-            MovieResponseDTO movieResponseDTO = objectMapper.readValue(json, MovieResponseDTO.class);
-            return movieResponseDTO.getMovieList();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 

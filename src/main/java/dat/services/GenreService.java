@@ -1,10 +1,16 @@
 package dat.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dat.dtos.GenreDTO;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 public class GenreService {
 
@@ -26,6 +32,21 @@ public class GenreService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response.body();
         } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // convert from JSON to List of ActorDTO
+    public static List<GenreDTO> convertToDTOFromJSONList (String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        // enabling it to properly serialize / deserialize date and time like LocalDate
+        objectMapper.registerModule(new JavaTimeModule());
+
+        try {
+            GenreDTO genreDTO = objectMapper.readValue(json, GenreDTO.class);
+            return genreDTO.genres;
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;

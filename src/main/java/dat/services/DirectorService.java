@@ -11,7 +11,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DirectorService {
 
@@ -79,5 +81,11 @@ public class DirectorService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String convertPlainStringToJSONArray(String plainString) {
+        return Arrays.stream(plainString.split(",\\s*"))
+                .map(name -> String.format("{\"name\": \"%s\"}", name.trim()))
+                .collect(Collectors.joining(",", "[", "]"));
     }
 }

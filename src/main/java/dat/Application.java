@@ -15,25 +15,23 @@ import jakarta.persistence.EntityManagerFactory;
 
 import java.util.List;
 
-public class Application
-{
-    public static void main(String[] args)
-    {
+public class Application {
+	public static void main (String[] args) {
 
-        //the_movie_db
+		// the_movie_db
 
-       // addDataToDatabase();
-       // addMoviesToDatabase();
+		addDataToDatabase();
+		addMoviesToDatabase();
 
-        FetchData fetchData = new FetchData();
+		FetchData fetchData = new FetchData();
 
-        //fetchData.getAllMovies();
+		// fetchData.getAllMovies();
 
-        //fetchData.getAllDirectors();
+		// fetchData.getAllDirectors();
 
-        //fetchData.getAllActors();
+		// fetchData.getAllActors();
 
-        //fetchData.getAllGenres();
+		// fetchData.getAllGenres();
 
 //        Movie movie = new Movie();
 //        movie.setTitle("God film");
@@ -44,60 +42,54 @@ public class Application
 //        movieDTO.setTitle("Fantastisk film");
 //        fetchData.updateEntity(movieDTO, 333L);
 
-        //fetchData.removeEntity(333L);
+		// fetchData.removeEntity(333L);
 
-        //fetchData.findDirectorInASpecificMovie("Boundless");
+		// fetchData.findDirectorInASpecificMovie("Boundless");
 
-        //fetchData.findActorsInASpecificMovie("Boundless");
+		// fetchData.findActorsInASpecificMovie("Boundless");
 
-        //fetchData.findGenreInASpecificMovie("Boundless");
+		// fetchData.findGenreInASpecificMovie("Boundless");
 
-        //fetchData.findAllMoviesInASpecificGenre("Horror");
+		// fetchData.findAllMoviesInASpecificGenre("Horror");
 
-        //fetchData.getMoviesByTitle("bound");
+		// fetchData.getMoviesByTitle("bound");
 
-        //fetchData.getAverageRatingOfAllMovies();
+		// fetchData.getAverageRatingOfAllMovies();
 
-        //fetchData.getTop10LowestRatedMovies();
+		// fetchData.getTop10LowestRatedMovies();
 
-        //fetchData.getTop10HighestRatedMovies();
+		// fetchData.getTop10HighestRatedMovies();
 
-        //fetchData.getTop10MostPopularMovies();
-
-
-    }
-
-    public static void addDataToDatabase()
-    {
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
-
-        List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
-        DirectorDAO directorDAO = DirectorDAO.getInstance(emf);
-        directorDAO.persistListOfDirectors(allDirectorsDTO);
-
-        String allGenres = GenreService.getAllGenresJSON();
-        List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
-        GenreDAO genreDAO = GenreDAO.getInstance(emf);
-        genreDAO.persistListOfGenres(genreDTOS);
-
-        List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
-        ActorDAO actorDAO = ActorDAO.getInstance(emf);
-        actorDAO.persistListOfActors(actorDTOS);
-
-    }
+		// fetchData.getTop10MostPopularMovies();
 
 
-    public static void addMoviesToDatabase()
-    {
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
+	}
 
-        String jsonAllMovies = MovieService.getAllMoviesJSON(1);
-        List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
-        MovieDAO movieDAO = MovieDAO.getInstance(emf);
-        movieDAO.persistListOfMovies(moviesDTOs);
-    }
+	public static void addDataToDatabase () {
+		EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
+
+		List<DirectorDTO> allDirectorsDTO = DirectorService.getAllDirectorsFromJSON(1);
+		DirectorDAO directorDAO = DirectorDAO.getInstance(emf);
+		directorDAO.persistListOfDirectors(allDirectorsDTO);
+
+		String allGenres = GenreService.getAllGenresJSON();
+		List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+		GenreDAO genreDAO = GenreDAO.getInstance(emf);
+		genreDAO.persistListOfGenres(genreDTOS);
+
+		List<ActorDTO> actorDTOS = ActorService.getAllActorsFromJSON(1);
+		ActorDAO actorDAO = ActorDAO.getInstance(emf);
+		actorDAO.persistListOfActors(actorDTOS);
+	}
 
 
+	public static void addMoviesToDatabase () {
+		EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
 
+		String jsonAllMovies = MovieService.getAllMoviesJSON(1);
+		List<MovieDTO> movieDTOList = MovieService.convertToDTOFromJSONList(jsonAllMovies);
+		MovieDAO movieDAO = MovieDAO.getInstance(emf);
+		movieDAO.persistListOfMovies(movieDTOList);
+	}
 
 }
