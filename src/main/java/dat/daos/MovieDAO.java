@@ -106,8 +106,7 @@ public class MovieDAO {
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
-			System.out.println("Failed to persist list of movies: " + e.getMessage());
-			e.printStackTrace();
+			throw new JpaException("Failed to persist list of movies: " + e.getMessage());
 		}
 		return persistedlist;
 	}
@@ -173,8 +172,7 @@ public class MovieDAO {
 			em.remove(movie);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			System.out.println("Failed to delete movie: ");
-			e.printStackTrace();
+			throw new JpaException("Failed to delete movie: " + e.getMessage());
 		}
 
 	}
@@ -335,5 +333,4 @@ public class MovieDAO {
 			movie.setGenres(genres);
 		}
 	}
-
 }

@@ -32,4 +32,9 @@ public class ActorDTO
         this.id = actor.getId();
         this.name = actor.getName();
     }
+
+    public ActorDTO (long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

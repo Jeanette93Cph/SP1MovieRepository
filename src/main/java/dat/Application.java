@@ -16,7 +16,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 public class Application {
-	public static void main (String[] args) {
+	public static void main (String[] args) throws Exception {
 
 		// the_movie_db
 
@@ -73,7 +73,7 @@ public class Application {
 		directorDAO.persistListOfDirectors(allDirectorsDTO);
 
 		String allGenres = GenreService.getAllGenresJSON();
-		List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+		List<GenreDTO> genreDTOS = GenreService.convertToDTOFromJSONList(allGenres);
 		GenreDAO genreDAO = GenreDAO.getInstance(emf);
 		genreDAO.persistListOfGenres(genreDTOS);
 
@@ -83,7 +83,7 @@ public class Application {
 	}
 
 
-	public static void addMoviesToDatabase () {
+	public static void addMoviesToDatabase () throws Exception {
 		EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
 
 		String jsonAllMovies = MovieService.getAllMoviesJSON(1);

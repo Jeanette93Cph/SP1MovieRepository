@@ -45,7 +45,7 @@ public class GenreService {
 
         try {
             GenreDTO genreDTO = objectMapper.readValue(json, GenreDTO.class);
-            return genreDTO.genres;
+            return genreDTO.getGenres();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
