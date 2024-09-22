@@ -107,11 +107,12 @@ public class MovieDTO {
     }
 
 
-    public MovieDTO (Long id, String title, Double popularity, Double voteAverage, String releaseDate) {
+    public MovieDTO (Long id, String title, Double popularity, Double voteAverage, String releaseDate, List<Long> genreIDs) {
         this.id = id;
         this.title = title;
         this.popularity = popularity;
         this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
+        this.genreIDs = genreIDs;
     }
 }
