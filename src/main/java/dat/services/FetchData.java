@@ -69,6 +69,15 @@ public class FetchData
         return movieDTO;
     }
 
+    public MovieDTO findEntity(Long id)
+    {
+        MovieDAO movieDAO = new MovieDAO(emf);
+        MovieDTO movieDTO = movieDAO.findEntity(id);
+        System.out.println(movieDTO);
+
+        return movieDTO;
+    }
+
     public MovieDTO updateEntity(MovieDTO movieDTO, Long id)
     {
         MovieDAO movieDAO = new MovieDAO(emf);
@@ -77,15 +86,6 @@ public class FetchData
 
         return movieDTO;
 
-    }
-
-    public MovieDTO findEntity(Long id)
-    {
-        MovieDAO movieDAO = new MovieDAO(emf);
-        MovieDTO movieDTO = movieDAO.findEntity(id);
-        System.out.println(movieDTO);
-
-        return movieDTO;
     }
 
     public void removeEntity(Long id)
@@ -217,7 +217,7 @@ public class FetchData
                 ))
                 .collect(Collectors.toList());
     }
-    
+
     // Get the top 10 most popular movies
     public List<MovieDTO> getTop10MostPopularMovies () {
         MovieDAO movieDAO = new MovieDAO(emf);

@@ -23,36 +23,17 @@ public class Application
         //the_movie_db
 
        // addDataToDatabase();
-
        // addMoviesToDatabase();
 
         FetchData fetchData = new FetchData();
 
-        //fetchData.getAverageRatingOfAllMovies();
-
-        //fetchData.getAllGenres();
+        //fetchData.getAllMovies();
 
         //fetchData.getAllDirectors();
 
-        //fetchData.getTop10LowestRatedMovies();
-
-        //fetchData.getTop10HighestRatedMovies();
-
-        //fetchData.getTop10MostPopularMovies();
-
-        //fetchData.getMovieByTitle("Boundless");
-
-        //fetchData.findGenreInASpecificMovie("Boundless");
-
-        //fetchData.findDirectorInASpecificMovie("Boundless");
-
-        //fetchData.findActorsInASpecificMovie("Boundless");
-
-        //fetchData.getAllGenre();
-
         //fetchData.getAllActors();
 
-        //fetchData.findAllMoviesInASpecificGenre("Horror");
+        //fetchData.getAllGenres();
 
 //        Movie movie = new Movie();
 //        movie.setTitle("God film");
@@ -65,7 +46,24 @@ public class Application
 
         //fetchData.removeEntity(333L);
 
-        fetchData.getMoviesByTitle("bound");
+        //fetchData.findDirectorInASpecificMovie("Boundless");
+
+        //fetchData.findActorsInASpecificMovie("Boundless");
+
+        //fetchData.findGenreInASpecificMovie("Boundless");
+
+        //fetchData.findAllMoviesInASpecificGenre("Horror");
+
+        //fetchData.getMoviesByTitle("bound");
+
+        //fetchData.getAverageRatingOfAllMovies();
+
+        //fetchData.getTop10LowestRatedMovies();
+
+        //fetchData.getTop10HighestRatedMovies();
+
+        //fetchData.getTop10MostPopularMovies();
+
 
     }
 
