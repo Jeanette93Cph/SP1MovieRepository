@@ -21,9 +21,9 @@ public class Application
 
         //the_movie_db
 
-        //addDataToDatabase();
+        addDataToDatabase();
 
-        //addMoviesToDatabase();
+        addMoviesToDatabase();
 
         FetchData fetchData = new FetchData();
 
@@ -41,7 +41,7 @@ public class Application
 
         //fetchData.getMovieByTitle("Boundless");
 
-        fetchData.findGenreInASpecificMovie("Boundless");
+        //fetchData.findGenreInASpecificMovie("Boundless");
 
     }
 
