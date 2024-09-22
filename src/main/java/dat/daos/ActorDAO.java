@@ -1,26 +1,29 @@
 package dat.daos;
 
 import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
 import dat.entities.Actor;
-import dat.entities.Director;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Data Access Object Layer
+ * CRUD operations to create, read, update, and delete actors in the database
+ */
 
 public class ActorDAO {
 
 	private static ActorDAO actorDAO;
-
 	private static EntityManagerFactory emf;
 
+	//constructor
 	public ActorDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
+	// Singleton pattern - if there is no instance of ActorDAO, create one
 	public static ActorDAO getInstance (EntityManagerFactory emf) {
 		if (actorDAO == null) {
 			actorDAO = new ActorDAO(emf);
@@ -28,8 +31,7 @@ public class ActorDAO {
 		return actorDAO;
 	}
 
-
-	// Persist one director
+	// Persist a new actor object into db
 	public static ActorDTO persistEntity (ActorDTO actorDTO) {
 		Actor actor = new Actor();
 		actor.setId(actorDTO.getId());
@@ -45,8 +47,7 @@ public class ActorDAO {
 		return new ActorDTO(actor);
 	}
 
-
-	// Persist a list of directors
+	// Persist a list of actors into db
 	public List<ActorDTO> persistListOfActors (List<ActorDTO> actorDTOList) {
 		List<ActorDTO> persistedlist = new ArrayList<>();
 		try (EntityManager em = emf.createEntityManager()) {
@@ -54,7 +55,6 @@ public class ActorDAO {
 
 			for (ActorDTO dto : actorDTOList) {
 				Actor actor = em.find(Actor.class, dto.getId());
-
 
 				if (actor == null) {
 					actor = new Actor(dto);
@@ -77,7 +77,7 @@ public class ActorDAO {
 		return persistedlist;
 	}
 
-
+	// Find all actors in db
 	public static List<ActorDTO> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT new dat.dtos.ActorDTO(a) FROM Actor a", ActorDTO.class).getResultList();
@@ -86,6 +86,7 @@ public class ActorDAO {
 		}
 	}
 
+	// Find an actor by id
 	public static ActorDTO findEntity (Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Actor actor = em.find(Actor.class, id);
@@ -98,6 +99,7 @@ public class ActorDAO {
 		}
 	}
 
+	// Update an actor by id
 	public static ActorDTO updateEntity (ActorDTO actorDTO, Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
@@ -122,7 +124,7 @@ public class ActorDAO {
 		return null;
 	}
 
-
+ 	// Delete an existing actor in the db by id
 	public static void removeEntity (Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Actor actor = em.find(Actor.class, id);
@@ -136,8 +138,5 @@ public class ActorDAO {
 			System.out.println("Failed to delete actor: ");
 			e.printStackTrace();
 		}
-
 	}
-
-
 }

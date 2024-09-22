@@ -1,6 +1,5 @@
 package dat.entities;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import dat.dtos.ActorDTO;
+
 import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,10 +19,10 @@ public class Movie {
 	@Column(name = "movie_id", nullable = false)
 	private Long id;
 
-	@Column(name = "title", nullable = false)
+	@Column(name = "title", nullable = false, length = 100)
 	private String title;
 
-	@Column(name = "original_language", nullable = false)
+	@Column(name = "original_language", nullable = false, length = 3)
 	private String originalLanguage;
 
 	@Column(name = "release_date", nullable = false)
@@ -35,10 +34,9 @@ public class Movie {
 	@Column(name = "vote_average", nullable = false)
 	private Double voteAverage;
 
-	//Store genre_ids as a comma-separated String
+	//FIX because join tables don't work properly. We store the genre_ids as a comma-separated String in the db
 	@Column(name = "genre_ids", nullable = false)
 	private String genreIDs;
-
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "director_id")

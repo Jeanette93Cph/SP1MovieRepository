@@ -2,23 +2,27 @@ package dat.daos;
 
 import dat.dtos.DirectorDTO;
 import dat.entities.Director;
-import dat.entities.Movie;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object Layer
+ * CRUD operations to create, read, update, and delete directors in the database
+ */
+
 public class DirectorDAO {
 	private static DirectorDAO directorDAO;
-
 	private static EntityManagerFactory emf;
 
+	//constructor
 	public DirectorDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
+	// Singleton pattern - if there is no instance of DirectorDAO, create one
 	public static DirectorDAO getInstance (EntityManagerFactory emf) {
 		if (directorDAO == null) {
 			directorDAO = new DirectorDAO(emf);
@@ -26,8 +30,7 @@ public class DirectorDAO {
 		return directorDAO;
 	}
 
-
-	// Persist one director
+	// Persist a new director object into db
 	public DirectorDTO persistEntity (DirectorDTO directorDTO) {
 		Director director = new Director();
 		director.setId(directorDTO.getId());
@@ -44,7 +47,7 @@ public class DirectorDAO {
 	}
 
 
-	// Persist a list of directors
+	// Persist a list of directors into db
 	public List<DirectorDTO> persistListOfDirectors (List<DirectorDTO> directorDTOList) {
 		List<DirectorDTO> persistedlist = new ArrayList<>();
 		try (EntityManager em = emf.createEntityManager()) {
@@ -67,7 +70,7 @@ public class DirectorDAO {
 		return persistedlist;
 	}
 
-
+	// Find all directors in the database
 	public static List<DirectorDTO> findAll () {
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT new dat.dtos.DirectorDTO(d) FROM Director d", DirectorDTO.class).getResultList();
@@ -76,6 +79,7 @@ public class DirectorDAO {
 		}
 	}
 
+	// Find a director by id in the database
 	public static DirectorDTO findEntity (Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Director director = em.find(Director.class, id);
@@ -88,6 +92,7 @@ public class DirectorDAO {
 		}
 	}
 
+	// Update a director in the database by id
 	public static DirectorDTO updateEntity (DirectorDTO directorDTO, Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
@@ -112,7 +117,7 @@ public class DirectorDAO {
 		return null;
 	}
 
-
+	// Remove an existing director from the database by id
 	public static void removeEntity (Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Director director = em.find(Director.class, id);
@@ -126,8 +131,5 @@ public class DirectorDAO {
 			System.out.println("Failed to delete director: ");
 			e.printStackTrace();
 		}
-
 	}
-
-
 }

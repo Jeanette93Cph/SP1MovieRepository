@@ -11,7 +11,7 @@ Movie "*" -- "*" Actor
 
 Movie "*" -- "*" Genre
 
-Movie "*" -- "*" Director
+Movie "*" -- "1" Director
 
 class Movie {
 Long id;
@@ -21,7 +21,7 @@ String releaseDate;
 double voteAverage;
 List<Genre> genres;
 List<Actor> actors;
-List<Director> directors;
+Director directors;
 }
 
 class Actor{

@@ -6,20 +6,21 @@ import dat.daos.DirectorDAO;
 import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
-import dat.entities.Movie;
 import dat.dtos.DirectorDTO;
 import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
-import dat.entities.Genre;
 import jakarta.persistence.EntityManagerFactory;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is a service layer that streams data from the database and performs operations on it.
+ * We can use these methods to adjust the output of the data without manipulating the dao layer where entities are stored.
+ */
+
 public class FetchData {
 	EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
-
 
 	public List<MovieDTO> getAllMovies () {
 		MovieDAO movieDAO = new MovieDAO(emf);

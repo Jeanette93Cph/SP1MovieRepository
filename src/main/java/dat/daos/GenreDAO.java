@@ -5,19 +5,24 @@ import dat.entities.Genre;
 import dat.exceptions.JpaException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object Layer
+ * CRUD operations to create, read, update, and delete genres in the database
+ */
+
 public class GenreDAO {
 	private static GenreDAO genreDAO;
-
 	private static EntityManagerFactory emf;
 
+	//constructor
 	public GenreDAO(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
+	// Singleton pattern - if there is no instance of GenreDAO, create one
 	public static GenreDAO getInstance(EntityManagerFactory emf) {
 		if (genreDAO == null) {
 			genreDAO = new GenreDAO(emf);
@@ -25,7 +30,7 @@ public class GenreDAO {
 		return genreDAO;
 	}
 
-	// Persist one genre
+	// Persist a new genre object into db - return the persisted genre as a DTO
 	public static GenreDTO persistEntity(GenreDTO genreDTO) {
 		Genre genre = new Genre();
 		genre.setGenre_id(genreDTO.getId());
@@ -41,7 +46,7 @@ public class GenreDAO {
 		return new GenreDTO(genre);
 	}
 
-	// Persist a list of genres
+	// Persist a list of genres into db - return the persisted genres as a list of DTOs
 	public List<GenreDTO> persistListOfGenres(List<GenreDTO> genreDTOList) {
 		List<GenreDTO> persistedlist = new ArrayList<>();
 		try (EntityManager em = emf.createEntityManager()) {
@@ -69,6 +74,7 @@ public class GenreDAO {
 		return persistedlist;
 	}
 
+	// Find all genres in the database
 	public static List<GenreDTO> findAll() {
 		try (EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT new dat.dtos.GenreDTO(g) FROM Genre g", GenreDTO.class).getResultList();
@@ -77,6 +83,7 @@ public class GenreDAO {
 		}
 	}
 
+	// Find a genre by id in the database by id
 	public static GenreDTO findEntity(Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Genre genre = em.find(Genre.class, id);
@@ -89,6 +96,7 @@ public class GenreDAO {
 		}
 	}
 
+	// Update a genre in the database by id
 	public static GenreDTO updateEntity(GenreDTO genreDTO, Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
@@ -113,6 +121,7 @@ public class GenreDAO {
 		return null;
 	}
 
+	// Delete an existing genre from the database by id
 	public static void removeEntity(Long id) {
 		try (EntityManager em = emf.createEntityManager()) {
 			Genre genre = em.find(Genre.class, id);

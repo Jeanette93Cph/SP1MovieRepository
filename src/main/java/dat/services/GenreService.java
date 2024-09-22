@@ -1,11 +1,21 @@
 package dat.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dat.dtos.GenreDTO;
+import dat.exceptions.ApiException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
+/**
+ * This class is used to fetch genres from the movie database API endpoint via the URI.
+ * We use the convertToDTOFromJSONList() method to convert the JSON response to a list of GenreDTO.
+ */
 
 public class GenreService {
 

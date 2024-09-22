@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-
 import java.util.Properties;
 
 public class HibernateConfig {
@@ -57,7 +56,6 @@ public class HibernateConfig {
             throw new ExceptionInInitializerError(ex);
         }
     }
-
 
     private static Properties setBaseProperties(Properties props) {
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");

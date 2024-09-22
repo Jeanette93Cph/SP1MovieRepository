@@ -14,6 +14,10 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "directors")
 public class Director {
+
+	//@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	@Id
 	@Column(name = "director_id", nullable = false)
 	private Long id;

@@ -13,8 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genres")
-public class Genre
-{
+public class Genre {
 	@Id
 	@Column(name = "genre_id", nullable = false)
 	private Long genre_id;
@@ -26,9 +25,7 @@ public class Genre
 	@ManyToMany(mappedBy = "genres")
 	private List<Movie> movies;
 
-
-	public Genre(GenreDTO genreDTO)
-	{
+	public Genre (GenreDTO genreDTO) {
 		this.genre_id = genreDTO.getId();
 		this.name = genreDTO.getName();
 	}

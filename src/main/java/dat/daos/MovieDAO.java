@@ -19,24 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MovieDAO
-{
+/**
+ * Data Access Object Layer
+ * CRUD operations to create, read, update, and delete movies in the database
+ * Also includes other methods to find data from genres, directors, and actors in a specific movie
+ */
 
-	// Singleton instance
+public class MovieDAO {
 	private static MovieDAO instance;
-
 	private static EntityManagerFactory emf;
 
-	//used in method findDirectorInASpecificMovie() and findActorsInASpecificMovie()
-	private static final String API_KEY = System.getenv("api_key");
-
-	// Public constructor
-	public MovieDAO(EntityManagerFactory emf) {
+	//constructor
+	public MovieDAO (EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 
-	// Singleton pattern
-	public static MovieDAO getInstance(EntityManagerFactory emf) {
+	// Singleton pattern - if there is no instance of MovieDAO, create one
+	public static MovieDAO getInstance (EntityManagerFactory emf) {
 		if (instance == null) {
 			instance = new MovieDAO(emf);
 		}
@@ -44,19 +43,17 @@ public class MovieDAO
 	}
 
 
-	//Persist one movie
-	public MovieDTO persistEntity(MovieDTO movieDTO)
-	{
+	// Persist one movie
+	public MovieDTO persistEntity (MovieDTO movieDTO) {
 		Movie movie;
 
-		try(EntityManager em = emf.createEntityManager())
-		{
+		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
 
 			// Find existing movie
 			movie = em.find(Movie.class, movieDTO.getId());
 			if (movie == null) {
-				//Create a new Movie if it doesn't exist
+				// Create a new Movie if it doesn't exist
 				movie = new Movie(movieDTO);
 				em.persist(movie);
 			} else {
@@ -69,7 +66,7 @@ public class MovieDAO
 				movie.setGenreIDs(movieDTO.getGenreIDs());
 			}
 
-			//called to handle the updating of the movies associated: director, actor and genres.
+			// called to handle the updating of the movies associated: director, actor and genres.
 			setRelationships(em, movie, movieDTO);
 
 			em.getTransaction().commit();
@@ -80,31 +77,27 @@ public class MovieDAO
 	}
 
 
-	//Persist a list of movies
-	public List<MovieDTO> persistListOfMovies(List<MovieDTO> movieDTOList)
-	{
+	// Persist a list of movies
+	public List<MovieDTO> persistListOfMovies (List<MovieDTO> movieDTOList) {
 		List<MovieDTO> persistedlist = new ArrayList<>();
 
-		try(EntityManager em = emf.createEntityManager())
-		{
+		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
 
-			for(MovieDTO dto : movieDTOList)
-			{
+			for (MovieDTO dto : movieDTOList) {
 				Movie movie = em.find(Movie.class, dto.getId());
 
-				if(movie == null)
-				{
+				if (movie == null) {
 					movie = new Movie(dto);
 					setRelationships(em, movie, dto);
 					em.persist(movie);
-				} else{
+				} else {
 					movie = new Movie(dto);
 					setRelationships(em, movie, dto);
 					movie = em.merge(movie);
 				}
 
-				//add the persisted DTO to the result list
+				// add the persisted DTO to the result list
 				persistedlist.add(new MovieDTO(movie));
 			}
 			em.getTransaction().commit();
@@ -124,31 +117,24 @@ public class MovieDAO
 		}
 	}
 
-	public MovieDTO findEntity(Long id)
-	{
-		try(EntityManager em = emf.createEntityManager())
-		{
+	public MovieDTO findEntity (Long id) {
+		try (EntityManager em = emf.createEntityManager()) {
 			Movie movie = em.find(Movie.class, id);
-			if(movie == null)
-			{
+			if (movie == null) {
 				throw new JpaException("No movie found with id: " + id);
 			}
 			return new MovieDTO(em.find(Movie.class, id));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new JpaException("Failed to find movie.");
 		}
 	}
 
-	public MovieDTO updateEntity(MovieDTO movieDTO, Long id)
-	{
-		try(EntityManager em = emf.createEntityManager())
-		{
+	public MovieDTO updateEntity (MovieDTO movieDTO, Long id) {
+		try (EntityManager em = emf.createEntityManager()) {
 			em.getTransaction().begin();
 			Movie movie = em.find(Movie.class, id);
 
-			if(movie == null)
-			{
+			if (movie == null) {
 				throw new JpaException("No movie found with id: " + id);
 			}
 
@@ -158,7 +144,7 @@ public class MovieDAO
 			movie.setReleaseDate(movieDTO.getReleaseDate());
 			movie.setVoteAverage(movieDTO.getVoteAverage());
 
-			//called to handle the updating of the movies associated: director, actor and genres.
+			// called to handle the updating of the movies associated: director, actor and genres.
 			setRelationships(em, movie, movieDTO);
 
 			em.merge(movie);
@@ -174,11 +160,8 @@ public class MovieDAO
 	}
 
 
-
-	public void removeEntity(Long id)
-	{
-		try(EntityManager em = emf.createEntityManager())
-		{
+	public void removeEntity (Long id) {
+		try (EntityManager em = emf.createEntityManager()) {
 			Movie movie = em.find(Movie.class, id);
 			if (movie == null) {
 				throw new JpaException("No movie found with id: " + id);
@@ -192,8 +175,7 @@ public class MovieDAO
 
 	}
 
-	public MovieDTO findGenreInASpecificMovie(String title)
-	{
+	public MovieDTO findGenreInASpecificMovie (String title) {
 		try (EntityManager em = emf.createEntityManager()) {
 			// Hent filmen
 			Movie movie = em.createQuery(
@@ -220,8 +202,9 @@ public class MovieDAO
 		}
 	}
 
-	public MovieDTO findDirectorInASpecificMovie(String title)
-	{
+	public MovieDTO findDirectorInASpecificMovie (String title) {
+		// used in method findDirectorInASpecificMovie() and findActorsInASpecificMovie()
+		String API_KEY = System.getenv("api_key");
 		try (EntityManager em = emf.createEntityManager()) {
 
 			TypedQuery<Movie> query = em.createQuery(
@@ -245,8 +228,9 @@ public class MovieDAO
 		}
 	}
 
-	public MovieDTO findActorsInASpecificMovie(String title)
-	{
+	public MovieDTO findActorsInASpecificMovie (String title) {
+		// used in method findDirectorInASpecificMovie() and findActorsInASpecificMovie()
+		String API_KEY = System.getenv("api_key");
 		try (EntityManager em = emf.createEntityManager()) {
 
 			TypedQuery<Movie> query = em.createQuery(
@@ -270,9 +254,8 @@ public class MovieDAO
 		}
 	}
 
-	//list of all movies within a particular genre. help from chatgpt
-	public List<MovieDTO> findAllMoviesInASpecificGenre(String genreName)
-	{
+	// list of all movies within a particular genre by genre name
+	public List<MovieDTO> findAllMoviesInASpecificGenre (String genreName) {
 		try (EntityManager em = emf.createEntityManager()) {
 			// fetch the genre
 			Genre genre = em.createQuery(
@@ -297,12 +280,8 @@ public class MovieDAO
 	}
 
 
-
-
-
-	//Help method establishes the relationships between a Movie entity and its associated Director, Actors and Genres. help from chatgpt
-	private static void setRelationships(EntityManager em, Movie movie, MovieDTO dto)
-	{
+	// Help method establishes the relationships between a Movie entity and its associated Director, Actors and Genres. help from chatgpt
+	private static void setRelationships (EntityManager em, Movie movie, MovieDTO dto) {
 		// Set Director
 		DirectorDTO directorDTO = dto.getDirector();
 		if (directorDTO != null) {
@@ -342,5 +321,4 @@ public class MovieDAO
 			movie.setGenres(genres);
 		}
 	}
-
 }

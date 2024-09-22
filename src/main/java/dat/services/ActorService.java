@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.ActorDTO;
 import dat.exceptions.ApiException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,20 +13,25 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to fetch actors from the movie database API endpoint via the URI.
+ * We use the extractActorsFromCredits() method to extract the actors from the JSON response.
+ */
+
 public class ActorService {
 	private static final String API_KEY = System.getenv("api_key");
-	private static final String BASE_URL_MOVIE_DANISH_RECENT_5_YEARS = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&primary_release_date.lte=2024-10-01&sort_by=popularity.desc&with_original_language=da";
 	private static final String URL = "https://api.themoviedb.org/3/movie/";
 
-	private static HttpClient client = HttpClient.newHttpClient();
+	private static HttpClient httpClient = HttpClient.newHttpClient();
 
 	public static List<ActorDTO> getAllActorsFromJSON (int page) {
 		List<ActorDTO> listOfActorsDTO = new ArrayList<>();
 
 		try {
-			// get all movies based on filter: danish movies from the recent 5 years
+			// get all danish movies from the recent 5 years (on page)
 			String jsonAllMovies = MovieService.getAllMoviesJSON(page);
-			// get all movieIDs based on filter
+
+			// get all ids from the movies
 			List<Long> movieIDs = MovieService.getAllMoviesIDJSON(jsonAllMovies);
 
 			// retrieving actors for each movie
@@ -39,23 +45,25 @@ public class ActorService {
 			}
 			return listOfActorsDTO;
 
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException | InterruptedException e) { //throws exception if the request fails
 			throw new ApiException("Failed to fetch actors: " + e.getMessage());
 		}
 	}
 
-	// help method to getAllActorsJSON(). with help from chatgpt
+	// Method to fetch a JSON response given a URL - searching for actor credits
 	public static String getJSONResponse (String url) throws IOException, InterruptedException {
+
+		// we establish a connection to the API through HttpClient
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(url))
 				.GET()
 				.build();
 
 		try {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
 			// Check if the response status is not successful
-			if (response.statusCode() != 200) {
+			if (response.statusCode() != HttpURLConnection.HTTP_OK) { //HTTP status code 200 means the request was successful
 				String errorMsg = "Failed to fetch actors. HTTP Status Code: " + response.statusCode() + ". Response: " + response.body();
 				throw new ApiException(errorMsg);
 			}
@@ -65,8 +73,7 @@ public class ActorService {
 		}
 	}
 
-
-	// help method to getAllActorsJSON(). with help from chatgpt
+	// Method to extract actors from credits - converts them to ActerDTO objects and saves in List
 	public static List<ActorDTO> extractActorsFromCredits (String jsonCredits) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
