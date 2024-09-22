@@ -17,7 +17,7 @@ public class Genre
 {
 	@Id
 	@Column(name = "genre_id", nullable = false)
-	private Long id;
+	private Long genre_id;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
@@ -29,7 +29,7 @@ public class Genre
 
 	public Genre(GenreDTO genreDTO)
 	{
-		this.id = genreDTO.getId();
+		this.genre_id = genreDTO.getId();
 		this.name = genreDTO.getName();
 	}
 

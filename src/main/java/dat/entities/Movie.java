@@ -1,4 +1,5 @@
 package dat.entities;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dat.dtos.ActorDTO;
 import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
@@ -33,6 +34,11 @@ public class Movie {
 
 	@Column(name = "vote_average")
 	private Double voteAverage;
+
+	//Store genre_ids as a comma-separated String
+	@Column(name = "genre_ids")
+	private String genreIDs;
+
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "director_id")
@@ -81,6 +87,7 @@ public class Movie {
 		this.releaseDate = movieDTO.getReleaseDate();
 		this.popularity = movieDTO.getPopularity();
 		this.voteAverage = movieDTO.getVoteAverage();
+		this.setGenreIDs(movieDTO.getGenreIDs());
 
 		// Assume that each movie has only one director
 
@@ -97,5 +104,34 @@ public class Movie {
 		this.actors = new ArrayList<>();
 
 	}
+
+
+
+	// treat genre_ids as a string to store it in the table 'movies' in separate column
+
+	//setter method to store the genre IDs as a comma,separated string
+	public void setGenreIDs(List<Long> genreIDs)
+	{
+		this.genreIDs = genreIDs != null ? String.join(",", genreIDs.stream().map(String::valueOf).toArray(String[]::new)) : null;
+	}
+
+	//getter method to retrieve genre IDs as a List
+	public List<Long> getGenreIDs()
+	{
+		if(this.genreIDs != null && !this.genreIDs.isEmpty())
+		{
+			String[] ids = this.genreIDs.split(",");
+			List<Long> genreIDList = new ArrayList<>();
+			for(String id : ids)
+			{
+				genreIDList.add(Long.valueOf(id));
+			}
+			return genreIDList;
+		}
+		return new ArrayList<>();
+	}
+
+
+
 
 }

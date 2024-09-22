@@ -34,7 +34,7 @@ public class GenreDAO
     public static GenreDTO persistEntity(GenreDTO genreDTO)
     {
         Genre genre = new Genre();
-        genre.setId(genreDTO.getId());
+        genre.setGenre_id(genreDTO.getId());
         genre.setName(genreDTO.getName());
 
         try(EntityManager em = emf.createEntityManager())
@@ -72,7 +72,7 @@ public class GenreDAO
                     genre = em.merge(genre);
                 }
 
-                dto.setId(genre.getId());
+                dto.setId(genre.getGenre_id());
                 persistedlist.add(dto);
             }
             em.getTransaction().commit();
@@ -125,7 +125,7 @@ public class GenreDAO
             }
 
             genre.setName(genreDTO.getName());
-            genre.setId(genreDTO.getId());
+            genre.setGenre_id(genreDTO.getId());
 
             em.merge(genre);
             em.getTransaction().commit();

@@ -27,7 +27,7 @@ public class GenreDTO
 
     public GenreDTO(Genre genre)
     {
-        this.id = genre.getId();
+        this.id = genre.getGenre_id();
         this.name = genre.getName();
     }
 
