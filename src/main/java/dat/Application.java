@@ -5,10 +5,7 @@ import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
 import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
+import dat.dtos.*;
 import dat.entities.Movie;
 import dat.services.*;
 import jakarta.persistence.EntityManagerFactory;
@@ -22,8 +19,8 @@ public class Application
 
         //the_movie_db
 
-       // addDataToDatabase();
-       // addMoviesToDatabase();
+        //addDataToDatabase();
+        //addMoviesToDatabase();
 
         FetchData fetchData = new FetchData();
 
@@ -33,13 +30,13 @@ public class Application
 
         //fetchData.getAllActors();
 
-        //fetchData.getAllGenres();
+        //fetchData.getAllGenre();
 
 //        Movie movie = new Movie();
 //        movie.setTitle("God film");
 //        movie.setId(333L);
 //        fetchData.persistEntity(new MovieDTO(movie));
-//
+
 //        MovieDTO movieDTO = fetchData.findEntity(333L);
 //        movieDTO.setTitle("Fantastisk film");
 //        fetchData.updateEntity(movieDTO, 333L);
@@ -76,7 +73,7 @@ public class Application
         directorDAO.persistListOfDirectors(allDirectorsDTO);
 
         String allGenres = GenreService.getAllGenresJSON();
-        List<GenreDTO> genreDTOS = GenreDTO.convertToDTOFromJSONList(allGenres);
+        List<GenreDTO> genreDTOS = GenreService.convertToDTOFromJSONList(allGenres);
         GenreDAO genreDAO = GenreDAO.getInstance(emf);
         genreDAO.persistListOfGenres(genreDTOS);
 
@@ -92,7 +89,7 @@ public class Application
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("the_movie_db");
 
         String jsonAllMovies = MovieService.getAllMoviesJSON(1);
-        List<MovieDTO> moviesDTOs = MovieDTO.convertToDTOFromJSONList(jsonAllMovies);
+        List<MovieDTO> moviesDTOs = MovieService.convertToDTOFromJSONList(jsonAllMovies);
         MovieDAO movieDAO = MovieDAO.getInstance(emf);
         movieDAO.persistListOfMovies(moviesDTOs);
     }

@@ -53,28 +53,24 @@ public class MovieDAO
 		{
 			em.getTransaction().begin();
 
-
-			// Find existing movie, or create a new one if it doesn't exist
+			// Find existing movie
 			movie = em.find(Movie.class, movieDTO.getId());
 			if (movie == null) {
-				// Use constructor to map basic fields
+				//Create a new Movie if it doesn't exist
 				movie = new Movie(movieDTO);
+				em.persist(movie);
 			} else {
 				// Update movie fields from DTO if already exists
-				movie = new Movie(movieDTO);
+				movie.setPopularity(movieDTO.getPopularity());
+				movie.setTitle(movieDTO.getTitle());
+				movie.setOriginalLanguage(movieDTO.getOriginalLanguage());
+				movie.setReleaseDate(movieDTO.getReleaseDate());
+				movie.setVoteAverage(movieDTO.getVoteAverage());
+				movie.setGenreIDs(movieDTO.getGenreIDs());
 			}
 
-			// Set the director, actors, and genres
+			//called to handle the updating of the movies associated: director, actor and genres.
 			setRelationships(em, movie, movieDTO);
-
-
-			if(movie.getId() == null)
-			{
-				em.persist(movie);
-			} else{
-				//merge if it already exists
-				movie = em.merge(movie);
-			}
 
 			em.getTransaction().commit();
 		}
@@ -168,6 +164,7 @@ public class MovieDAO
 			movie.setReleaseDate(movieDTO.getReleaseDate());
 			movie.setVoteAverage(movieDTO.getVoteAverage());
 
+			//called to handle the updating of the movies associated: director, actor and genres.
 			setRelationships(em, movie, movieDTO);
 
 			em.merge(movie);
@@ -314,7 +311,7 @@ public class MovieDAO
 
 
 
-	//Help method to set the director, actors and genres. help from chatgpt
+	//Help method establishes the relationships between a Movie entity and its associated Director, Actors and Genres. help from chatgpt
 	private static void setRelationships(EntityManager em, Movie movie, MovieDTO dto)
 	{
 		// Set Director
@@ -341,20 +338,6 @@ public class MovieDAO
 
 			}
 		}
-
-//		// Set Actors
-//		if (dto.getActors() != null) {
-//			List<Actor> actors = new ArrayList<>();
-//			for (ActorDTO actorDTO : dto.getActors()) {
-//				Actor actor = em.find(Actor.class, actorDTO.getId());
-//				if (actor == null) {
-//					actor = new Actor(actorDTO);
-//					em.persist(actor);
-//				}
-//				actors.add(actor);
-//			}
-//			movie.setActors(actors);
-//		}
 
 		// Set Genres
 		if (dto.getGenres() != null) {

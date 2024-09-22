@@ -36,18 +36,4 @@ public class GenreDTO
 
     }
 
-    // convert from JSON to List of ActorDTO
-    public static List<GenreDTO> convertToDTOFromJSONList(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        //enabling it to properly serialize / deserialize date and time like LocalDate
-        objectMapper.registerModule(new JavaTimeModule());
-
-        try {
-            GenreDTO genreDTO = objectMapper.readValue(json, GenreDTO.class);
-            return genreDTO.genres;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
