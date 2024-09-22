@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.entities.Actor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActorDTO
 {
@@ -24,21 +26,15 @@ public class ActorDTO
     @JsonProperty("name")
     private String name;
 
-
     public List<ActorDTO> cast;
-
 
     public ActorDTO(Actor actor) {
         this.id = actor.getId();
         this.name = actor.getName();
     }
 
-    public ActorDTO()
-    {
-
+    public ActorDTO (long id, String name) {
+        this.id = id;
+        this.name = name;
     }
-
-
-
-
 }

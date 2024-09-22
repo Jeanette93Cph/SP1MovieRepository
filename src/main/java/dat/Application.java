@@ -5,7 +5,10 @@ import dat.daos.ActorDAO;
 import dat.daos.DirectorDAO;
 import dat.daos.GenreDAO;
 import dat.daos.MovieDAO;
-import dat.dtos.*;
+import dat.dtos.ActorDTO;
+import dat.dtos.DirectorDTO;
+import dat.dtos.GenreDTO;
+import dat.dtos.MovieDTO;
 import dat.entities.Movie;
 import dat.services.*;
 import jakarta.persistence.EntityManagerFactory;
@@ -19,8 +22,8 @@ public class Application
 
         //the_movie_db
 
-        //addDataToDatabase();
-        //addMoviesToDatabase();
+       // addDataToDatabase();
+       // addMoviesToDatabase();
 
         FetchData fetchData = new FetchData();
 
@@ -30,13 +33,13 @@ public class Application
 
         //fetchData.getAllActors();
 
-        //fetchData.getAllGenre();
+        //fetchData.getAllGenres();
 
 //        Movie movie = new Movie();
 //        movie.setTitle("God film");
 //        movie.setId(333L);
 //        fetchData.persistEntity(new MovieDTO(movie));
-
+//
 //        MovieDTO movieDTO = fetchData.findEntity(333L);
 //        movieDTO.setTitle("Fantastisk film");
 //        fetchData.updateEntity(movieDTO, 333L);

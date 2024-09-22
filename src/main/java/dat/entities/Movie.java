@@ -23,20 +23,20 @@ public class Movie {
 	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "original_language")
+	@Column(name = "original_language", nullable = false)
 	private String originalLanguage;
 
-	@Column(name = "release_date")
+	@Column(name = "release_date", nullable = false)
 	private String releaseDate;
 
-	@Column(name = "popularity")
+	@Column(name = "popularity", nullable = false)
 	private Double popularity;
 
-	@Column(name = "vote_average")
+	@Column(name = "vote_average", nullable = false)
 	private Double voteAverage;
 
 	//Store genre_ids as a comma-separated String
-	@Column(name = "genre_ids")
+	@Column(name = "genre_ids", nullable = false)
 	private String genreIDs;
 
 

@@ -73,9 +73,7 @@ public class MovieDAO
 			setRelationships(em, movie, movieDTO);
 
 			em.getTransaction().commit();
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			throw new JpaException("Failed to persist actor:" + e.getMessage());
 		}
 		return new MovieDTO(movie);
@@ -112,20 +110,16 @@ public class MovieDAO
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
-			System.out.println("Failed to persist list of movies: " + e.getMessage());
-			e.printStackTrace();
+			throw new JpaException("Failed to persist list of movies: " + e.getMessage());
 		}
 		return persistedlist;
 	}
 
 
-	public static List<MovieDTO> findAll()
-	{
-		try(EntityManager em = emf.createEntityManager())
-		{
+	public static List<MovieDTO> findAll () {
+		try (EntityManager em = emf.createEntityManager()) {
 			return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m", MovieDTO.class).getResultList();
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			throw new JpaException("Failed to find all movies." + e.getMessage());
 		}
 	}
@@ -172,9 +166,7 @@ public class MovieDAO
 
 			return new MovieDTO(movie);
 
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("Failed to update movie: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -194,11 +186,8 @@ public class MovieDAO
 			em.getTransaction().begin();
 			em.remove(movie);
 			em.getTransaction().commit();
-		}
-		catch (Exception e)
-		{
-			System.out.println("Failed to delete movie: ");
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new JpaException("Failed to delete movie: " + e.getMessage());
 		}
 
 	}

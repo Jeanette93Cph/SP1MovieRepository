@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GenreDTO
 {
@@ -25,15 +26,8 @@ public class GenreDTO
     private List<GenreDTO> genres;
 
 
-    public GenreDTO(Genre genre)
-    {
-        this.id = genre.getGenre_id();
-        this.name = genre.getName();
-    }
-
-    public GenreDTO()
-    {
-
-    }
-
+	public GenreDTO (Genre genre) {
+		this.id = genre.getGenre_id();
+		this.name = genre.getName();
+	}
 }

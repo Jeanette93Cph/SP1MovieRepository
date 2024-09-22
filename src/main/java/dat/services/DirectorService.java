@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.CrewMemberDTO;
 import dat.dtos.DirectorDTO;
+import dat.exceptions.ApiException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +12,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DirectorService {
 
@@ -55,6 +58,9 @@ public class DirectorService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
+
+
+
     }
 
     public static DirectorDTO extractDirectorFromCredits(String jsonCredits) {
@@ -76,8 +82,14 @@ public class DirectorService {
             }
 
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new ApiException("Failed to convert JSON to DTO: " + e.getMessage());
         }
         return null;
+    }
+
+    private static String convertPlainStringToJSONArray(String plainString) {
+        return Arrays.stream(plainString.split(",\\s*"))
+                .map(name -> String.format("{\"name\": \"%s\"}", name.trim()))
+                .collect(Collectors.joining(",", "[", "]"));
     }
 }
