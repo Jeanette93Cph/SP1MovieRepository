@@ -107,7 +107,11 @@ public class MovieDTO {
     }
 
 
-
-
-
+    public MovieDTO (Long id, String title, Double popularity, Double voteAverage, String releaseDate) {
+        this.id = id;
+        this.title = title;
+        this.popularity = popularity;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+    }
 }
