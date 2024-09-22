@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dat.dtos.GenreDTO;
+import dat.exceptions.ApiException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,9 +33,8 @@ public class GenreService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response.body();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+           throw new ApiException("Failed to fetch genres: " + e.getMessage());
         }
-        return null;
     }
 
     // convert from JSON to List of ActorDTO
@@ -47,8 +47,7 @@ public class GenreService {
             GenreDTO genreDTO = objectMapper.readValue(json, GenreDTO.class);
             return genreDTO.getGenres();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new ApiException("Failed to convert JSON to DTO: " + e.getMessage());
         }
-        return null;
     }
 }

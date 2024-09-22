@@ -1,19 +1,8 @@
 package dat.daos;
 
 import dat.config.HibernateConfig;
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
-import dat.dtos.GenreDTO;
-import dat.dtos.MovieDTO;
-import dat.entities.Actor;
-import dat.entities.Director;
-import dat.entities.Genre;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MovieDAOTest {

@@ -91,9 +91,7 @@ public class FetchData {
 	public MovieDTO findDirectorInASpecificMovie (String title) {
 		MovieDAO movieDAO = new MovieDAO(emf);
 		MovieDTO movieDTO = movieDAO.findDirectorInASpecificMovie(title);
-
 		System.out.println(movieDTO);
-
 		return movieDTO;
 	}
 
@@ -101,9 +99,7 @@ public class FetchData {
 	public MovieDTO findActorsInASpecificMovie (String title) {
 		MovieDAO movieDAO = new MovieDAO(emf);
 		MovieDTO movieDTO = movieDAO.findActorsInASpecificMovie(title);
-
 		System.out.println(movieDTO);
-
 		return movieDTO;
 	}
 
@@ -111,9 +107,7 @@ public class FetchData {
 	public MovieDTO findGenreInASpecificMovie (String title) {
 		MovieDAO movieDAO = new MovieDAO(emf);
 		MovieDTO movieDTO = movieDAO.findGenreInASpecificMovie(title);
-
 		System.out.println(movieDTO);
-
 		return movieDTO;
 
 	}
@@ -122,11 +116,9 @@ public class FetchData {
 		MovieDAO movieDAO = new MovieDAO(emf);
 		List<MovieDTO> listOfMoviesDTO = movieDAO.findAllMoviesInASpecificGenre(genreName);
 		listOfMoviesDTO.forEach(System.out::println);
-
 		return listOfMoviesDTO;
 
 	}
-
 
 	// Search for a movie by title (case-insensitive) and return all movies that contain the search string in the title. help from chatgpt
 	public List<MovieDTO> getMoviesByTitle (String title) {
@@ -225,5 +217,4 @@ public class FetchData {
 				))
 				.collect(Collectors.toList());
 	}
-
 }
