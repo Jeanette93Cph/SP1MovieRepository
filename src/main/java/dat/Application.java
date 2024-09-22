@@ -9,6 +9,7 @@ import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
 import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
+import dat.entities.Movie;
 import dat.services.*;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -21,17 +22,41 @@ public class Application
 
         //the_movie_db
 
-        addDataToDatabase();
-
-        addMoviesToDatabase();
+       // addDataToDatabase();
+       // addMoviesToDatabase();
 
         FetchData fetchData = new FetchData();
 
-        //fetchData.getAverageRatingOfAllMovies();
+        //fetchData.getAllMovies();
+
+        //fetchData.getAllDirectors();
+
+        //fetchData.getAllActors();
 
         //fetchData.getAllGenres();
 
-        //fetchData.getAllDirectors();
+//        Movie movie = new Movie();
+//        movie.setTitle("God film");
+//        movie.setId(333L);
+//        fetchData.persistEntity(new MovieDTO(movie));
+//
+//        MovieDTO movieDTO = fetchData.findEntity(333L);
+//        movieDTO.setTitle("Fantastisk film");
+//        fetchData.updateEntity(movieDTO, 333L);
+
+        //fetchData.removeEntity(333L);
+
+        //fetchData.findDirectorInASpecificMovie("Boundless");
+
+        //fetchData.findActorsInASpecificMovie("Boundless");
+
+        //fetchData.findGenreInASpecificMovie("Boundless");
+
+        //fetchData.findAllMoviesInASpecificGenre("Horror");
+
+        //fetchData.getMoviesByTitle("bound");
+
+        //fetchData.getAverageRatingOfAllMovies();
 
         //fetchData.getTop10LowestRatedMovies();
 
@@ -39,9 +64,6 @@ public class Application
 
         //fetchData.getTop10MostPopularMovies();
 
-        //fetchData.getMovieByTitle("Boundless");
-
-        //fetchData.findGenreInASpecificMovie("Boundless");
 
     }
 

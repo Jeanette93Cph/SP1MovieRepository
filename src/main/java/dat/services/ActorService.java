@@ -63,7 +63,7 @@ public class ActorService {
     }
 
 	// help method to getAllActorsJSON(). with help from chatgpt
-	private static String getJSONResponse(String url) throws IOException, InterruptedException
+	public static String getJSONResponse(String url) throws IOException, InterruptedException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(url))

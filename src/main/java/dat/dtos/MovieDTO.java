@@ -41,6 +41,14 @@ public class MovieDTO {
     @JsonProperty("vote_average")
     private Double voteAverage;
 
+    //Store genre_ids as a List<Long> since that's what the API provides
+    @JsonProperty("genre_ids")
+    private List<Long> genreIDs;
+
+    @JsonProperty("cast")
+    private List<CrewMemberDTO> crew;
+
+
     @JsonProperty("genres")
     private List<GenreDTO> genres;
 
@@ -58,6 +66,7 @@ public class MovieDTO {
         this.releaseDate = movie.getReleaseDate();
         this.popularity = movie.getPopularity();
         this.voteAverage = movie.getVoteAverage();
+        this.genreIDs = movie.getGenreIDs();
 
         if (movie.getDirector() != null) {
             this.director = new DirectorDTO(movie.getDirector());
@@ -112,4 +121,9 @@ public class MovieDTO {
         }
         return null;
     }
+
+
+
+
+
 }
