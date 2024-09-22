@@ -3,6 +3,7 @@ package dat.daos;
 import dat.dtos.ActorDTO;
 import dat.entities.Actor;
 import dat.exceptions.JpaException;
+import dat.resources.Logger;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.ArrayList;
@@ -71,7 +72,8 @@ public class ActorDAO {
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			System.out.println("Failed to persist list of actors: ");
-			e.printStackTrace();
+			Logger.exceptionLog(e.getMessage());
+			Logger.consoleLog(e.getMessage());
 
 		}
 		return persistedlist;

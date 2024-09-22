@@ -49,7 +49,12 @@ Class DirectorDTO
 }
 
 package "entities" {
-Class Actor
+Class Actor {
+    id : Long
+    name : String
+    movies : List<Movie>
+  }
+
 Class Movie
 Class Genre
 Class Director
@@ -57,12 +62,20 @@ Class Director
 
 package "exceptions" {
   class JpaException {
-    +JpaException(String message)
+    + JpaException(String message)
+    + void writeToLog(String message)
+  }
+  class ApiException {
+    + ApiException(String message)
+    + void writeToLog(String message)
   }
 }
 
 package "resources" {
-Class Logger
+Class Logger {
+  + exceptionLog (String in)
+  + consoleLog (String in)
+  + FileWriter fileWriter : File
 }
 
 package "services" {

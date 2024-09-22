@@ -9,6 +9,7 @@ import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
 import dat.dtos.GenreDTO;
 import dat.dtos.MovieDTO;
+import dat.resources.Logger;
 import dat.services.*;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -28,8 +29,8 @@ public class Application {
 		 */
 
 		// Add data to database
-		addDataToDatabase();
-		addMoviesToDatabase();
+		//addDataToDatabase();
+		//addMoviesToDatabase();
 
 		// instance of FetchData
 		FetchData fetchData = new FetchData();
@@ -57,7 +58,8 @@ public class Application {
 		// fetchData.getAverageRatingOfAllMovies();
 		// fetchData.getTop10LowestRatedMovies();
 		// fetchData.getTop10HighestRatedMovies();
-		//fetchData.getTop10MostPopularMovies();
+		// fetchData.getTop10MostPopularMovies();
+		// fetchData.getTop10MostPopularMovies();
 	}
 
 	public static void addDataToDatabase () {
