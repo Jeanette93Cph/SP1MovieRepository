@@ -26,26 +26,95 @@ skinparam Component {
 
 ''
 
-Class Main {
+Class Application {
   +main(String[] args)
+  + addData()
 }
-
 
 package "config" {
 Class HibernateConfig
 }
 
 package "daos" {
-Interface IDAO
-Class MovieDao
+Interface IDAO {
+	T create(T t);
+	T read(Object id);
+	T update(T t);
+	void delete(Object id);
+}
+
+Class MovieDao {
+- EntityManagerFactory emf
+- static MovieDAO instance
++ MovieDAO(EntityManagerFactory emf)
++ static MovieDAO getInstance(EntityManagerFactory emf)
++ MovieDTO persistEntity(MovieDTO movieDTO)
++ List<MovieDTO> persistListOfMovies(List<MovieDTO> movieDTOList)
++ List<MovieDTO> findAll()
++ MovieDTO findEntity(Long id)
++ MovieDTO updateEntity(MovieDTO movieDTO, Long id)
++ void removeEntity(Long id)
++ MovieDTO findGenreInASpecificMovie(String title)
++ MovieDTO findDirectorInASpecificMovie(String title)
++ MovieDTO findActorsInASpecificMovie(String title)
++ List<MovieDTO> findAllMoviesInASpecificGenre(String genreName)
+}
+
+
+Class GenreDAO {
+
+
+}
+
+Class ActorDAO {
+
+}
+
+Class DirectorDAO {
+
+}
 }
 
 package "dtos" {
-Class ActorDTO
-Class MovieDTO
-Class GenreDTO
-Class MovieDTO
-Class DirectorDTO
+Class ActorDTO {
+- id : long
+- name : String
+- movies : List<MovieDTO>
+}
+
+Class MovieDTO {
+- id : long
+- title : String
+- originalLanguage : String
+- releaseDate : String
+- popularity : Double
+- voteAverage : Double
+- genreIDs : List<Long>
+- crew : List<CrewMemberDTO>
+- genres : List<GenreDTO>
+- actors : List<ActorDTO>
+- director : DirectorDTO
+}
+
+Class CrewMemberDTO {
++ id : long
++ name : String
++ job : String
+- cast : List<CrewMemberDTO>
+- crew : List<CrewMemberDTO>
+}
+
+Class GenreDTO {
+- id : long
+- name : String
+- genres : List<GenreDTO>
+}
+
+Class DirectorDTO {
+- id : long
+- name : String
+- directors : List<DirectorDTO>
+}
 }
 
 package "entities" {
@@ -55,9 +124,31 @@ Class Actor {
     movies : List<Movie>
   }
 
-Class Movie
-Class Genre
-Class Director
+Class Movie {
++ id : Long
++ title : String
++ originalLanguage : String
++ releaseDate : String
++ popularity : Double
++ voteAverage : Double
++ genreIDs : List<Long>
++ crew : List<CrewMember>
++  genres : List<Genre>
++ actors : List<Actor>
++ director : Director
+  }
+
+Class Genre {
++ id : Long
++ name : String
++ genres : List<Genre>
+  }
+
+Class Director {
++ id : Long
++ name : String
++ directors : List<Director>
+  }
 }
 
 package "exceptions" {
@@ -77,17 +168,43 @@ Class Logger {
   + consoleLog (String in)
   + FileWriter fileWriter : File
 }
+}
 
 package "services" {
-Class MovieService
-Class ActorService
-Class GenreService
+Class MovieService {
+}
+
+Class ActorService {
+- static final String API_KEY
+- static final String URL
+- static HttpClient httpClient
++ List<ActorDTO> getAllActorsFromJSON(int page)
++ String getJSONResponse(String url)
++ List<ActorDTO> extractActorsFromCredits(String jsonCredits)
+}
+
+
+Class GenreService {
+}
+
 Class DirectorService
 }
 
 ' Define relationships
+"services" --> "daos"
+"daos" <--> Database
 
+"Application" -----> "services"
+"Application" <---> "TMDB_API"
 
+"IDAO" <-- "MovieDao"
+"IDAO" <-- "GenreDAO"
+"IDAO" <-- "ActorDAO"
+"IDAO" <-- "DirectorDAO"
+
+Movie "*" -- "*" Actor : has
+Movie "*" -- "*" Genre : has
+Movie "*" -- "1" Director : has
 
 
 @enduml@enduml
